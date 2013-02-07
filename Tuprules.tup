@@ -1,0 +1,51 @@
+base = $(TUP_CWD)
+src_base = $(base)/src
+include_base = $(base)/include
+
+CFLAGS += -g -O0
+CFLAGS += -Wall -m64
+CFLAGS += -I$(include_base)
+
+CXXFLAGS += -std=c++11 -stdlib=libc++
+
+LDFLAGS += -lc++
+LDFLAGS += -arch x86_64
+
+LD = ld
+
+ifeq (@(TUP_PLATFORM),macosx)
+  CFLAGS += -fobjc-arc -fblocks
+  CFLAGS += -DTARGET_OS_MAC
+  CXXFLAGS += -ObjC++
+  LDFLAGS += -framework Cocoa
+endif
+ifeq (@(TUP_PLATFORM),linux)
+  CFLAGS += -DTARGET_OS_LINUX
+endif
+ifeq (@(TUP_PLATFORM),win32)
+  CFLAGS += -DTARGET_OS_WINDOWS
+endif
+ifeq (@(TUP_PLATFORM),freebsd)
+  CFLAGS += -DTARGET_OS_BSD
+endif
+
+module_objects += $(src_base)/types/*.o
+
+c_files = *.c *.m
+cxx_files = *.cpp *.cc *.cxx *.mm
+
+ifndef CC
+  CC = clang
+endif
+
+ifndef CXX
+  CXX = clang++
+endif
+
+!cc_file = |> $(CC) $(CFLAGS) $(LDFLAGS) -o %o %f |> %B
+!cxx_file = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |> %B
+!cc_object = |> $(CC) $(CFLAGS) -c -o %o %f |> %B.o
+!cxx_object = |> $(CXX) $(CFLAGS) $(CXXFLAGS) -c -o %o %f |> %B.o
+!cxx_bin = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o -l%f |>
+!ar_lib = |> ar cr %o %f |>
+!ld_exe = |> $(CXX) %f $(LDFLAGS) -ObjC -o %o |>

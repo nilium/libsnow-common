@@ -1,0 +1,3 @@
+include_rules
+
+: $(module_objects) |> ar -rcs %o %f |> libsnow-common.a
