@@ -1,7 +1,7 @@
 // types_2d.hh -- Noel Cower -- Public Domain
 
-#ifndef __TYPES_2D_HH__
-#define __TYPES_2D_HH__
+#ifndef __SNOW_TYPES_2D_HH__
+#define __SNOW_TYPES_2D_HH__
 
 #include <iostream>
 #include <algorithm>
@@ -268,4 +268,4 @@ typedef rect_t<int> recti_t;
 
 }
 
-#endif /* end __TYPES_2D_HH__ include guard */
+#endif /* end __SNOW_TYPES_2D_HH__ include guard */
