@@ -295,7 +295,7 @@ inline
 auto operator * (const vec3_t<T> &lhs,
                  const vec3_t<Q> &rhs) -> vec3_t<T>
 {
-  return lhs.cross_product(rhs);
+  return lhs.scaled(rhs);
 }
 
 template <typename T, typename Q>
@@ -572,7 +572,7 @@ inline
 auto operator * (const vec4_t<T> &lhs,
                  const vec4_t<Q> &rhs) -> vec4_t<T>
 {
-  return lhs.cross_product(rhs);
+  return lhs.scaled(rhs);
 }
 
 template <typename T, typename Q>
