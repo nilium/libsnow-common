@@ -1004,8 +1004,7 @@ auto quat_t<T>::slerp(const quat_t &to, value_type delta) const -> quat_t
     return dquat;
 
   if (dot > value_type(0.9999)) {
-    scale0 = value_type(1) - delta;
-    scale1 = delta;
+    return lerp(to, delta);
   } else {
     angle = std::acos(dot);
     inv_sin = value_type(1) / std::sin(angle);
