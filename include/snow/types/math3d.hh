@@ -1167,7 +1167,7 @@ struct mat4_t
     return *this;
   }
 
-  auto multiply(const vec4 &vec) -> vec4
+  auto multiply(const vec4 &vec) const -> vec4
   {
     return {
       vec.dot_product(colvec4(0)),
@@ -1177,7 +1177,7 @@ struct mat4_t
     };
   }
 
-  auto multiply(const vec3 &vec) -> vec3
+  auto multiply(const vec3 &vec) const -> vec3
   {
     return {
       vec.dot_product(colvec3(0)) + m03,
@@ -1186,7 +1186,7 @@ struct mat4_t
     };
   }
 
-  auto rotate(const vec3 &vec) -> vec3
+  auto rotate(const vec3 &vec) const -> vec3
   {
     return {
       vec.dot_product(colvec3(0)),
@@ -1195,7 +1195,7 @@ struct mat4_t
     };
   }
 
-  auto inverse_rotate(const vec3 &vec) -> vec3
+  auto inverse_rotate(const vec3 &vec) const -> vec3
   {
     return {
       vec.dot_product(rowvec3(0)),
