@@ -1136,7 +1136,7 @@ struct mat4_t
     };
 
     for (int cindex = 0; cindex < 4; ++cindex) {
-      vec4 column = colvec4(cindex);
+      const vec4 column = colvec4(cindex);
       m[cindex     ] = column.dot_product(rowvecs[0]);
       m[cindex + 4 ] = column.dot_product(rowvecs[1]);
       m[cindex + 8 ] = column.dot_product(rowvecs[2]);
