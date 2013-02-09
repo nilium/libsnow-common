@@ -5,9 +5,10 @@
 
 #include <stdexcept>
 #include <cmath>
+#include <algorithm>
 #include <cfloat>
 #include <iostream>
-
+#include <type_traits>
 
 namespace snow {
 
@@ -107,6 +108,11 @@ T clamp_value(T val, Q min, R max)
 
 template <typename T = float>
 struct vec3_t {
+  static_assert(std::is_floating_point<T>::value,
+                "value_type must be floating point type");
+  static_assert(std::is_scalar<T>::value,
+                "value_type must be scalar type");
+
   typedef T value_type;
 
   value_type x, y, z;
@@ -146,7 +152,7 @@ struct vec3_t {
   {
     const value_type sqrlen = length();
     return sqrlen != 0
-           ? static_cast<value_type>(sqrtf(sqrlen))
+           ? static_cast<value_type>(std::sqrt(sqrlen))
            : 0;
   }
 
@@ -277,14 +283,47 @@ struct vec3_t {
     return scale(value_type(1) / scalar);
   }
 
+  auto operator - () const -> vec3_t
+  {
+    return negated();
+  }
+
+  auto operator[] (int index) -> value_type&
+  {
+    static_assert(std::is_pod<vec3_t>::value, "vec3 must be POD to use subscript operator");
+    if (index < 0 || index > 2)
+      throw std::out_of_range("attempt to access out of range element");
+    return (&x)[index];
+  }
+
+  auto operator[] (int index) const -> value_type
+  {
+    static_assert(std::is_pod<vec3_t>::value, "vec3 must be POD to use subscript operator");
+    if (index < 0 || index > 2)
+      throw std::out_of_range("attempt to access out of range element");
+    return (&x)[index];
+  }
+
+  operator value_type* ()
+  {
+    static_assert(std::is_pod<vec3_t>::value, "vec3 must be POD to cast to value_type pointer");
+    return &x;
+  }
+
+  operator const value_type* () const
+  {
+    static_assert(std::is_pod<vec3_t>::value, "vec3 must be POD to cast to value_type pointer");
+    return &x;
+  }
+
   template <typename Q>
   operator vec3_t<Q> () const
   {
-    vec3_t<Q> result;
-    result.x = static_cast<Q>(x);
-    result.y = static_cast<Q>(y);
-    result.z = static_cast<Q>(z);
-    return result;
+    return {
+      static_cast<Q>(x),
+      static_cast<Q>(y),
+      static_cast<Q>(z)
+    };
   }
 };
 
@@ -321,14 +360,6 @@ template <typename T, typename Q>
 inline
 auto operator * (const vec3_t<T> &lhs,
                  const vec3_t<Q> &rhs) -> vec3_t<T>
-{
-  return lhs.scaled(rhs);
-}
-
-template <typename T, typename Q>
-inline
-auto operator * (const vec3_t<T> &lhs,
-                 T rhs) -> vec3_t<T>
 {
   return lhs.scaled(rhs);
 }
@@ -386,6 +417,11 @@ auto operator != (const vec3_t<T> &lhs,
 
 template <typename T = float>
 struct vec4_t {
+  static_assert(std::is_floating_point<T>::value,
+                "value_type must be floating point type");
+  static_assert(std::is_scalar<T>::value,
+                "value_type must be scalar type");
+
   typedef T value_type;
 
   value_type x, y, z, w;
@@ -427,7 +463,7 @@ struct vec4_t {
   {
     const value_type sqrlen = length();
     return sqrlen != 0
-           ? static_cast<value_type>(sqrtf(sqrlen))
+           ? static_cast<value_type>(std::sqrt(sqrlen))
            : 0;
   }
 
@@ -558,8 +594,41 @@ struct vec4_t {
     return scale(value_type(1) / scalar);
   }
 
+  auto operator - () const -> vec4_t
+  {
+    return negated();
+  }
+
+  auto operator[] (int index) -> value_type&
+  {
+    static_assert(std::is_pod<vec4_t>::value, "vec4 must be POD to use subscript operator");
+    if (index < 0 || index > 3)
+      throw std::out_of_range("attempt to access out of range element");
+    return (&x)[index];
+  }
+
+  auto operator[] (int index) const -> value_type
+  {
+    static_assert(std::is_pod<vec4_t>::value, "vec4 must be POD to use subscript operator");
+    if (index < 0 || index > 3)
+      throw std::out_of_range("attempt to access out of range element");
+    return (&x)[index];
+  }
+
+  operator value_type* ()
+  {
+    static_assert(std::is_pod<vec4_t>::value, "vec4 must be POD to cast to value_type pointer");
+    return &x;
+  }
+
+  operator const value_type* () const
+  {
+    static_assert(std::is_pod<vec4_t>::value, "vec4 must be POD to cast to value_type pointer");
+    return &x;
+  }
+
   template <typename Q>
-  operator vec4_t<Q> ()
+  operator vec4_t<Q> () const
   {
     return {
       static_cast<Q>(x),
@@ -610,9 +679,9 @@ auto operator * (const vec4_t<T> &lhs,
 template <typename T, typename Q>
 inline
 auto operator * (const vec4_t<T> &lhs,
-                 T rhs) -> vec4_t<T>
+                 Q rhs) -> vec4_t<T>
 {
-  return lhs.scaled(rhs);
+  return lhs.scaled(static_cast<T>(rhs));
 }
 
 template <typename T, typename Q>
@@ -661,29 +730,381 @@ auto operator != (const vec4_t<T> &lhs,
 
 template <typename T = float>
 struct quat_t {
-  typedef T value_type;
+  static_assert(std::is_floating_point<T>::value,
+                "value_type must be floating point type");
+  static_assert(std::is_scalar<T>::value,
+                "value_type must be scalar type");
 
-  value_type x, y, z, w;
+  typedef T value_type;
+  typedef vec3_t<value_type> vec3;
+
+  vec3 xyz;
+  value_type w;
 
   static const quat_t zero;
   static const quat_t one;
   static const quat_t identity;
+
+  auto length() const -> value_type
+  {
+    return xyz.length() + w * w;
+  }
+
+  auto magnitude() const -> value_type
+  {
+    const value_type sqrlen = length();
+    return sqrlen != 0
+           ? static_cast<value_type>(std::sqrt(sqrlen))
+           : 0;
+  }
+
+  auto inverse() const -> quat_t
+  {
+    return {
+      -xyz, w
+    };
+  }
+
+  auto invert() -> quat_t&
+  {
+    xyz.negate();
+    return *this;
+  }
+
+  auto negated() const -> quat_t
+  {
+    return {
+      -xyz, -w
+    };
+  }
+
+  auto negate() -> quat_t&
+  {
+    invert();
+    w = -w;
+    return *this;
+  }
+
+  auto product(const quat_t& other) const -> quat_t
+  {
+    value_type wt, w1, w2;
+    vec3 temp_xyz;
+    w1 = w;
+    w2 = other.w;
+
+    wt = w1 * w2 - xyz.dot_product(other.xyz);
+    temp_xyz = other.xyz * w1;
+    temp_xyz += xyz * w2;
+    temp_xyz += other.xyz.cross_product(xyz);
+    return {
+      temp_xyz, wt
+    };
+  }
+
+  auto multiply(const quat_t& other) -> quat_t&
+  {
+    value_type w1, w2;
+    vec3 temp_xyz;
+    w1 = w;
+    w2 = other.w;
+
+    w = w1 * w2 - xyz.dot_product(other.xyz);
+    temp_xyz = other.xyz * w1;
+    temp_xyz += xyz * w2;
+    temp_xyz += other.xyz.cross_product(xyz);
+    xyz = temp_xyz;
+    return *this;
+  }
+
+  auto normalized() const -> quat_t
+  {
+    value_type sqrlen = xyz.length() + w * w;
+    if (sqrlen != 0)
+      sqrlen = value_type(1) / std::sqrt(sqrlen);
+
+    return {
+      xyz * sqrlen,
+      w * sqrlen
+    };
+  }
+
+  auto normalize() -> quat_t&
+  {
+    value_type sqrlen = xyz.length() + w * w;
+    if (sqrlen != 0)
+      sqrlen = value_type(1) / std::sqrt(sqrlen);
+
+    xyz *= sqrlen;
+    w *= sqrlen;
+
+    return *this;
+  }
+
+  auto difference(const quat_t &other) const -> quat_t
+  {
+    return {
+      xyz - other.xyz,
+      w - other.w
+    };
+  }
+
+  auto subtract(const quat_t &other) -> quat_t&
+  {
+    xyz -= other.xyz;
+    w -= other.w;
+    return *this;
+  }
+
+  auto sum(const quat_t &other) const -> quat_t
+  {
+    return {
+      xyz + other.xyz,
+      w + other.w
+    };
+  }
+
+  auto add(const quat_t &other) -> quat_t&
+  {
+    xyz += other.xyz;
+    w += other.w;
+    return *this;
+  }
+
+  auto scaled(value_type scalar) const -> quat_t
+  {
+    return {
+      xyz * scalar,
+      w * scalar
+    };
+  }
+
+  auto scaled(const quat_t &other) const -> quat_t
+  {
+    return {
+      xyz * other.xyz,
+      w * other.w
+    };
+  }
+
+  auto scale(value_type scalar) -> quat_t&
+  {
+    xyz *= scalar;
+    w *= scalar;
+    return *this;
+  }
+
+  auto scale(const quat_t &other) -> quat_t&
+  {
+    xyz *= other.xyz;
+    w *= other.w;
+    return *this;
+  }
+
+  auto dot_product(const quat_t &other) const -> value_type
+  {
+    return xyz.dot_product(other.xyz) + w * other.w;
+  }
+
+  auto slerp(const quat_t &to, value_type delta) const -> quat_t;
+
+  auto lerp(const quat_t &to, value_type delta) const -> quat_t;
+
+  auto operator *= (const quat_t &other) -> quat_t&
+  {
+    return multiply(other);
+  }
+
+  auto operator *= (value_type scalar) -> quat_t&
+  {
+    return scale(scalar);
+  }
+
+  auto operator += (const quat_t &other) -> quat_t&
+  {
+    return add(other);
+  }
+
+  auto operator -= (const quat_t &other) -> quat_t&
+  {
+    return subtract(other);
+  }
+
+  auto operator - () const -> quat_t
+  {
+    return inverse();
+  }
+
+  auto operator[] (int index) -> value_type&
+  {
+    static_assert(std::is_pod<quat_t>::value, "quaternion must be POD to use subscript operator");
+    if (index < 0 || index > 15)
+      throw std::out_of_range("attempt to access out of range element");
+    return (&xyz.x)[index];
+  }
+
+  auto operator[] (int index) const -> value_type
+  {
+    static_assert(std::is_pod<quat_t>::value, "quaternion must be POD to use subscript operator");
+    if (index < 0 || index > 15)
+      throw std::out_of_range("attempt to access out of range element");
+    return (&xyz.x)[index];
+  }
+
+  operator value_type* ()
+  {
+    static_assert(std::is_pod<quat_t>::value, "quaternion must be POD to cast to value_type pointer");
+    return &xyz.x;
+  }
+
+  operator const value_type* () const
+  {
+    static_assert(std::is_pod<quat_t>::value, "quaternion must be POD to cast to value_type pointer");
+    return &xyz.x;
+  }
+
+  template <typename Q>
+  operator quat_t<Q> () const
+  {
+    return {
+      static_cast<vec3_t<Q> >(xyz),
+      static_cast<Q>(w)
+    };
+  }
 };
 
 template <typename T>
-const quat_t<T> quat_t<T>::zero = { 0, 0, 0, 0 };
+const quat_t<T> quat_t<T>::zero = { { 0, 0, 0 }, 0 };
 
 template <typename T>
-const quat_t<T> quat_t<T>::one = { 1, 1, 1, 1 };
+const quat_t<T> quat_t<T>::one = { { 1, 1, 1 }, 1 };
 
 template <typename T>
-const quat_t<T> quat_t<T>::identity = { 0, 0, 0, 1 };
+const quat_t<T> quat_t<T>::identity = { { 0, 0, 0 }, 1 };
+
+template <typename T>
+auto quat_t<T>::slerp(const quat_t &to, value_type delta) const -> quat_t
+{
+  value_type dot, scale0, scale1, angle, inv_sin;
+  quat_t dquat = to;
+
+  if (delta < 0 || is_zero(delta)) {
+    return *this;
+  } else if (delta >= 1) {
+    return to;
+  }
+
+  dot = dot_product(to);
+
+  if (dot < 0) {
+    dot = -dot;
+    dquat.negate();
+  }
+
+  if (dot >= value_type(1.1))
+    return dquat;
+
+  if (dot > value_type(0.9999)) {
+    scale0 = value_type(1) - delta;
+    scale1 = delta;
+  } else {
+    angle = std::acos(dot);
+    inv_sin = value_type(1) / std::sin(angle);
+    scale0 = std::sin((value_type(1) - delta) * angle) * inv_sin;
+    scale1 = std::sin(delta * angle) * inv_sin;
+  }
+
+  return dquat.scale(scale1).add(scaled(scale0));
+}
+
+template <typename T>
+auto quat_t<T>::lerp(const quat_t &to, value_type delta) const -> quat_t
+{
+  if (delta < 0 || is_zero(delta)) {
+    return *this;
+  } else if (delta >= 1) {
+    return to;
+  }
+
+  quat_t dquat = to;
+  value_type scale1 = clamp_value(delta, 0, 1);
+  value_type scale0 = value_type(1) - delta;
+  return dquat.scale(scale1).add(scaled(scale0)).normalize();
+}
+
+template <typename T>
+inline
+auto operator << (std::ostream &out, const quat_t<T> &in) -> std::ostream&
+{
+  return out << "{ x: " << in.xyz.x << ", y: " << in.xyz.y << ", z: " << in.xyz.z << ", w: " << in.w << " }";
+}
+
+template <typename T, typename Q>
+inline
+auto operator * (const quat_t<T> &lhs,
+                 const quat_t<Q> &rhs) -> quat_t<T>
+{
+  return lhs.product(rhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator * (const quat_t<T> &lhs,
+                 Q rhs) -> quat_t<T>
+{
+  return lhs.scaled(rhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator + (const quat_t<T> &lhs,
+                 const quat_t<Q> &rhs) -> quat_t<T>
+{
+  return lhs.sum(rhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator - (const quat_t<T> &lhs,
+                 const quat_t<Q> &rhs) -> quat_t<T>
+{
+  return lhs.difference(rhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator % (const quat_t<T> &lhs,
+                 const quat_t<Q> &rhs) -> T
+{
+  return lhs.dot_product(rhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator == (const quat_t<T> &lhs,
+                 const quat_t<Q> &rhs) -> bool
+{
+  return
+    is_zero(lhs.xyz.x - rhs.xyz.x) &&
+    is_zero(lhs.xyz.y - rhs.xyz.y) &&
+    is_zero(lhs.xyz.z - rhs.xyz.z) &&
+    is_zero(lhs.w - rhs.w);
+}
+
+template <typename T, typename Q>
+inline
+auto operator != (const quat_t<T> &lhs,
+                  const quat_t<Q> &rhs) -> bool
+{
+  return !(lhs == rhs);
+}
 
 
 
 /*==============================================================================
 
   Line (ported over from Mark Sibly's Blitz3D maths routines)
+  Not required to be a POD type, though it may end up being one due to
+  restrictions placed on other types.
 
 ==============================================================================*/
 
@@ -754,6 +1175,11 @@ struct line_t
 template <typename T = float>
 struct mat4_t
 {
+  static_assert(std::is_floating_point<T>::value,
+                "value_type must be floating point type");
+  static_assert(std::is_scalar<T>::value,
+                "value_type must be scalar type");
+
   typedef T value_type;
   typedef vec3_t<value_type> vec3;
   typedef vec4_t<value_type> vec4;
@@ -1089,6 +1515,7 @@ struct mat4_t
 
   auto operator[] (int index) -> value_type&
   {
+    static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to use subscript operator");
     if (index < 0 || index > 15)
       throw std::out_of_range("attempt to access out of range element");
     return (&m00)[index];
@@ -1096,6 +1523,7 @@ struct mat4_t
 
   auto operator[] (int index) const -> value_type
   {
+    static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to use subscript operator");
     if (index < 0 || index > 15)
       throw std::out_of_range("attempt to access out of range element");
     return (&m00)[index];
@@ -1103,11 +1531,13 @@ struct mat4_t
 
   operator value_type* ()
   {
+    static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to cast to value_type pointer");
     return &m00;
   }
 
   operator const value_type* () const
   {
+    static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to cast to value_type pointer");
     return &m00;
   }
 
@@ -1248,8 +1678,8 @@ template <typename T>
 auto mat4_t<T>::rotation(value_type angle, const vec3 &axis) -> mat4_t
 {
   angle *= S_DEG2RAD;
-  const value_type  c = static_cast<value_type>(cosf(angle));
-  const value_type  s = static_cast<value_type>(sinf(angle));
+  const value_type  c = static_cast<value_type>(std::cos(angle));
+  const value_type  s = static_cast<value_type>(std::sin(angle));
   const value_type ic = value_type(1) - c;
   const value_type xy = axis.x * axis.y * ic;
   const value_type yz = axis.y * axis.z * ic;
