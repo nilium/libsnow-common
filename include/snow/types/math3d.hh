@@ -80,6 +80,26 @@ long double max_value<long double>() { return LDBL_MAX; }
 
 
 /*==============================================================================
+  clamp_value
+
+    Clamps a value from the given minimum value to the maximum value.
+==============================================================================*/
+template <typename T>
+inline
+T clamp_value(T val, T min, T max)
+{
+  return (val < min ? min : (val > max ? max : val));
+}
+
+template <typename T, typename Q, typename R>
+inline
+T clamp_value(T val, Q min, R max)
+{
+  return (val < min ? static_cast<T>(min) : (val > max ? static_cast<T>(max) : val));
+}
+
+
+/*==============================================================================
 
   3-Component Vector
 
