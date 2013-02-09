@@ -245,6 +245,11 @@ struct vec3_t {
     return scale(scalar);
   }
 
+  auto operator *= (const vec3_t &other) -> vec3_t&
+  {
+    return scale(other);
+  }
+
   auto operator /= (value_type scalar) -> vec3_t&
   {
     return scale(value_type(1) / scalar);
@@ -519,6 +524,11 @@ struct vec4_t {
   auto operator *= (value_type scalar) -> vec4_t&
   {
     return scale(scalar);
+  }
+
+  auto operator *= (const vec4_t &other) -> vec4_t&
+  {
+    return scale(other);
   }
 
   auto operator /= (value_type scalar) -> vec4_t&
