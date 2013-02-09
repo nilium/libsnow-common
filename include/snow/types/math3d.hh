@@ -14,6 +14,7 @@ namespace snow {
 
 // General degrees-to-radians constant
 #define S_DEG2RAD (0.01745329251)
+#define S_EPSILON (1e-5)
 
 
 
@@ -35,21 +36,21 @@ template <>
 inline
 bool is_zero<float>(float value)
 {
-  return fabs(value) < FLT_EPSILON;
+  return std::abs(value) < S_EPSILON;
 }
 
 template <>
 inline
 bool is_zero<double>(double value)
 {
-  return fabs(value) < DBL_EPSILON;
+  return std::abs(value) < S_EPSILON;
 }
 
 template <>
 inline
 bool is_zero<long double>(long double value)
 {
-  return fabs(value) < LDBL_EPSILON;
+  return std::abs(value) < S_EPSILON;
 }
 
 
