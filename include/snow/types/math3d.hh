@@ -1295,7 +1295,8 @@ auto mat4_t<T>::look_at(const vec3 &eye, const vec3& center,
 {
   vec3 facing_norm = (center - eye).normalize();
   vec3 up_norm = up.normalized();
-  vec3 s = (facing_norm * up_norm).normalize();
+  vec3 s = (facing_norm.cross_product(up_norm)).normalize();
+  up_norm = s.cross_product(facing_norm);
   facing_norm.negate();
   up_norm.y = - up_norm.y;
 
