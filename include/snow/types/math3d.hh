@@ -1859,10 +1859,10 @@ struct mat4_t
   auto set_rowvec4(int index, const vec4 &row) -> mat4_t&
   {
     switch (index) {
-      case 0: m00 = row.x; m01 = row.y; m02 = row.z; m03 = row.w; break;
-      case 1: m10 = row.x; m11 = row.y; m12 = row.z; m13 = row.w; break;
-      case 2: m20 = row.x; m21 = row.y; m22 = row.z; m23 = row.w; break;
-      case 3: m30 = row.x; m31 = row.y; m32 = row.z; m33 = row.w; break;
+      case 0: m00 = row.x; m10 = row.y; m20 = row.z; m30 = row.w; break;
+      case 1: m01 = row.x; m11 = row.y; m21 = row.z; m31 = row.w; break;
+      case 2: m02 = row.x; m12 = row.y; m22 = row.z; m32 = row.w; break;
+      case 3: m03 = row.x; m13 = row.y; m23 = row.z; m33 = row.w; break;
       default: throw std::out_of_range("attempt to access out of range row");
     }
     return *this;
@@ -1905,10 +1905,10 @@ struct mat4_t
   auto set_rowvec3(int index, const vec3 &row) -> mat4_t&
   {
     switch (index) {
-      case 0: m00 = row.x; m01 = row.y; m02 = row.z; m03 = 0; break;
-      case 1: m10 = row.x; m11 = row.y; m12 = row.z; m13 = 0; break;
-      case 2: m20 = row.x; m21 = row.y; m22 = row.z; m23 = 0; break;
-      case 3: m30 = row.x; m31 = row.y; m32 = row.z; m33 = 1; break;
+      case 0: m00 = row.x; m10 = row.y; m20 = row.z; break;
+      case 1: m01 = row.x; m11 = row.y; m21 = row.z; break;
+      case 2: m02 = row.x; m12 = row.y; m22 = row.z; break;
+      case 3: m03 = row.x; m13 = row.y; m23 = row.z; break;
       default: throw std::out_of_range("attempt to access out of range row");
     }
     return *this;
@@ -1917,10 +1917,10 @@ struct mat4_t
   auto set_colvec3(int index, const vec3 &col) -> mat4_t&
   {
     switch (index) {
-      case 0: m00 = col.x; m01 = col.y; m02 = col.z; m03 = 0; break;
-      case 1: m10 = col.x; m11 = col.y; m12 = col.z; m13 = 0; break;
-      case 2: m20 = col.x; m21 = col.y; m22 = col.z; m23 = 0; break;
-      case 3: m30 = col.x; m31 = col.y; m32 = col.z; m33 = 1; break;
+      case 0: m00 = col.x; m01 = col.y; m02 = col.z; break;
+      case 1: m10 = col.x; m11 = col.y; m12 = col.z; break;
+      case 2: m20 = col.x; m21 = col.y; m22 = col.z; break;
+      case 3: m30 = col.x; m31 = col.y; m32 = col.z; break;
       default: throw std::out_of_range("attempt to access out of range column");
     }
     return *this;
