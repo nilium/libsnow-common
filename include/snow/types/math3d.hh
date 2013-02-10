@@ -101,6 +101,13 @@ vec3_t<value_type>
   auto negate() -> vec3_t&
     Negate this vector.
   ------------------------------------------------------------------------------
+  auto inverse() const -> vec4_t
+    Returns the inverse of this vector. In other words, 1 / component for each
+    component of the vector.
+  ------------------------------------------------------------------------------
+  auto invert() -> vec4_t&
+    Inverts this vector.
+  ------------------------------------------------------------------------------
   auto cross_product(const vec3_t &other) const -> vec3_t
     Get the cross product of this vector and another vector.
   ------------------------------------------------------------------------------
@@ -126,6 +133,9 @@ vec3_t<value_type>
   ------------------------------------------------------------------------------
   auto operator - () const -> vec3_t
     Get the negation of this vector.
+  ------------------------------------------------------------------------------
+  auto operator ~ () const -> vec3_t
+    Get the inverse of this vector.
   ------------------------------------------------------------------------------
   auto operator - (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> vec3_t<T>
     Difference operator.
@@ -226,6 +236,13 @@ vec4_t<value_type>
   ------------------------------------------------------------------------------
   auto negate() -> vec4_t&
     Negate this vector.
+    ------------------------------------------------------------------------------
+  auto inverse() const -> vec4_t
+    Returns the inverse of this vector. In other words, 1 / component for each
+    component of the vector.
+  ------------------------------------------------------------------------------
+  auto invert() -> vec4_t&
+    Inverts this vector.
   ------------------------------------------------------------------------------
   auto dot_product(const vec4_t &other) const -> value_type
     Get the dot product of this vector and another vector.
@@ -249,6 +266,9 @@ vec4_t<value_type>
   ------------------------------------------------------------------------------
   auto operator - () const -> vec4_t
     Get the negation of this vector.
+  ------------------------------------------------------------------------------
+  auto operator ~ () const -> vec4_t
+    Get the inverse of this vector.
   ------------------------------------------------------------------------------
   auto operator - (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> vec4_t<T>
     Difference operator.
@@ -394,6 +414,9 @@ quat_t<value_type>
   ------------------------------------------------------------------------------
   auto operator - () const -> quat_t
     Returns the negation - not the inverse - of this quaternion.
+  ------------------------------------------------------------------------------
+  auto operator ~ () const -> quat_t
+    Returns the inverse of this quaternion.
   ------------------------------------------------------------------------------
   auto operator * (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> quat_t<T>
     Returns the product of this quaternion and another quaternion.
@@ -881,6 +904,29 @@ struct alignas(4) vec3_t {
     return *this;
   }
 
+  auto inverse() const -> vec3_t
+  {
+    return {
+      (x != 0 ? value_type(1) / x : x),
+      (y != 0 ? value_type(1) / y : y),
+      (z != 0 ? value_type(1) / z : z)
+    };
+  }
+
+  auto invert() -> vec3_t&
+  {
+    if (x != 0) {
+      x = value_type(1) / x;
+    }
+    if (y != 0) {
+      y = value_type(1) / y;
+    }
+    if (z != 0) {
+      z = value_type(1) / z;
+    }
+    return *this;
+  }
+
   auto cross_product(const vec3_t &other) const -> vec3_t
   {
     return {
@@ -923,6 +969,11 @@ struct alignas(4) vec3_t {
   auto operator - () const -> vec3_t
   {
     return negated();
+  }
+
+  auto operator ~ () const -> vec3_t
+  {
+    return inverse();
   }
 
   auto operator[] (int index) -> value_type&
@@ -1201,6 +1252,33 @@ struct alignas(4) vec4_t {
     return *this;
   }
 
+  auto inverse() const -> vec4_t
+  {
+    return {
+      (x != 0 ? value_type(1) / x : x),
+      (y != 0 ? value_type(1) / y : y),
+      (z != 0 ? value_type(1) / z : z),
+      (w != 0 ? value_type(1) / w : w)
+    };
+  }
+
+  auto invert() -> vec4_t&
+  {
+    if (x != 0) {
+      x = value_type(1) / x;
+    }
+    if (y != 0) {
+      y = value_type(1) / y;
+    }
+    if (z != 0) {
+      z = value_type(1) / z;
+    }
+    if (w != 0) {
+      w = value_type(1) / w;
+    }
+    return *this;
+  }
+
   auto dot_product(const vec4_t &other) const -> value_type
   {
     return x * other.x + y * other.y + z * other.z + w * other.w;
@@ -1234,6 +1312,11 @@ struct alignas(4) vec4_t {
   auto operator - () const -> vec4_t
   {
     return negated();
+  }
+
+  auto operator ~ () const -> vec4_t
+  {
+    return inverse();
   }
 
   auto operator[] (int index) -> value_type&
@@ -1573,6 +1656,11 @@ struct alignas(4) quat_t {
   }
 
   auto operator - () const -> quat_t
+  {
+    return negated();
+  }
+
+  auto operator ~ () const -> quat_t
   {
     return inverse();
   }
