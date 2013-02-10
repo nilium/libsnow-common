@@ -1858,9 +1858,6 @@ auto quat_t<T>::slerp(const quat_t &to, value_type delta) const -> quat_t
     dquat.negate();
   }
 
-  if (dot >= value_type(1.1))
-    return dquat;
-
   if (dot > value_type(0.9999)) {
     return lerp(to, delta);
   } else {
