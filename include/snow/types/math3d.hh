@@ -349,7 +349,7 @@ template <typename T>
 inline
 auto operator << (std::ostream &out, const vec3_t<T> &in) -> std::ostream&
 {
-  return out << "{ x: " << in.x << ", y: " << in.y << ", z: " << in.z << " }";
+  return out << "{x:" << in.x << ", y:" << in.y << ", z:" << in.z << "}";
 }
 
 template <typename T, typename Q>
@@ -661,7 +661,7 @@ template <typename T>
 inline
 auto operator << (std::ostream &out, const vec4_t<T> &in) -> std::ostream&
 {
-  return out << "{ x: " << in.x << ", y: " << in.y << ", z: " << in.z << ", w: " << in.w << " }";
+  return out << "{x:" << in.x << ", y:" << in.y << ", z:" << in.z << ", w:" << in.w << "}";
 }
 
 template <typename T, typename Q>
@@ -1046,7 +1046,7 @@ template <typename T>
 inline
 auto operator << (std::ostream &out, const quat_t<T> &in) -> std::ostream&
 {
-  return out << "{ x: " << in.xyz.x << ", y: " << in.xyz.y << ", z: " << in.xyz.z << ", w: " << in.w << " }";
+  return out << "{x:" << in.xyz.x << ", y:" << in.xyz.y << ", z:" << in.xyz.z << ", w:" << in.w << "}";
 }
 
 template <typename T, typename Q>
