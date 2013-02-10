@@ -575,7 +575,7 @@ struct mat4_t;
 ==============================================================================*/
 
 template <typename T = float>
-struct vec3_t {
+struct alignas(4) vec3_t {
   static_assert(std::is_floating_point<T>::value,
                 "value_type must be floating point type");
   static_assert(std::is_scalar<T>::value,
@@ -884,7 +884,7 @@ auto operator != (const vec3_t<T> &lhs,
 ==============================================================================*/
 
 template <typename T = float>
-struct vec4_t {
+struct alignas(4) vec4_t {
   static_assert(std::is_floating_point<T>::value,
                 "value_type must be floating point type");
   static_assert(std::is_scalar<T>::value,
@@ -1197,7 +1197,7 @@ auto operator != (const vec4_t<T> &lhs,
 ==============================================================================*/
 
 template <typename T = float>
-struct quat_t {
+struct alignas(4) quat_t {
   static_assert(std::is_floating_point<T>::value,
                 "value_type must be floating point type");
   static_assert(std::is_scalar<T>::value,
@@ -1719,7 +1719,7 @@ struct line_t
 ==============================================================================*/
 
 template <typename T = float>
-struct mat4_t
+struct alignas(4) mat4_t
 {
   static_assert(std::is_floating_point<T>::value,
                 "value_type must be floating point type");
