@@ -10,6 +10,462 @@
 #include <iostream>
 #include <type_traits>
 
+/*==============================================================================
+                                   REFERENCE
+================================================================================
+
+This is a basic collection of templatized POD 3D maths structs for C++.
+
+They're not optimized for SSE or any other special cases. Essentially, they are
+generic and therefore likely to work just about anywhere a C++11 compiler will
+work. So, more or less everywhere. In many instances, you'd likely be better
+served by using something like GLM, though with this code, you can effectively
+create an array of vec3_ts to represent vertices, screw with them, and then pass
+them to OpenGL or something. So, there are some small benefits.
+
+It may also help to have POD types for serialization, though in reality this
+shouldn't be your concern with 3D maths types.
+
+
+================================================================================
+
+
+Included 3D maths types:
+  - vec3_t<T>          3-component vector
+  - vec4_t<T>          4-component vector
+  - quat_t<T>          quaternion
+  - line_t<T>          more or less a ray
+  - mat4_t<T>          4x4 square matrix
+
+
+================================================================================
+
+
+vec3_t<value_type>
+{
+  ////// Member variables //////
+
+  value_type  x
+  value_type  y
+  value_type  z
+
+  /////// Static Members ///////
+
+  vec3_t zero       -> Zero vector -> { 0, 0, 0 }
+  vec3_t one        -> One vector  -> { 1, 1, 1 }
+
+  ////// Instance Methods //////
+
+  auto normalize() -> vec3_t&
+    Get the result of normalizing this vector.
+  ------------------------------------------------------------------------------
+  auto normalized() const -> vec3_t
+    Normalize this vector.
+  ------------------------------------------------------------------------------
+  auto magnitude() const -> value_type
+    Get the magnitude of this vector.
+  ------------------------------------------------------------------------------
+  auto length() const -> value_type
+    Get the squared length of this vector.
+  ------------------------------------------------------------------------------
+  auto difference(const vec3_t &other) const -> vec3_t
+    Get the difference of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto subtract(const vec3_t &other) -> vec3_t&
+    Subtract another vector from this vector.
+  ------------------------------------------------------------------------------
+  auto sum(const vec3_t &other) const -> vec3_t
+    Get the sum of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto add(const vec3_t &other) -> vec3_t&
+    Add another vector to this vector.
+  ------------------------------------------------------------------------------
+  auto scaled(const vec3_t &other) const -> vec3_t
+    Get the result of scaling this vector by another vector.
+  ------------------------------------------------------------------------------
+  auto scale(const vec3_t &other) -> vec3_t&
+    Scale this vector by another vector.
+  ------------------------------------------------------------------------------
+  auto scaled(value_type scalar) const -> vec3_t
+    Get the result of scaling this vector by a scalar.
+  ------------------------------------------------------------------------------
+  auto scale(value_type scalar) -> vec3_t&
+    Scale this vector by a scalar.
+  ------------------------------------------------------------------------------
+  auto negated() const -> vec3_t
+    Get the negation of this vector.
+  ------------------------------------------------------------------------------
+  auto negate() -> vec3_t&
+    Negate this vector.
+  ------------------------------------------------------------------------------
+  auto cross_product(const vec3_t &other) const -> vec3_t
+    Get the cross product of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto dot_product(const vec3_t &other) const -> value_type
+    Get the dot product of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto operator += (const vec3_t &other) -> vec3_t&
+    Adds another vector to this vector.
+  ------------------------------------------------------------------------------
+  auto operator -= (const vec3_t &other) -> vec3_t&
+    Subtracts another vector from this vector.
+  ------------------------------------------------------------------------------
+  auto operator *= (const vec3_t &other) -> vec3_t&
+    Scales this vector by another vector.
+  ------------------------------------------------------------------------------
+  auto operator *= (value_type scalar) -> vec3_t&
+    Scales this vector by a scalar.
+  ------------------------------------------------------------------------------
+  auto operator /= (value_type scalar) -> vec3_t&
+    Scales this vector by one over the scalar provided. In the event that the
+    scalar is zero, something bad might happen. Chances are it'll blow your
+    foot off or something.
+  ------------------------------------------------------------------------------
+  auto operator - () const -> vec3_t
+    Get the negation of this vector.
+  ------------------------------------------------------------------------------
+  auto operator - (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> vec3_t<T>
+    Difference operator.
+  ------------------------------------------------------------------------------
+  auto operator + (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> vec3_t<T>
+    Sum operator.
+  ------------------------------------------------------------------------------
+  auto operator * (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> vec3_t<T>
+    Scale-by-vector operator.
+  ------------------------------------------------------------------------------
+  auto operator * (const vec3_t<T> &lhs, Q rhs) -> vec3_t<T>
+    Scale-by-scalar operator.
+  ------------------------------------------------------------------------------
+  auto operator / (const vec3_t<T> &lhs, Q rhs) -> vec3_t<T>
+    Division operator - returns the result of scaling by one over rhs.
+  ------------------------------------------------------------------------------
+  auto operator % (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> T
+    Dot product operator.
+  ------------------------------------------------------------------------------
+  auto operator == (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> bool
+  auto operator != (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> bool
+    Equality operators.
+  ------------------------------------------------------------------------------
+  auto operator << (std::ostream &out, const vec3_t<T> &in) -> std::ostream&
+    Write the vector to an ostream (as text).
+  ------------------------------------------------------------------------------
+  auto operator[] (int index) -> value_type&
+  auto operator[] (int index) const -> value_type
+    Get reference to member at index (e.g., 0 = x, 1 = y, 2 = z, and any other
+    index is an exception [happy birthday]).
+  ------------------------------------------------------------------------------
+  operator value_type* ()
+  operator const value_type* () const
+    Convert to value_type pointer (same as getting &x).
+  ------------------------------------------------------------------------------
+  operator vec3_t<Q> () const
+    Cast this vector to a vector of value_type Q.
+}
+
+
+================================================================================
+
+
+vec4_t<value_type>
+{
+  ////// Member variables //////
+
+  value_type  x
+  value_type  y
+  value_type  z
+  value_type  w
+
+  /////// Static Members ///////
+
+  vec4_t zero       -> Zero vector -> { 0, 0, 0 }
+  vec4_t one        -> One vector  -> { 1, 1, 1 }
+
+  ////// Instance Methods //////
+
+  auto normalize() -> vec4_t&
+    Get the result of normalizing this vector.
+  ------------------------------------------------------------------------------
+  auto normalized() const -> vec4_t
+    Normalize this vector.
+  ------------------------------------------------------------------------------
+  auto magnitude() const -> value_type
+    Get the magnitude of this vector.
+  ------------------------------------------------------------------------------
+  auto length() const -> value_type
+    Get the squared length of this vector.
+  ------------------------------------------------------------------------------
+  auto difference(const vec4_t &other) const -> vec4_t
+    Get the difference of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto subtract(const vec4_t &other) -> vec4_t&
+    Subtract another vector from this vector.
+  ------------------------------------------------------------------------------
+  auto sum(const vec4_t &other) const -> vec4_t
+    Get the sum of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto add(const vec4_t &other) -> vec4_t&
+    Add another vector to this vector.
+  ------------------------------------------------------------------------------
+  auto scaled(const vec4_t &other) const -> vec4_t
+    Get the result of scaling this vector by another vector.
+  ------------------------------------------------------------------------------
+  auto scale(const vec4_t &other) -> vec4_t&
+    Scale this vector by another vector.
+  ------------------------------------------------------------------------------
+  auto scaled(value_type scalar) const -> vec4_t
+    Get the result of scaling this vector by a scalar.
+  ------------------------------------------------------------------------------
+  auto scale(value_type scalar) -> vec4_t&
+    Scale this vector by a scalar.
+  ------------------------------------------------------------------------------
+  auto negated() const -> vec4_t
+    Get the negation of this vector.
+  ------------------------------------------------------------------------------
+  auto negate() -> vec4_t&
+    Negate this vector.
+  ------------------------------------------------------------------------------
+  auto dot_product(const vec4_t &other) const -> value_type
+    Get the dot product of this vector and another vector.
+  ------------------------------------------------------------------------------
+  auto operator += (const vec4_t &other) -> vec4_t&
+    Adds another vector to this vector.
+  ------------------------------------------------------------------------------
+  auto operator -= (const vec4_t &other) -> vec4_t&
+    Subtracts another vector from this vector.
+  ------------------------------------------------------------------------------
+  auto operator *= (const vec4_t &other) -> vec4_t&
+    Scales this vector by another vector.
+  ------------------------------------------------------------------------------
+  auto operator *= (value_type scalar) -> vec4_t&
+    Scales this vector by a scalar.
+  ------------------------------------------------------------------------------
+  auto operator /= (value_type scalar) -> vec4_t&
+    Scales this vector by one over the scalar provided. In the event that the
+    scalar is zero, something bad might happen. Chances are it'll blow your
+    foot off or something.
+  ------------------------------------------------------------------------------
+  auto operator - () const -> vec4_t
+    Get the negation of this vector.
+  ------------------------------------------------------------------------------
+  auto operator - (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> vec4_t<T>
+    Difference operator.
+  ------------------------------------------------------------------------------
+  auto operator + (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> vec4_t<T>
+    Sum operator.
+  ------------------------------------------------------------------------------
+  auto operator * (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> vec4_t<T>
+    Scale-by-vector operator.
+  ------------------------------------------------------------------------------
+  auto operator * (const vec4_t<T> &lhs, Q rhs) -> vec4_t<T>
+    Scale-by-scalar operator.
+  ------------------------------------------------------------------------------
+  auto operator / (const vec4_t<T> &lhs, Q rhs) -> vec4_t<T>
+    Division operator - returns the result of scaling by one over rhs.
+  ------------------------------------------------------------------------------
+  auto operator % (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> T
+    Dot product operator.
+  ------------------------------------------------------------------------------
+  auto operator == (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> bool
+  auto operator != (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> bool
+    Equality operators.
+  ------------------------------------------------------------------------------
+  auto operator << (std::ostream &out, const vec4_t<T> &in) -> std::ostream&
+    Write the vector to an ostream (as text).
+  ------------------------------------------------------------------------------
+  auto operator[] (int index) -> value_type&
+  auto operator[] (int index) const -> value_type
+    Get reference to member at index (e.g., 0 = x, 1 = y, 2 = z, 3 = w, and
+    any other index is an exception [happy birthday]).
+  ------------------------------------------------------------------------------
+  operator value_type* ()
+  operator const value_type* () const
+    Convert to value_type pointer (same as getting &x).
+  ------------------------------------------------------------------------------
+  operator vec4_t<Q> () const
+    Cast this vector to a vector of value_type Q.
+}
+
+
+================================================================================
+
+
+quat_t<value_type>
+{
+  ////// Member variables //////
+
+  vec3_t      xyz
+  value_type  w
+
+  /////// Static Members ///////
+
+  quat_t zero       -> Zero quaternion     -> { 0, 0, 0, 0 }
+  quat_t one        -> One quaternion      -> { 1, 1, 1, 0 }
+  quat_t identity   -> Identity quaternion -> { 0, 0, 0, 1 }
+
+  auto from_mat4(const mat4_t& mat) -> quat_t
+    Constructs a quaternion from a 4x4 matrix.
+  ------------------------------------------------------------------------------
+  auto from_angle_axis(value_type angle, const vec3_t &axis) -> quat_t
+    Constructs a quaternion representation rotation about the given axis.
+
+  ////// Instance Methods //////
+
+  auto length() const -> value_type
+    See vec4::length.
+  ------------------------------------------------------------------------------
+  auto magnitude() const -> value_type
+    See vec4::magnitude.
+  ------------------------------------------------------------------------------
+  auto inverse() const -> quat_t
+    Returns the inverse of this quaternion.
+  ------------------------------------------------------------------------------
+  auto invert() -> quat_t&
+    Inverts this quaternion.
+  ------------------------------------------------------------------------------
+  auto negated() const -> quat_t
+    Returns the negation of this quaternion (see vec4::negated).
+  ------------------------------------------------------------------------------
+  auto negate() -> quat_t&
+    Negates this quaternion (see vec4::negate).
+  ------------------------------------------------------------------------------
+  auto product(const quat_t& other) const -> quat_t
+    Gets the product of this and another quaternion.
+  ------------------------------------------------------------------------------
+  auto multiply(const quat_t& other) -> quat_t&
+    Multiplies this quaternion by another quaternion.
+  ------------------------------------------------------------------------------
+  auto normalized() const -> quat_t
+    See vec4::normalized.
+  ------------------------------------------------------------------------------
+  auto normalize() -> quat_t&
+    See vec4::normalize.
+  ------------------------------------------------------------------------------
+  auto difference(const quat_t &other) const -> quat_t
+    See vec4::difference.
+  ------------------------------------------------------------------------------
+  auto subtract(const quat_t &other) -> quat_t&
+    See vec4::subtract.
+  ------------------------------------------------------------------------------
+  auto sum(const quat_t &other) const -> quat_t
+    See vec4::sum.
+  ------------------------------------------------------------------------------
+  auto add(const quat_t &other) -> quat_t&
+    See vec4::add.
+  ------------------------------------------------------------------------------
+  auto scaled(value_type scalar) const -> quat_t
+    See vec4::scaled.
+  ------------------------------------------------------------------------------
+  auto scaled(const quat_t &other) const -> quat_t
+    See vec4::scaled.
+  ------------------------------------------------------------------------------
+  auto scale(value_type scalar) -> quat_t&
+    See vec4::scale.
+  ------------------------------------------------------------------------------
+  auto scale(const quat_t &other) -> quat_t&
+    See vec4::scale.
+  ------------------------------------------------------------------------------
+  auto dot_product(const quat_t &other) const -> value_type
+    See vec4::dot_product.
+  ------------------------------------------------------------------------------
+  auto slerp(const quat_t &to, value_type delta) const -> quat_t
+    Interpolates from this quaternion to another using spherical linear
+    interpolation and returns the result. For sufficiently small rotations,
+    it will revert to linear interpolation (see quat::lerp).
+  ------------------------------------------------------------------------------
+  auto lerp(const quat_t &to, value_type delta) const -> quat_t
+    Interpolates from this quaternion to another using linear interpolation.
+    The result is always normalized.
+  ------------------------------------------------------------------------------
+  auto operator *= (const quat_t &other) -> quat_t&
+    Multiplies this quaternion by another.
+  ------------------------------------------------------------------------------
+  auto operator *= (value_type scalar) -> quat_t&
+    Scales this quaternion with a scalar.
+  ------------------------------------------------------------------------------
+  auto operator += (const quat_t &other) -> quat_t&
+    Adds another quaternion to this quaternion.
+  ------------------------------------------------------------------------------
+  auto operator -= (const quat_t &other) -> quat_t&
+    Subtracts another quaternion from this quaternion.
+  ------------------------------------------------------------------------------
+  auto operator - () const -> quat_t
+    Returns the negation - not the inverse - of this quaternion.
+  ------------------------------------------------------------------------------
+  auto operator * (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> quat_t<T>
+    Returns the product of this quaternion and another quaternion.
+  ------------------------------------------------------------------------------
+  auto operator * (const quat_t<T> &lhs, Q rhs) -> quat_t<T>
+    Returns the product of this quaternion and a scalar.
+  ------------------------------------------------------------------------------
+  auto operator + (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> quat_t<T>
+    Returns the sum of this quaternion and another quaternion.
+  ------------------------------------------------------------------------------
+  auto operator - (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> quat_t<T>
+    Returns the difference of this quaternion and another quaternion.
+  ------------------------------------------------------------------------------
+  auto operator % (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> T
+    Returns the dot product of this quaternion and another quaternion.
+  ------------------------------------------------------------------------------
+  auto operator == (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> bool
+  auto operator != (const quat_t<T> &lhs, const quat_t<Q> &rhs) -> bool
+    Equality operators.
+  ------------------------------------------------------------------------------
+  auto operator[] (int index) -> value_type&
+  auto operator[] (int index) const -> value_type
+    Get reference to member at index (0 = x, 1 = y, 2 = z, 3 = w; any other
+    index throws an exception).
+  ------------------------------------------------------------------------------
+  operator value_type* ()
+  operator const value_type* () const
+    Convert to value_type pointer (same as getting &xyz.x).
+  ------------------------------------------------------------------------------
+  auto operator << (std::ostream &out, const quat_t<T> &in) -> std::ostream&
+    Writes this quaternion to an output stream (uses text).
+  ------------------------------------------------------------------------------
+  operator quat_t<Q> () const
+    Cast this quaternion to a quaternion of value_type Q.
+}
+
+
+================================================================================
+
+
+line_t<value_type>
+{
+  ////// Member variables //////
+
+  vec3_t  origin
+  vec3_t  dest
+
+  ////// Instance Methods //////
+}
+
+
+
+mat4_t<value_type>
+{
+  ////// Member variables //////
+
+  value_type  m00, m10, m20, m30
+  value_type  m01, m11, m21, m31
+  value_type  m02, m12, m22, m32
+  value_type  m03, m13, m23, m33
+
+  /////// Static Members ///////
+
+  mat4_t zero       -> Zero matrix
+  mat4_t identity   -> Identity matrix
+
+
+
+  ////// Instance Methods //////
+}
+
+================================================================================
+                                 END REFERENCE
+==============================================================================*/
+
+
 namespace snow {
 
 
