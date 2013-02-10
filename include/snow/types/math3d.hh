@@ -438,7 +438,7 @@ line_t<value_type>
   ////// Member variables //////
 
   vec3_t  origin
-  vec3_t  dest
+  vec3_t  dist
 
   ////// Instance Methods //////
 }
@@ -1811,17 +1811,17 @@ struct line_t
 {
   typedef T value_type;
   typedef vec3_t<value_type> vec3;
-  vec3 origin, dest;
+  vec3 origin, dist;
 
   auto end() const -> vec3
   {
-    return origin + dest;
+    return origin + dist;
   }
 
   auto translated(const vec3 &d) const -> line_t
   {
     return {
-      origin + d, dest
+      origin + d, dist
     };
   }
 
@@ -1834,13 +1834,13 @@ struct line_t
   auto scaled(value_type d) const -> line_t
   {
     return {
-        origin, dest * d
+        origin, dist * d
     };
   }
 
   auto scale(value_type d) -> line_t&
   {
-    dest *= d;
+    dist *= d;
     return *this;
   }
 
@@ -1848,7 +1848,7 @@ struct line_t
   {
     // This is borrowed from Mark Sibly's Blitz3D maths code since it's
     // really rather nice.
-    return end().scale(dest.dot_product(p - origin) / dest.dot_product(dest));
+    return end().scale(dist.dot_product(p - origin) / dist.dot_product(dist));
   }
 };
 
