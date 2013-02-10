@@ -305,6 +305,7 @@ quat_t<value_type>
   quat_t one        -> One quaternion      -> { 1, 1, 1, 0 }
   quat_t identity   -> Identity quaternion -> { 0, 0, 0, 1 }
 
+
   auto from_mat4(const mat4_t& mat) -> quat_t
     Constructs a quaternion from a 4x4 matrix.
   ------------------------------------------------------------------------------
@@ -441,8 +442,24 @@ line_t<value_type>
   vec3_t  dist
 
   ////// Instance Methods //////
+
+  auto end() const -> vec3
+    Get the end-point of the line.
+  ------------------------------------------------------------------------------
+  auto translated(const vec3 &d) const -> line_t
+  auto translate(const vec3 &d) -> line_t&
+    Translate the line's origin by vector `d`.
+  ------------------------------------------------------------------------------
+  auto scaled(value_type d) const -> line_t
+  auto scale(value_type d) -> line_t&
+    Scale the line by scalar `d`.
+  ------------------------------------------------------------------------------
+  auto nearest_to(const vec3& p) const -> vec3
+    Get the nearest point on the line to point `p`.
 }
 
+
+================================================================================
 
 
 mat4_t<value_type>
