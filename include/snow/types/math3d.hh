@@ -757,6 +757,12 @@ struct quat_t {
   static const quat_t one;
   static const quat_t identity;
 
+  static
+  auto from_angle_axis(value_type angle, const vec3 &axis) -> quat_t;
+
+  static
+  auto from_mat4(const mat4_t<value_type> &mat) -> quat_t;
+
   auto length() const -> value_type
   {
     return xyz.length() + w * w;
@@ -992,6 +998,79 @@ const quat_t<T> quat_t<T>::one = { { 1, 1, 1 }, 1 };
 
 template <typename T>
 const quat_t<T> quat_t<T>::identity = { { 0, 0, 0 }, 1 };
+
+template <typename T>
+auto quat_t<T>::from_angle_axis(value_type angle, const vec3 &axis) -> quat_t
+{
+  vec3 axis_n = axis.normalized();
+  value_type s;
+  angle *= S_DEG2RAD * 0.5;
+  s = std::sin(angle);
+
+  return {
+    axis_n * s,
+    std::cos(angle)
+  };
+}
+
+template <typename T>
+auto quat_t<T>::from_mat4(const mat4_t<value_type> &mat) -> quat_t
+{
+  quat_t out;
+  value_type r;
+  const value_type trace = mat.m00 + mat.m11 + mat.m22;
+  const value_type *m = (value_type *)m;
+  const value_type m01 = mat.m01, m02 = mat.m02, m10 = mat.m10,
+                   m12 = mat.m12, m20 = mat.m20, m21 = mat.m21;
+
+  if (trace > 0) {
+    r = std::sqrt(trace + 1);
+    out.w = r * 0.5;
+    r = 0.5 / r;
+    out.xyz = {
+      (m12 - m21) * r,
+      (m20 - m02) * r,
+      (m01 - m10) * r
+    };
+  } else {
+    int index = 0;
+    if (mat.m11 > mat.m00) {
+      index = 1;
+    }
+    if (mat.m22 > (index ? mat.m11 : mat.m00)) {
+      index = 2;
+    }
+
+    switch (index) {
+    default:
+    case 0:
+      r = out.xyz.x = std::sqrt(mat.m00 - (mat.m11 + mat.m22) + 1) * 0.5;
+      if (r != 0) r = 0.5 / r;
+      out.xyz.y = (m10 + m01) * r;
+      out.xyz.z = (m20 + m02) * r;
+      out.w     = (m12 - m21) * r;
+      break;
+
+    case 1:
+      r = out.xyz.y = std::sqrt(mat.m11 - (mat.m22 + mat.m00) + 1) * 0.5;
+      if (r != 0) r = 0.5 / r;
+      out.xyz.x = (m10 + m01) * r;
+      out.xyz.z = (m12 + m21) * r;
+      out.w     = (m20 - m02) * r;
+      break;
+
+    case 2:
+      r = out.xyz.z = std::sqrt(mat.m11 - (mat.m00 + mat.m11) + 1) * 0.5;
+      if (r != 0) r = 0.5 / r;
+      out.xyz.x = (m20 + m02) * r;
+      out.xyz.y = (m21 + m12) * r;
+      out.w     = (m01 - m10) * r;
+      break;
+    }
+  }
+
+  return out;
+}
 
 template <typename T>
 auto quat_t<T>::slerp(const quat_t &to, value_type delta) const -> quat_t
