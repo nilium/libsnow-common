@@ -1941,6 +1941,47 @@ struct mat4_t
     return temp;
   }
 
+  auto negated() const -> mat4_t
+  {
+    return {
+      -m00, -m10, -m20, -m30,
+      -m01, -m11, -m21, -m31,
+      -m02, -m12, -m22, -m32,
+      -m03, -m13, -m23, -m33
+    };
+  }
+
+  auto negate() -> mat4_t&
+  {
+    m00 = -m00; m10 = -m10; m20 = -m20; m30 = -m30;
+    m01 = -m01; m11 = -m11; m21 = -m21; m31 = -m31;
+    m02 = -m02; m12 = -m12; m22 = -m22; m32 = -m32;
+    m03 = -m03; m13 = -m13; m23 = -m23; m33 = -m33;
+    return *this;
+  }
+
+  auto sum(const mat4_t &other) const -> mat4_t
+  {
+    return {
+      m00 + other.m00,
+      m10 + other.m10,
+      m20 + other.m20,
+      m30 + other.m30,
+      m01 + other.m01,
+      m11 + other.m11,
+      m21 + other.m21,
+      m31 + other.m31,
+      m02 + other.m02,
+      m12 + other.m12,
+      m22 + other.m22,
+      m32 + other.m32,
+      m03 + other.m03,
+      m13 + other.m13,
+      m23 + other.m23,
+      m33 + other.m33
+    };
+  }
+
   auto sum(value_type scalar) const -> mat4_t
   {
     return {
@@ -1961,6 +2002,27 @@ struct mat4_t
       m23 + scalar,
       m33 + scalar
     };
+  }
+
+  auto add(const mat4_t &other) -> mat4_t&
+  {
+    m00 += other.m00;
+    m10 += other.m10;
+    m20 += other.m20;
+    m30 += other.m30;
+    m01 += other.m01;
+    m11 += other.m11;
+    m21 += other.m21;
+    m31 += other.m31;
+    m02 += other.m02;
+    m12 += other.m12;
+    m22 += other.m22;
+    m32 += other.m32;
+    m03 += other.m03;
+    m13 += other.m13;
+    m23 += other.m23;
+    m33 += other.m33;
+    return *this;
   }
 
   auto add(value_type scalar) -> mat4_t&
@@ -2027,6 +2089,49 @@ struct mat4_t
     return *this;
   }
 
+  auto scaled(const mat4_t &other) const -> mat4_t
+  {
+    return {
+      m00 * other.m00,
+      m10 * other.m10,
+      m20 * other.m20,
+      m30 * other.m30,
+      m01 * other.m01,
+      m11 * other.m11,
+      m21 * other.m21,
+      m31 * other.m31,
+      m02 * other.m02,
+      m12 * other.m12,
+      m22 * other.m22,
+      m32 * other.m32,
+      m03 * other.m03,
+      m13 * other.m13,
+      m23 * other.m23,
+      m33 * other.m33
+    };
+  }
+
+  auto scale(const mat4_t &other) -> mat4_t&
+  {
+    m00 *= other.m00;
+    m10 *= other.m10;
+    m20 *= other.m20;
+    m30 *= other.m30;
+    m01 *= other.m01;
+    m11 *= other.m11;
+    m21 *= other.m21;
+    m31 *= other.m31;
+    m02 *= other.m02;
+    m12 *= other.m12;
+    m22 *= other.m22;
+    m32 *= other.m32;
+    m03 *= other.m03;
+    m13 *= other.m13;
+    m23 *= other.m23;
+    m33 *= other.m33;
+    return *this;
+  }
+
   auto scaled(const vec3 &vec) const -> mat4_t
   {
     return {
@@ -2089,6 +2194,26 @@ struct mat4_t
   {
     static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to cast to value_type pointer");
     return &m00;
+  }
+
+  auto operator *= (const mat4_t &other) -> mat4_t&
+  {
+    return multiply(other);
+  }
+
+  auto operator *= (value_type scalar) -> mat4_t&
+  {
+    return scale(scalar);
+  }
+
+  auto operator += (const mat4_t &other) -> mat4_t&
+  {
+    return add(other);
+  }
+
+  auto operator += (value_type scalar) -> mat4_t&
+  {
+    return add(scalar);
   }
 
   auto inverse_affine(mat4_t &out) const -> bool;
@@ -2399,9 +2524,59 @@ auto mat4_t<T>::adjoint() const -> mat4_t
   };
 }
 
-template <typename T>
+template <typename T, typename Q>
+inline
+auto operator * (const mat4_t<T> &rhs,
+                 const mat4_t<Q> &lhs) -> mat4_t<T>
+{
+  return rhs.product(lhs);
+}
+
+
+template <typename T, typename Q>
+inline
+auto operator * (const mat4_t<T> &rhs,
+                 const vec4_t<Q> &lhs) -> vec4_t<T>
+{
+  return rhs.product(lhs);
+}
+
+
+template <typename T, typename Q>
+inline
+auto operator * (const mat4_t<T> &rhs,
+                 const vec3_t<Q> &lhs) -> vec3_t<T>
+{
+  return rhs.product(lhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator * (const mat4_t<T> &rhs,
+                 const Q &lhs) -> mat4_t<T>
+{
+  return rhs.scaled(lhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator + (const mat4_t<T> &rhs,
+                 const mat4_t<Q> &lhs) -> mat4_t<T>
+{
+  return rhs.sum(lhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator + (const mat4_t<T> &rhs,
+                 const Q &lhs) -> mat4_t<T>
+{
+  return rhs.sum(lhs);
+}
+
+template <typename T, typename Q>
 auto operator == (const mat4_t<T> &rhs,
-                  const mat4_t<T> &lhs) -> bool
+                  const mat4_t<Q> &lhs) -> bool
 {
   return
   is_zero(lhs.m00 - rhs.m00) &&
@@ -2424,6 +2599,13 @@ auto operator == (const mat4_t<T> &rhs,
   is_zero(lhs.m31 - rhs.m31) &&
   is_zero(lhs.m32 - rhs.m32) &&
   is_zero(lhs.m33 - rhs.m33);
+}
+
+template <typename T, typename Q>
+auto operator != (const mat4_t<T> &rhs,
+                  const mat4_t<Q> &lhs) -> bool
+{
+  return !(rhs == lhs);
 }
 
 typedef vec3_t<float> vec3f_t;
