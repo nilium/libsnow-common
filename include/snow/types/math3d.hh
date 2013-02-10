@@ -2704,6 +2704,20 @@ auto mat4_t<T>::adjoint() const -> mat4_t
   };
 }
 
+template <typename T>
+inline
+auto operator << (std::ostream &out,
+                  const mat4_t<T> &in) -> std::ostream&
+{
+  out << "{";
+  for (int index = 0; index < 16; ++index) {
+    out << in[index];
+    if (index < 15)
+      out << ", ";
+  }
+  return out << "}";
+}
+
 template <typename T, typename Q>
 inline
 auto operator * (const mat4_t<T> &rhs,
