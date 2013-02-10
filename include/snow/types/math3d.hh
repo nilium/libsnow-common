@@ -2732,7 +2732,7 @@ inline
 auto operator * (const mat4_t<T> &rhs,
                  const vec4_t<Q> &lhs) -> vec4_t<T>
 {
-  return rhs.product(lhs);
+  return rhs.multiply(lhs);
 }
 
 
@@ -2741,7 +2741,7 @@ inline
 auto operator * (const mat4_t<T> &rhs,
                  const vec3_t<Q> &lhs) -> vec3_t<T>
 {
-  return rhs.product(lhs);
+  return rhs.multiply(lhs);
 }
 
 template <typename T, typename Q>
