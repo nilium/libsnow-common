@@ -126,6 +126,9 @@ vec3_t<value_type>
   auto operator *= (value_type scalar) -> vec3_t&
     Scales this vector by a scalar.
   ------------------------------------------------------------------------------
+  auto operator /= (const vec3_t &other) -> vec3_t&
+    Scales this vector by the inverse of another vector.
+  ------------------------------------------------------------------------------
   auto operator /= (value_type scalar) -> vec3_t&
     Scales this vector by one over the scalar provided. In the event that the
     scalar is zero, something bad might happen. Chances are it'll blow your
@@ -148,6 +151,9 @@ vec3_t<value_type>
   ------------------------------------------------------------------------------
   auto operator * (const vec3_t<T> &lhs, Q rhs) -> vec3_t<T>
     Scale-by-scalar operator.
+  ------------------------------------------------------------------------------
+  auto operator / (const vec3_t<T> &lhs, const vec3_t<Q> &rhs) -> vec3_t<T>
+    Returns the product of scaling this vector by the inverse of another vector.
   ------------------------------------------------------------------------------
   auto operator / (const vec3_t<T> &lhs, Q rhs) -> vec3_t<T>
     Division operator - returns the result of scaling by one over rhs.
@@ -259,6 +265,9 @@ vec4_t<value_type>
   auto operator *= (value_type scalar) -> vec4_t&
     Scales this vector by a scalar.
   ------------------------------------------------------------------------------
+  auto operator /= (const vec4_t &other) -> vec4_t&
+    Scales this vector by the inverse of another vector.
+  ------------------------------------------------------------------------------
   auto operator /= (value_type scalar) -> vec4_t&
     Scales this vector by one over the scalar provided. In the event that the
     scalar is zero, something bad might happen. Chances are it'll blow your
@@ -281,6 +290,9 @@ vec4_t<value_type>
   ------------------------------------------------------------------------------
   auto operator * (const vec4_t<T> &lhs, Q rhs) -> vec4_t<T>
     Scale-by-scalar operator.
+  ------------------------------------------------------------------------------
+  auto operator / (const vec4_t<T> &lhs, const vec4_t<Q> &rhs) -> vec4_t<T>
+    Returns the product of scaling this vector by the inverse of another vector.
   ------------------------------------------------------------------------------
   auto operator / (const vec4_t<T> &lhs, Q rhs) -> vec4_t<T>
     Division operator - returns the result of scaling by one over rhs.
@@ -571,6 +583,14 @@ mat4_t<value_type>
   auto add(value_type scalar)   -> mat4_t&
     Add a matrix or a scalar value to this matrix.
   ------------------------------------------------------------------------------
+  auto difference(const mat4_t &other) const -> mat4_t
+  auto difference(value_type scalar) const   -> mat4_t
+    Get the difference of this matrix and another matrix or a scalar value.
+  ------------------------------------------------------------------------------
+  auto subtract(const mat4_t &other) -> mat4_t&
+  auto subtract(value_type scalar)   -> mat4_t&
+    Subtract a matrix or a scalar value from this matrix.
+  ------------------------------------------------------------------------------
   auto scaled(value_type scalar) const -> mat4_t
   auto scale(value_type scalar) -> mat4_t&
     Get the scaled matrix or scale the matrix by a scalar value.
@@ -633,6 +653,10 @@ mat4_t<value_type>
   auto operator += (value_type scalar) -> mat4_t&
     Add operators (see mat4::add).
   ------------------------------------------------------------------------------
+  auto operator -= (const mat4_t &other) -> mat4_t&
+  auto operator -= (value_type scalar) -> mat4_t&
+    Subtract operators (see mat4::subtract).
+  ------------------------------------------------------------------------------
   auto operator * (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> mat4_t<T>
     Product operator (see mat4::product).
   ------------------------------------------------------------------------------
@@ -646,6 +670,10 @@ mat4_t<value_type>
   auto operator + (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> mat4_t<T>
   auto operator + (const mat4_t<T> &rhs, const Q &lhs) -> mat4_t<T>
     Sum operators (see mat4::sum).
+  ------------------------------------------------------------------------------
+  auto operator - (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> mat4_t<T>
+  auto operator - (const mat4_t<T> &rhs, const Q &lhs) -> mat4_t<T>
+    Sum operators (see mat4::difference).
   ------------------------------------------------------------------------------
   auto operator == (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> bool
   auto operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> bool
@@ -966,6 +994,11 @@ struct alignas(4) vec3_t {
     return scale(value_type(1) / scalar);
   }
 
+  auto operator /= (const vec3_t &other) -> vec3_t&
+  {
+    return scale(other.inverse());
+  }
+
   auto operator - () const -> vec3_t
   {
     return negated();
@@ -1058,6 +1091,14 @@ auto operator * (const vec3_t<T> &lhs,
                  Q rhs) -> vec3_t<T>
 {
   return lhs.scaled(static_cast<T>(rhs));
+}
+
+template <typename T, typename Q>
+inline
+auto operator / (const vec3_t<T> &lhs,
+                 const vec3_t<Q> &rhs) -> vec3_t<T>
+{
+  return lhs.scaled(rhs.inverse());
 }
 
 template <typename T, typename Q>
@@ -1309,6 +1350,11 @@ struct alignas(4) vec4_t {
     return scale(value_type(1) / scalar);
   }
 
+  auto operator /= (const vec4_t &other) -> vec4_t&
+  {
+    return scale(other.inverse());
+  }
+
   auto operator - () const -> vec4_t
   {
     return negated();
@@ -1402,6 +1448,14 @@ auto operator * (const vec4_t<T> &lhs,
                  Q rhs) -> vec4_t<T>
 {
   return lhs.scaled(static_cast<T>(rhs));
+}
+
+template <typename T, typename Q>
+inline
+auto operator / (const vec4_t<T> &lhs,
+                 const vec4_t<Q> &rhs) -> vec4_t<T>
+{
+  return lhs.scaled(rhs.inverse());
 }
 
 template <typename T, typename Q>
@@ -2314,6 +2368,93 @@ struct alignas(4) mat4_t
     return *this;
   }
 
+
+  auto difference(const mat4_t &other) const -> mat4_t
+  {
+    return {
+      m00 - other.m00,
+      m10 - other.m10,
+      m20 - other.m20,
+      m30 - other.m30,
+      m01 - other.m01,
+      m11 - other.m11,
+      m21 - other.m21,
+      m31 - other.m31,
+      m02 - other.m02,
+      m12 - other.m12,
+      m22 - other.m22,
+      m32 - other.m32,
+      m03 - other.m03,
+      m13 - other.m13,
+      m23 - other.m23,
+      m33 - other.m33
+    };
+  }
+
+  auto difference(value_type scalar) const -> mat4_t
+  {
+    return {
+      m00 - scalar,
+      m10 - scalar,
+      m20 - scalar,
+      m30 - scalar,
+      m01 - scalar,
+      m11 - scalar,
+      m21 - scalar,
+      m31 - scalar,
+      m02 - scalar,
+      m12 - scalar,
+      m22 - scalar,
+      m32 - scalar,
+      m03 - scalar,
+      m13 - scalar,
+      m23 - scalar,
+      m33 - scalar
+    };
+  }
+
+  auto subtract(const mat4_t &other) -> mat4_t&
+  {
+    m00 -= other.m00;
+    m10 -= other.m10;
+    m20 -= other.m20;
+    m30 -= other.m30;
+    m01 -= other.m01;
+    m11 -= other.m11;
+    m21 -= other.m21;
+    m31 -= other.m31;
+    m02 -= other.m02;
+    m12 -= other.m12;
+    m22 -= other.m22;
+    m32 -= other.m32;
+    m03 -= other.m03;
+    m13 -= other.m13;
+    m23 -= other.m23;
+    m33 -= other.m33;
+    return *this;
+  }
+
+  auto subtract(value_type scalar) -> mat4_t&
+  {
+    m00 -= scalar;
+    m10 -= scalar;
+    m20 -= scalar;
+    m30 -= scalar;
+    m01 -= scalar;
+    m11 -= scalar;
+    m21 -= scalar;
+    m31 -= scalar;
+    m02 -= scalar;
+    m12 -= scalar;
+    m22 -= scalar;
+    m32 -= scalar;
+    m03 -= scalar;
+    m13 -= scalar;
+    m23 -= scalar;
+    m33 -= scalar;
+    return *this;
+  }
+
   auto scaled(value_type scalar) const -> mat4_t
   {
     return {
@@ -2482,6 +2623,16 @@ struct alignas(4) mat4_t
   auto operator += (value_type scalar) -> mat4_t&
   {
     return add(scalar);
+  }
+
+  auto operator -= (const mat4_t &other) -> mat4_t&
+  {
+    return subtract(other);
+  }
+
+  auto operator -= (value_type scalar) -> mat4_t&
+  {
+    return subtract(scalar);
   }
 
   auto inverse_affine(mat4_t &out) const -> bool;
@@ -2854,6 +3005,22 @@ auto operator + (const mat4_t<T> &rhs,
                  const Q &lhs) -> mat4_t<T>
 {
   return rhs.sum(lhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator - (const mat4_t<T> &rhs,
+                 const mat4_t<Q> &lhs) -> mat4_t<T>
+{
+  return rhs.difference(lhs);
+}
+
+template <typename T, typename Q>
+inline
+auto operator - (const mat4_t<T> &rhs,
+                 const Q &lhs) -> mat4_t<T>
+{
+  return rhs.difference(lhs);
 }
 
 template <typename T, typename Q>
