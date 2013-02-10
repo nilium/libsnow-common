@@ -1752,6 +1752,17 @@ struct mat4_t
   }
 
   static
+  auto scaling(const vec3 &off) -> mat4_t
+  {
+    return {
+      off.x, 0, 0, 0,
+      0, off.y, 0, 0,
+      0, 0, off.z, 0,
+      0, 0, 0, 1
+    };
+  }
+
+  static
   auto rotation(value_type angle, const vec3 &axis) -> mat4_t;
 
   static
