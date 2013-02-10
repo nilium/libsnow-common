@@ -1956,16 +1956,16 @@ struct alignas(4) mat4_t
   {
     value_type tx, ty, tz, xx, xy, xz, yy, yz, zz, wx, wy, wz;
 
-    tx = 2.0 * in.x;
-    ty = 2.0 * in.y;
-    tz = 2.0 * in.z;
+    tx = 2.0 * in.xyz.x;
+    ty = 2.0 * in.xyz.y;
+    tz = 2.0 * in.xyz.z;
 
-    xx = tx * in.x;
-    xy = tx * in.y;
-    xz = tx * in.z;
+    xx = tx * in.xyz.x;
+    xy = tx * in.xyz.y;
+    xz = tx * in.xyz.z;
 
-    yy = ty * in.y;
-    yz = tz * in.y;
+    yy = ty * in.xyz.y;
+    yz = tz * in.xyz.y;
 
     zz = tz * in.w;
 
