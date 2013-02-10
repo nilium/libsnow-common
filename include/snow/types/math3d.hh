@@ -37,6 +37,9 @@ Included 3D maths types:
   - line_t<T>          more or less a ray
   - mat4_t<T>          4x4 square matrix
 
+All types must have a value_type of float or double. Long double may also work
+but is completely untested and may break anything that depends on the data types
+in the structures being packed.
 
 ================================================================================
 
@@ -457,8 +460,157 @@ mat4_t<value_type>
   mat4_t identity   -> Identity matrix
 
 
+  auto translation(const vec3 &off) -> mat4_t
+    Creates a translation matrix.
+  ------------------------------------------------------------------------------
+  auto scaling(const vec3 &off) -> mat4_t
+    Creates a scale matrix. Named 'scaling' due to name overlap with
+    mat4::scale(vec3) below.
+  ------------------------------------------------------------------------------
+  auto rotation(value_type angle, const vec3 &axis) -> mat4_t
+    Creates a rotation matrix.
+  ------------------------------------------------------------------------------
+  auto frustum(value_type left, value_type right,
+               value_type bottom, value_type top,
+               value_type near, value_type far) -> mat4_t
+    Creates a perspective projection matrix.
+  ------------------------------------------------------------------------------
+  auto orthographic(value_type left, value_type right,
+                    value_type top, value_type bottom,
+                    value_type near, value_type far) -> mat4_t
+    Creates an orthographic projection matrix.
+  ------------------------------------------------------------------------------
+  auto perspective(value_type fovY, value_type aspect,
+                   value_type near, value_type far) -> mat4_t
+    Creates a perspective projection matrix.
+  ------------------------------------------------------------------------------
+  auto look_at(const vec3 &eye, const vec3& center, const vec3& up) -> mat4_t
+    Creates a look-at matrix.
+  ------------------------------------------------------------------------------
+  auto from_quat(const quat &in) -> mat4_t
+    Converts the given quaternion to a mat4.
+
 
   ////// Instance Methods //////
+
+  auto translate(const vec3 &translation) -> mat4_t&
+  auto translated(const vec3 &translation) const -> mat4_t
+    Translate this matrix or get the translated matrix.
+    In both cases, translates the matrix using a 3-component vector.
+  ------------------------------------------------------------------------------
+  auto transpose()        -> mat4_t&
+  auto transposed() const -> mat4_t
+    Tranpose this matrix or get the transposed matrix.
+  ------------------------------------------------------------------------------
+  auto rowvec4(int index) const -> vec4
+  auto colvec4(int index) const -> vec4
+  auto set_rowvec4(int index, const vec4 &row) -> mat4_t&
+  auto set_colvec4(int index, const vec4 &col) -> mat4_t&
+    Get and set 4-component row and column vectors.
+  ------------------------------------------------------------------------------
+  auto rowvec3(int index) const -> vec3
+  auto colvec3(int index) const -> vec3
+  auto set_rowvec3(int index, const vec3 &row) -> mat4_t&
+  auto set_colvec3(int index, const vec3 &col) -> mat4_t&
+    Get and set 3-component row and column vectors. Does not modify the fourth
+    row or column for given columns and rows when using set_*vec3().
+  ------------------------------------------------------------------------------
+  auto inverse_orthogonal() -> mat4_t
+    Get the inverse orthogonal matrix.
+  ------------------------------------------------------------------------------
+  auto negated() const -> mat4_t
+  auto negate()        -> mat4_t&
+    Get the negation of this matrix. Simply put, this just negates all elements
+    of the matrix.
+  ------------------------------------------------------------------------------
+  auto sum(const mat4_t &other) const -> mat4_t
+  auto sum(value_type scalar) const   -> mat4_t
+    Get the sum of this matrix and another matrix or a scalar value.
+  ------------------------------------------------------------------------------
+  auto add(const mat4_t &other) -> mat4_t&
+  auto add(value_type scalar)   -> mat4_t&
+    Add a matrix or a scalar value to this matrix.
+  ------------------------------------------------------------------------------
+  auto scaled(value_type scalar) const -> mat4_t
+  auto scale(value_type scalar) -> mat4_t&
+    Get the scaled matrix or scale the matrix by a scalar value.
+  ------------------------------------------------------------------------------
+  auto scaled(const mat4_t &other) const -> mat4_t
+  auto scale(const mat4_t &other) -> mat4_t&
+    Get the scaled matrix or scale the matrix by another matrix.
+  ------------------------------------------------------------------------------
+  auto scaled(const vec3 &vec) const -> mat4_t
+  auto scale(const vec3 &vec) -> mat4_t&
+    Get the scaled matrix or scale the matrix by a vec3 (this affects only
+    columns/rows < 3).
+  ------------------------------------------------------------------------------
+  auto inverse_affine(mat4_t &out) const -> bool
+    Get the inverse affine matrix of this matrix.
+  ------------------------------------------------------------------------------
+  auto adjoint() const -> mat4_t
+    Get the adjoint of this matrix.
+  ------------------------------------------------------------------------------
+  auto cofactor(int r0, int r1, int r2, int c0, int c1, int c2) const -> value_type
+    Get the cofactor of the given indices.
+  ------------------------------------------------------------------------------
+  auto determinant() const -> value_type
+    Get the determinant of the matrix.
+  ------------------------------------------------------------------------------
+  auto inverse_general(mat4_t &out) const -> bool
+    Gets the inverse of this matrix if possible. Returns the inverse to the
+    output argument. Returns true if successful, false if not.
+  ------------------------------------------------------------------------------
+  auto product(const mat4_t &other) const -> mat4_t
+  auto multiply(const mat4_t &other) -> mat4_t&
+    Get the product of multipling this and another matrix together, or multiply
+    this matrix by another.
+  ------------------------------------------------------------------------------
+  auto multiply(const vec4 &vec) const -> vec4
+  auto multiply(const vec3 &vec) const -> vec3
+    Transform a vec4 and vec3, respectively.
+  ------------------------------------------------------------------------------
+  auto rotate(const vec3 &vec) const -> vec3
+  auto inverse_rotate(const vec3 &vec) const -> vec3
+    Rotate a vec3. rotate() is the same as multiply(vec3), albeit without
+    translation added.
+  ------------------------------------------------------------------------------
+  auto operator[] (int index) -> value_type&
+  auto operator[] (int index) const -> value_type
+    Returns a reference (or the value at) the index in the matrix. Indices
+    outside the range [0-15] will throw an exception.
+  ------------------------------------------------------------------------------
+  operator value_type* ()
+  operator const value_type* () const
+    Returns a pointer to the first element of the matrix.
+  ------------------------------------------------------------------------------
+  auto operator *= (const mat4_t &other) -> mat4_t&
+    Multiplies this mat4 by the other mat4.
+  ------------------------------------------------------------------------------
+  auto operator *= (value_type scalar) -> mat4_t&
+    Scales this matrix by the given scalar or vec3.
+  ------------------------------------------------------------------------------
+  auto operator += (const mat4_t &other) -> mat4_t&
+  auto operator += (value_type scalar) -> mat4_t&
+    Add operators (see mat4::add).
+  ------------------------------------------------------------------------------
+  auto operator * (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> mat4_t<T>
+    Product operator (see mat4::product).
+  ------------------------------------------------------------------------------
+  auto operator * (const mat4_t<T> &rhs, const vec4_t<Q> &lhs) -> vec4_t<T>
+  auto operator * (const mat4_t<T> &rhs, const vec3_t<Q> &lhs) -> vec3_t<T>
+    Product operators (see mat4::multiply for vectors).
+  ------------------------------------------------------------------------------
+  auto operator * (const mat4_t<T> &rhs, const Q &lhs) -> mat4_t<T>
+    Scaled operator (see mat4::scaled).
+  ------------------------------------------------------------------------------
+  auto operator + (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> mat4_t<T>
+  auto operator + (const mat4_t<T> &rhs, const Q &lhs) -> mat4_t<T>
+    Sum operators (see mat4::sum).
+  ------------------------------------------------------------------------------
+  auto operator == (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> bool
+  auto operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs) -> bool
+    Equality operators.
+
 }
 
 ================================================================================
