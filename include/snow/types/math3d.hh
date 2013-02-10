@@ -1826,8 +1826,12 @@ struct mat4_t
 
   auto transposed() const -> mat4_t
   {
-    mat4_t t = *this;
-    return t.transpose();
+    return {
+      m00, m01, m02, m03,
+      m10, m11, m12, m13,
+      m20, m21, m22, m23,
+      m30, m31, m32, m33
+    };
   }
 
   auto rowvec4(int index) const -> vec4
