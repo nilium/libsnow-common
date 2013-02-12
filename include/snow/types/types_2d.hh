@@ -64,8 +64,10 @@ struct point_t
 template <typename T = int>
 struct dimens_t
 {
-  T width;
-  T height;
+  typedef T value_type;
+
+  value_type width;
+  value_type height;
 
   auto max(const dimens_t &other) const -> dimens_t
   {
@@ -83,10 +85,10 @@ struct dimens_t
     };
   }
 
-  operator rect_t<T> () const
+  operator rect_t<value_type> () const
   {
     return {
-      { T(), T(), },
+      { value_type(0), value_type(0), },
       *this
     };
   }
