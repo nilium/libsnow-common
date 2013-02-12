@@ -85,6 +85,11 @@ struct dimens_t
     };
   }
 
+  auto area() const -> value_type
+  {
+    return width * height;
+  }
+
   operator rect_t<value_type> () const
   {
     return {
