@@ -43,6 +43,18 @@ public:
   void reset();
 
   inline
+  auto bottom() const -> const binpack_t*
+  {
+    return pack_bottom_;
+  }
+
+  inline
+  auto right() const -> const binpack_t*
+  {
+    return pack_right_;
+  }
+
+  inline
   auto loaded() const -> bool
   {
     return loaded_;
