@@ -31,6 +31,7 @@ ifeq (@(TUP_PLATFORM),freebsd)
 endif
 
 module_objects += $(src_base)/types/*.o
+module_objects += $(src_base)/data/*.o
 
 c_files = *.c *.m
 cxx_files = *.cpp *.cc *.cxx *.mm
