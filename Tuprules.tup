@@ -4,7 +4,8 @@ include_base = $(base)/include
 
 CFLAGS += -g -O0
 CFLAGS += -Wall -m64
-CFLAGS += -I$(include_base)
+CFLAGS += -iquote "$(include_base)"
+CFLAGS += -I "$(include_base)"
 
 CXXFLAGS += -std=c++11 -stdlib=libc++
 
