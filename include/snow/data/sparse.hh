@@ -69,7 +69,7 @@ struct parser_t
 
 private:
   // Note: source may be a reference to state_.buffer.
-  inline void send_buffer_and_reset(source_kind_t kind)
+  inline virtual void send_buffer_and_reset(source_kind_t kind)
   {
     // Unlike send_string, send the starting position for a token instead of the
     // current reader position
@@ -77,12 +77,12 @@ private:
     state_.buffer.clear();
   }
 
-  inline void send_string(source_kind_t kind, const string &source)
+  inline virtual void send_string(source_kind_t kind, const string &source)
   {
     if (func_) func_(kind, source, state_.pos);
   }
 
-  inline void buffer_char(char c)
+  inline virtual void buffer_char(char c)
   {
     if (c != ' ' || state_.escaped)
       state_.space_count = 0;
@@ -92,7 +92,7 @@ private:
     state_.buffer.push_back(c);
   }
 
-  inline void close_with_error(const string &error)
+  inline virtual void close_with_error(const string &error)
   {
     if (state_.closed)
       throw std::runtime_error("Attempt to close with error when already closed.");
@@ -102,7 +102,7 @@ private:
   }
 
   // Copies the buffer after resizing it
-  const string &trimmed_buffer();
+  virtual const string &trimmed_buffer();
 
   typedef std::stack<position_t> position_stack_t;
 
