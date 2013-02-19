@@ -3,10 +3,10 @@
 #ifndef __SNOW_BINPACK_HH__
 #define __SNOW_BINPACK_HH__
 
+#include <snow-common.hh>
 #include "types_2d.hh"
 
-namespace snow
-{
+BEGIN_SNOW_NS
 
 class binpack_t
 {
@@ -104,6 +104,6 @@ public:
 
 };
 
-}
+END_SNOW_NS
 
 #endif /* end __SNOW_BINPACK_HH__ include guard */
