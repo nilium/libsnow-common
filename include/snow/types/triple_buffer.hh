@@ -56,7 +56,7 @@ public:
       Constructs a triple_buffer_t with default values for its backing buffers.
   ============================================================================*/
   triple_buffer_t(void) :
-    indices_(DEFAULT_INDICES), buffers_({buffer_type(), buffer_type(), buffer_type()})
+    indices_(DEFAULT_INDICES), buffers_()
   {
     static_assert((std::is_default_constructible<buffer_type>::value ||
                    std::is_pod<buffer_type>::value),
@@ -71,7 +71,7 @@ public:
   ============================================================================*/
   explicit
   triple_buffer_t(const buffer_type &init_value) :
-    indices_(DEFAULT_INDICES), buffers_({init_value, init_value, init_value})
+    indices_(DEFAULT_INDICES), buffers_({{init_value, init_value, init_value}})
   {
     static_assert((std::is_copy_constructible<buffer_type>::value ||
                    std::is_copy_assignable<buffer_type>::value ||
