@@ -47,6 +47,6 @@ endif
 !cxx_file = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |> %B
 !cc_object = |> $(CC) $(CFLAGS) -c -o %o %f |> %B.o
 !cxx_object = |> $(CXX) $(CFLAGS) $(CXXFLAGS) -c -o %o %f |> %B.o
-!cxx_bin = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o -l%f |>
+!cxx_bin = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |>
 !ar_lib = |> ar cr %o %f |>
 !ld_exe = |> $(CXX) %f $(LDFLAGS) -ObjC -o %o |>
