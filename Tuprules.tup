@@ -15,7 +15,7 @@ LDFLAGS += -arch x86_64
 LD = ld
 
 ifeq (@(TUP_PLATFORM),macosx)
-  CFLAGS += -fobjc-arc -fblocks
+  CFLAGS += -fblocks
   CFLAGS += -DTARGET_OS_MAC
   CXXFLAGS += -ObjC++
   LDFLAGS += -framework Cocoa
