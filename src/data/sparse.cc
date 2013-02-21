@@ -248,7 +248,6 @@ void parser_t::close()
 const string &parser_t::trimmed_buffer()
 {
   if (options_.trim_spaces && state_.space_count > 0) {
-    std::clog << "Trimming by " << state_.space_count << std::endl;
     state_.buffer.resize(state_.buffer.length() - state_.space_count);
     state_.space_count = 0;
   }
