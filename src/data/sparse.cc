@@ -284,7 +284,7 @@ void parser_t::state_t::close_with_error(const string &error)
   closed = true;
 }
 
-// Copies the buffer after resizing it
+// Returns the buffer byref after resizing it
 const string &parser_t::state_t::trimmed_buffer(const options_t &options)
 {
   if (options.trim_spaces && space_count > 0) {
