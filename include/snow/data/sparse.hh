@@ -47,7 +47,7 @@ struct position_t {
 
 std::ostream &operator << (std::ostream&, const position_t&);
 
-typedef std::function<void(source_kind_t, string, position_t)> parse_func_t;
+typedef std::function<void(source_kind_t, const string&, position_t)> parse_func_t;
 
 struct parser_t
 {
