@@ -73,14 +73,14 @@ const parser_t::state_t parser_t::DEFAULT_STATE = {
   parser_t::FIND_NAME,         // mode
   false,                       // escaped
   ' ',                         // last_char
+  parse_func_t(),              // func
   string(),                    // buffer
   string(),                    // error
   parser_t::position_stack_t() // openings
 };
 
 parser_t::parser_t(int options, parse_func_t callback)
-  : func_(callback),
-    options_({
+  : options_({
       // consume_ws
       CHECK_FLAG(options, SP_CONSUME_WHITESPACE),
       // trim_spaces
@@ -103,7 +103,7 @@ parser_t::parser_t(int options, parse_func_t callback)
 }
 
 parser_t::parser_t(const parser_t &other)
-  : func_(other.func_), options_(other.options_), state_(other.state_)
+  : options_(other.options_), state_(other.state_)
 {}
 
 parser_t::~parser_t()
@@ -127,7 +127,7 @@ void parser_t::add_source(const string &source)
         state_.mode = FIND_NAME;
     } else if (state_.escaped) {
       // Handle escaped character
-      buffer_char(escaped_char(current));
+      state_.buffer_char(escaped_char(current), options_);
       state_.escaped = false;
     } else {
       // Generic parsing
@@ -138,33 +138,33 @@ void parser_t::add_source(const string &source)
             state_.mode == FIND_NAME || state_.mode == FIND_VALUE) {
           // NOP
         } else if (state_.mode == READ_NAME) {
-          send_buffer_and_reset(SP_NAME);
+          state_.send_buffer_and_reset(SP_NAME, options_);
           state_.mode = FIND_VALUE;
         } else {
-          buffer_char(current);
+          state_.buffer_char(current, options_);
         }
         break; // END ' ' & '\t'
 
       case '{': // Start of node
         switch (state_.mode) {
         case READ_NAME:
-          send_buffer_and_reset(SP_NAME);
+          state_.send_buffer_and_reset(SP_NAME, options_);
         case FIND_VALUE:
           state_.openings.push(state_.pos);
-          send_string(SP_OPEN_NODE, "{");
+          state_.send_string(SP_OPEN_NODE, "{");
           break;
 
         case READ_VALUE:
-          send_buffer_and_reset(SP_VALUE);
+          state_.send_buffer_and_reset(SP_VALUE, options_);
         case FIND_NAME:
           if ((options_.nameless_roots && state_.openings.size() == 0) ||
               options_.nameless_nodes) {
             state_.openings.push(state_.pos);
-            send_string(SP_NAME, "");
+            state_.send_string(SP_NAME, "");
           } else {
             default:
-            close_with_error(error_with_position(state_.pos,
-                             "Invalid character '{' - expected name."));
+            state_.close_with_error(error_with_position(state_.pos,
+                                    "Invalid character '{' - expected name."));
             return;
           }
         }
@@ -176,22 +176,22 @@ void parser_t::add_source(const string &source)
       case ';':  // Inline terminator
       case '#':  // Comment
         switch (state_.mode) {
-        case READ_NAME:  send_buffer_and_reset(SP_NAME);
-        case FIND_VALUE: send_string(SP_VALUE, ""); break;
-        case READ_VALUE: send_buffer_and_reset(SP_VALUE); break;
+        case READ_NAME:  state_.send_buffer_and_reset(SP_NAME, options_);
+        case FIND_VALUE: state_.send_string(SP_VALUE, ""); break;
+        case READ_VALUE: state_.send_buffer_and_reset(SP_VALUE, options_); break;
         default: break;
         }
 
         if (current == '}') {
           // End of node
           if (state_.openings.size() == 0) {
-            close_with_error(error_with_position(state_.pos,
-                             "Unexpected '}' - no matching '{'."));
+            state_.close_with_error(error_with_position(state_.pos,
+                                    "Unexpected '}' - no matching '{'."));
             return;
           }
           state_.openings.pop();
           state_.mode = FIND_NAME;
-          send_string(SP_CLOSE_NODE, "}");
+          state_.send_string(SP_CLOSE_NODE, "}");
         } // if (current == '}')
 
         state_.mode = FIND_NAME << (4 * (current == '#'));
@@ -207,7 +207,7 @@ void parser_t::add_source(const string &source)
           state_.start = state_.pos;   // and store the token's starting pos
         }
 
-        buffer_char(current);
+        state_.buffer_char(current, options_);
         break;
       }
     }
@@ -229,9 +229,9 @@ void parser_t::close()
     throw std::runtime_error("Attempt to close already-closed parser.");
 
   switch (state_.mode) {
-  case READ_NAME:  send_buffer_and_reset(SP_NAME);
-  case FIND_VALUE: send_string(SP_VALUE, ""); break;
-  case READ_VALUE: send_buffer_and_reset(SP_VALUE); break;
+  case READ_NAME:  state_.send_buffer_and_reset(SP_NAME, options_);
+  case FIND_VALUE: state_.send_string(SP_VALUE, ""); break;
+  case READ_VALUE: state_.send_buffer_and_reset(SP_VALUE, options_); break;
   default: break;
   }
 
@@ -240,24 +240,60 @@ void parser_t::close()
     stream << state_.pos
       << " Unexpected end of document - expected '}' to match '{' at "
       << state_.openings.top();
-    close_with_error(stream.str());
+    state_.close_with_error(stream.str());
     return;
   }
 
   state_.buffer.resize(0);
   state_.closed = true;
 
-  send_string(SP_DONE, "");
+  state_.send_string(SP_DONE, "");
 }
 
-const string &parser_t::trimmed_buffer()
+
+// Note: source may be a reference to state_.buffer.
+inline void parser_t::state_t::send_buffer_and_reset(source_kind_t kind, const options_t &options)
 {
-  if (options_.trim_spaces && state_.space_count > 0) {
-    state_.buffer.resize(state_.buffer.length() - state_.space_count);
-    state_.space_count = 0;
-  }
-  return state_.buffer;
+  // Unlike send_string, send the starting position for a token instead of the
+  // current reader position
+  if (func) func(kind, trimmed_buffer(options), start);
+  buffer.clear();
 }
+
+void parser_t::state_t::send_string(source_kind_t kind, const string &source)
+{
+  if (func) func(kind, source, pos);
+}
+
+void parser_t::state_t::buffer_char(char c, const options_t &options)
+{
+  if (c != ' ' || escaped)
+    space_count = 0;
+  else if ((c == ' ' || c == '\t') && options.trim_spaces)
+    space_count += 1;
+
+  buffer.push_back(c);
+}
+
+void parser_t::state_t::close_with_error(const string &error)
+{
+  if (closed)
+    throw std::runtime_error("Attempt to close with error when already closed.");
+  send_string(SP_ERROR, error);
+  this->error = error;
+  closed = true;
+}
+
+// Copies the buffer after resizing it
+const string &parser_t::state_t::trimmed_buffer(const options_t &options)
+{
+  if (options.trim_spaces && space_count > 0) {
+    buffer.resize(buffer.length() - space_count);
+    space_count = 0;
+  }
+  return buffer;
+}
+
 
 END_SPARSE_NS
 END_SNOW_NS

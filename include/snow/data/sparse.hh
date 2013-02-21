@@ -62,48 +62,9 @@ struct parser_t
   inline virtual bool have_error() const { return !state_.error.empty(); }
   inline virtual const string &error() { return state_.error; }
 
-  inline virtual bool is_open() const
-  {
-    return !state_.closed;
-  }
+  inline virtual bool is_open() const { return !state_.closed; }
 
 private:
-  // Note: source may be a reference to state_.buffer.
-  inline virtual void send_buffer_and_reset(source_kind_t kind)
-  {
-    // Unlike send_string, send the starting position for a token instead of the
-    // current reader position
-    if (func_) func_(kind, trimmed_buffer(), state_.start);
-    state_.buffer.clear();
-  }
-
-  inline virtual void send_string(source_kind_t kind, const string &source)
-  {
-    if (func_) func_(kind, source, state_.pos);
-  }
-
-  inline virtual void buffer_char(char c)
-  {
-    if (c != ' ' || state_.escaped)
-      state_.space_count = 0;
-    else if ((c == ' ' || c == '\t') && options_.trim_spaces)
-      state_.space_count += 1;
-
-    state_.buffer.push_back(c);
-  }
-
-  inline virtual void close_with_error(const string &error)
-  {
-    if (state_.closed)
-      throw std::runtime_error("Attempt to close with error when already closed.");
-    send_string(SP_ERROR, error);
-    state_.error = error;
-    state_.closed = true;
-  }
-
-  // Copies the buffer after resizing it
-  virtual const string &trimmed_buffer();
-
   typedef std::stack<position_t> position_stack_t;
 
   enum parse_mode_t : int
@@ -123,6 +84,7 @@ private:
   };
 
   struct state_t {
+
     bool closed;
     position_t pos;
     position_t start;
@@ -133,12 +95,22 @@ private:
     bool escaped;
     char last_char;
 
+    parse_func_t func;
+
     string buffer;
     string error;
+
     position_stack_t openings;
+
+    // Note: source may be a reference to state_.buffer.
+    void send_buffer_and_reset(source_kind_t kind, const options_t &options);
+    void send_string(source_kind_t kind, const string &source);
+    void buffer_char(char c, const options_t &options);
+    void close_with_error(const string &error);
+    // Copies the buffer after resizing it
+    const string &trimmed_buffer(const options_t &options);
   };
 
-  parse_func_t func_;
   options_t options_;
   state_t state_;
 
