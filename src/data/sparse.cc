@@ -112,7 +112,12 @@ parser_t::~parser_t()
 
 void parser_t::add_source(const string &source)
 {
-  for (const char current : source) {
+  const char *source_cst = source.c_str();
+  const char *source_cst_end = source_cst + source.length();
+
+  for (; source_cst < source_cst_end; ++source_cst) {
+    const char current = *source_cst;
+
     if (state_.mode == READ_COMMENT) {
       // If in a comment, read until the end of the line. In all cases, if an
       // end of line occurs, the next mode will necessarily be FIND_NAME (this
