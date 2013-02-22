@@ -2,7 +2,13 @@ base = $(TUP_CWD)
 src_base = $(base)/src
 include_base = $(base)/include
 
-CFLAGS += -g -O0
+BUILD_DEBUG=0
+ifeq ($(BUILD_DEBUG),0)
+  CFLAGS += -O4
+else
+  CFLAGS += -g -O0
+endif
+
 CFLAGS += -Wall -m64
 CFLAGS += -iquote "$(include_base)"
 CFLAGS += -I "$(include_base)"
