@@ -1,7 +1,7 @@
 #ifndef __SNOW_THREAD_HH__
 #define __SNOW_THREAD_HH__
 
-#include "snow-common.hh"
+#include <snow-common.hh>
 
 #include <thread>
 
