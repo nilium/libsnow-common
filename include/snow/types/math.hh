@@ -52,6 +52,24 @@ bool is_zero<long double>(long double value)
 
 
 /*==============================================================================
+  are_equiv
+
+    Compares whether two values are equivalent. For non-floating-point values,
+    this is the same as ==. For floating point values, this tests whether the
+    difference of the two values is less than S_EPSILON using is_zero.
+==============================================================================*/
+
+template <typename T>
+bool are_equiv(T lhs, T rhs)
+{
+  return (std::is_floating_point<T>::value
+          ? is_zero(lhs - rhs)
+          : (lhs == rhs));
+}
+
+
+
+/*==============================================================================
   max_value
 
     Returns the maximum value for a given type. Only intended for use with
