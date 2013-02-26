@@ -60,7 +60,7 @@ struct parser_t
   virtual void close();
 
   inline virtual bool have_error() const { return !state_.error.empty(); }
-  inline virtual const string &error() { return state_.error; }
+  inline virtual const string &error() const { return state_.error; }
 
   inline virtual bool is_open() const { return !state_.closed; }
 
