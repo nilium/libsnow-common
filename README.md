@@ -6,6 +6,13 @@ data handling (the Sparse C++ implementation), and other common utilities and
 structures that have utility across multiple projects (including sbfgen, Snow,
 and a few other projects).
 
+## Documentation
+
+Documentation can be found over on [The Codex], my personal TiddlyWiki. It's a
+work in progress, but likely to contain more thorough documentation when needed.
+
+[The Codex]: http://spifftastic.net/codex/
+
 ## License
 
 Except where noted otherwise, all source code in Snow-Common is public
