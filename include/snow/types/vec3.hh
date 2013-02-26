@@ -67,11 +67,11 @@ vec3_t<value_type>
   vec3_t &      negate()
     Negate this vector.
   ------------------------------------------------------------------------------
-  vec4_t        inverse() const
+  vec3_t        inverse() const
     Returns the inverse of this vector. In other words, 1 / component for each
     component of the vector.
   ------------------------------------------------------------------------------
-  vec4_t &      invert()
+  vec3_t &      invert()
     Inverts this vector.
   ------------------------------------------------------------------------------
   vec3_t        cross_product(const vec3_t &other) const
