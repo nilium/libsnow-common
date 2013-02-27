@@ -1,6 +1,7 @@
 base = $(TUP_CWD)
 src_base = $(base)/src
 include_base = $(base)/include
+lib_base = $(base)/lib
 
 BUILD_DEBUG=0
 ifeq ($(BUILD_DEBUG),0)
@@ -42,6 +43,10 @@ module_objects += $(src_base)/logging/*.o
 
 c_files = *.c *.m
 cxx_files = *.cpp *.cc *.cxx *.mm
+object_files = *.o
+
+lib_name = libsnow-common.a
+lib_path = $(lib_base)/$(lib_name)
 
 ifndef CC
   CC = clang
@@ -56,5 +61,6 @@ endif
 !cc_object = |> $(CC) $(CFLAGS) -c -o %o %f |> %B.o
 !cxx_object = |> $(CXX) $(CFLAGS) $(CXXFLAGS) -c -o %o %f |> %B.o
 !cxx_bin = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |>
+!cxx_tests_bin = | $(lib_path) |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -L$(lib_base) -lsnow-common -o %o %f |>
 !ar_lib = |> ar cr %o %f |>
 !ld_exe = |> $(CXX) %f $(LDFLAGS) -ObjC -o %o |>
