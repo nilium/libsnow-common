@@ -13,6 +13,7 @@ extern "C" {
 }
 
 #include <snow/config.hh>
+#include <type_traits>
 
 BEGIN_SNOW_NS
 
@@ -48,32 +49,90 @@ struct lb_gens__<0, S...> {
 template <typename T>
 T lb_to_value(lua_State *L, int index)
 {
-  throw std::runtime_error("Cannot convert type from Lua value");
+#ifndef S_LBIND_NO_GENERIC_OBJECT
+  return T(*(const T *)lua_touserdata(L, index));
+#else  // !S_LBIND_NO_GENERIC_OBJECT
+  static_assert(false, "No lb_to_value specialization for object of type T.");
+#endif // S_LBIND_NO_GENERIC_OBJECT
 }
+
+#ifndef S_LBIND_NO_GENERIC_OBJECT
+template <typename T>
+int lb_generic_delete__(lua_State *L)
+{
+  ((T *)lua_touserdata(L, 1))->~T();
+  return 0;
+}
+
+template <typename T>
+void lb_bind_generic_delete__(lua_State *L)
+{
+  if (std::is_destructible<T>::value) {
+    lua_createtable(L, 0, 1);
+    lua_pushcclosure(L, lb_generic_delete__<T>, 0);
+    lua_setfield(L, -2, "__gc");
+    lua_setmetatable(L, -2);
+  }
+}
+#endif // !S_LBIND_NO_GENERIC_OBJECT
 
 template <typename T>
 void lb_push_value(lua_State *L, T &value)
 {
-  throw std::runtime_error("Cannot convert type to Lua value");
+#ifndef S_LBIND_NO_GENERIC_OBJECT
+  new(lua_newuserdata(L, sizeof(T))) T(value);
+  lb_bind_generic_delete__<T>(L);
+#else  // !S_LBIND_NO_GENERIC_OBJECT
+  static_assert(false, "No lb_push_value specialization for object of type T.");
+#endif // S_LBIND_NO_GENERIC_OBJECT
 }
 
 template <typename T>
 void lb_push_value(lua_State *L, const T &value)
 {
-  throw std::runtime_error("Cannot convert type to Lua value");
+  new(lua_newuserdata(L, sizeof(T))) T(value);
+  lb_bind_generic_delete__<T>(L);
 }
 
 template <typename T>
 void lb_glue_from_(lua_State *L, int index, T &out)
 {
-  if (std::is_integral<T>::value)
-    out = static_cast<T>(lua_tointeger(L, index));
-  else if (std::is_floating_point<T>::value)
-    out = static_cast<T>(lua_tonumber(L, index));
-  else
-    out = lb_to_value<T>(L, index);
+  out = lb_to_value<T>(L, index);
 }
 
+// lb_glue_from_<INTEGER TYPE> -------------------------------------------------
+template <>
+void lb_glue_from_<int>(lua_State *L, int index, int &out)
+{
+  out = static_cast<int>(lua_tointeger(L, index));
+}
+
+template <>
+void lb_glue_from_<long>(lua_State *L, int index, long &out)
+{
+  out = static_cast<long>(lua_tointeger(L, index));
+}
+
+template <>
+void lb_glue_from_<size_t>(lua_State *L, int index, size_t &out)
+{
+  out = static_cast<size_t>(lua_tointeger(L, index));
+}
+
+// lb_glue_from_<FLOATING POINT> -----------------------------------------------
+template <>
+void lb_glue_from_<float>(lua_State *L, int index, float &out)
+{
+  out = static_cast<float>(lua_tonumber(L, index));
+}
+
+template <>
+void lb_glue_from_<double>(lua_State *L, int index, double &out)
+{
+  out = static_cast<double>(lua_tonumber(L, index));
+}
+
+// lb_glue_from_<std::string> --------------------------------------------------
 template <>
 void lb_glue_from_<std::string>(lua_State *L, int index, std::string &out)
 {
@@ -95,29 +154,49 @@ void lb_unpack_values_into__(lua_State *L, std::tuple<T...> &values, const int m
 }
 
 template <typename T>
-void lb_push_value__(lua_State *L, T &value)
+void lb_push_value__(lua_State *L, T &&value)
 {
-  if (std::is_integral<T>::value)
-    lua_pushinteger(L, static_cast<lua_Integer>(value));
-  else if (std::is_floating_point<T>::value)
-    lua_pushnumber(L, static_cast<lua_Number>(value));
-  else
-    lb_push_value(L, value);
+  lb_push_value(L, value);
 }
 
 template <typename T>
-void lb_push_value__(lua_State *L, const T &value)
+void lb_push_value__(lua_State *L, const T &&value)
 {
-  if (std::is_integral<T>::value)
-    lua_pushinteger(L, static_cast<lua_Integer>(value));
-  else if (std::is_floating_point<T>::value)
-    lua_pushnumber(L, static_cast<lua_Number>(value));
-  else
-    lb_push_value(L, value);
+  lb_push_value(L, value);
 }
 
 template <>
-void lb_push_value__<std::string>(lua_State *L, const std::string &value)
+void lb_push_value__<int>(lua_State *L, const int &&value)
+{
+  lua_pushinteger(L, static_cast<lua_Integer>(value));
+}
+
+template <>
+void lb_push_value__<long>(lua_State *L, const long &&value)
+{
+  lua_pushinteger(L, static_cast<lua_Integer>(value));
+}
+
+template <>
+void lb_push_value__<size_t>(lua_State *L, const size_t &&value)
+{
+  lua_pushinteger(L, static_cast<lua_Integer>(value));
+}
+
+template <>
+void lb_push_value__<float>(lua_State *L, const float &&value)
+{
+  lua_pushnumber(L, static_cast<lua_Number>(value));
+}
+
+template <>
+void lb_push_value__<double>(lua_State *L, const double &&value)
+{
+  lua_pushnumber(L, static_cast<lua_Number>(value));
+}
+
+template <>
+void lb_push_value__<std::string>(lua_State *L, const std::string &&value)
 {
   lua_pushlstring(L, value.c_str(), value.length());
 }
@@ -173,7 +252,7 @@ lfunc_t lb_glue_binding_fn__(R (*func)())
 
     Returns the Lua glue function for the given function (func).
 ==============================================================================*/
-template <class F>
+template <typename F>
 lfunc_t lb_glue_binding_fn(F func)
 {
   return lb_glue_binding_fn__<F>(func);
@@ -184,7 +263,7 @@ lfunc_t lb_glue_binding_fn(F func)
 
     Pushes the given function's wrapper-function onto the Lua stack.
 ==============================================================================*/
-template <class F>
+template <typename F>
 void lb_push_function(lua_State *L, F f)
 {
   // Store the original function in an upvalue (necessary since I haven't found
