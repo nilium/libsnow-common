@@ -36,6 +36,7 @@ ifeq (@(TUP_PLATFORM),freebsd)
 endif
 
 module_objects += $(src_base)/types/*.o
+module_objects += $(src_base)/string/*.o
 module_objects += $(src_base)/data/*.o
 module_objects += $(src_base)/logging/*.o
 

@@ -29,4 +29,7 @@ and linked to. So, it would produce some errors if in here.
 // Data
 #include "snow/data/sparse.hh"
 
+// Strings
+#include "snow/string/string.hh"
+
 #endif /* end __SNOW_COMMON__SNOW_COMMON_HH__ include guard */
