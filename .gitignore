@@ -1,3 +1,7 @@
 .tup
 *.o
 lib*.a
+*_test.*
+*_test
+*.dSYM
+.DS_Store
