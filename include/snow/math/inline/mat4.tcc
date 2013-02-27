@@ -1,5 +1,5 @@
-#ifndef __SNOW_MAT4_TCC__
-#define __SNOW_MAT4_TCC__
+#ifndef __SNOW_COMMON__MAT4_TCC__
+#define __SNOW_COMMON__MAT4_TCC__
 
 template <typename T>
 const mat4_t<T> mat4_t<T>::identity = {
@@ -1017,4 +1017,4 @@ bool operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
 }
 
 
-#endif /* end __SNOW_MAT4_TCC__ include guard */
+#endif /* end __SNOW_COMMON__MAT4_TCC__ include guard */

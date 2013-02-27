@@ -1,7 +1,7 @@
 // range.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_RANGE_HH__
-#define __SNOW_RANGE_HH__
+#ifndef __SNOW_COMMON__RANGE_HH__
+#define __SNOW_COMMON__RANGE_HH__
 
 #include <iostream>
 #include <algorithm>
@@ -545,4 +545,4 @@ typedef range_t<double>        ranged_t;
 
 }
 
-#endif /* end __SNOW_RANGE_HH__ include guard */
+#endif /* end __SNOW_COMMON__RANGE_HH__ include guard */

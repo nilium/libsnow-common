@@ -1,5 +1,5 @@
-#ifndef __SNOW_COMMON__COMMON_CONFIG_HH__
-#define __SNOW_COMMON__COMMON_CONFIG_HH__
+#ifndef __SNOW_COMMON__CONFIG_HH__
+#define __SNOW_COMMON__CONFIG_HH__
 
 #if defined(__APPLE__)
 # include <TargetConditionals.h>
@@ -98,4 +98,4 @@ typedef std::string string;
 
 END_SNOW_NS
 
-#endif /* end __SNOW_COMMON__COMMON_CONFIG_HH__ include guard */
+#endif /* end __SNOW_COMMON__CONFIG_HH__ include guard */

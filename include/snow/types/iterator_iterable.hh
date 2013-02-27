@@ -1,7 +1,7 @@
 // iterator_iterable.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_ITERATOR_ITERABLE_HH__
-#define __SNOW_ITERATOR_ITERABLE_HH__
+#ifndef __SNOW_COMMON__ITERATOR_ITERABLE_HH__
+#define __SNOW_COMMON__ITERATOR_ITERABLE_HH__
 
 #include <iterator>
 
@@ -128,4 +128,4 @@ auto iterate_reverse_const(const T &container) -> iterator_iterable_t<decltype(c
 
 }
 
-#endif /* end __SNOW_ITERATOR_ITERABLE_HH__ include guard */
+#endif /* end __SNOW_COMMON__ITERATOR_ITERABLE_HH__ include guard */

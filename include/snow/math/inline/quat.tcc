@@ -1,5 +1,5 @@
-#ifndef __SNOW_QUAT_TCC__
-#define __SNOW_QUAT_TCC__
+#ifndef __SNOW_COMMON__QUAT_TCC__
+#define __SNOW_COMMON__QUAT_TCC__
 
 template <typename T>
 const quat_t<T> quat_t<T>::zero = { { 0, 0, 0 }, 0 };
@@ -450,4 +450,4 @@ bool operator != (const quat_t<T> &lhs, const quat_t<Q> &rhs)
   return !(lhs == rhs);
 }
 
-#endif /* end __SNOW_QUAT_TCC__ include guard */
+#endif /* end __SNOW_COMMON__QUAT_TCC__ include guard */

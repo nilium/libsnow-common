@@ -2,8 +2,8 @@
 // Attribution to Johannes Schaub for his answer on parameter packs on
 // Stack Overflow: http://stackoverflow.com/a/7858971/457812
 // For license information, see: http://creativecommons.org/licenses/by-sa/2.5/
-#ifndef __SNOW_LBIND_HH__
-#define __SNOW_LBIND_HH__
+#ifndef __SNOW_COMMON__LBIND_HH__
+#define __SNOW_COMMON__LBIND_HH__
 
 #include <stdexcept>
 #include <string>
@@ -274,4 +274,4 @@ void lb_push_function(lua_State *L, F f)
 
 END_SNOW_NS
 
-#endif /* end __SNOW_LBIND_HH__ include guard */
+#endif /* end __SNOW_COMMON__LBIND_HH__ include guard */

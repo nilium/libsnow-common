@@ -1,5 +1,5 @@
-#ifndef __SNOW_VEC4_HH__
-#define __SNOW_VEC4_HH__
+#ifndef __SNOW_COMMON__VEC4_HH__
+#define __SNOW_COMMON__VEC4_HH__
 
 #include "math.hh"
 
@@ -156,4 +156,4 @@ typedef vec4_t<double> vec4d_t;
 
 }
 
-#endif /* end __SNOW_VEC4_HH__ include guard */
+#endif /* end __SNOW_COMMON__VEC4_HH__ include guard */

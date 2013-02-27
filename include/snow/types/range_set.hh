@@ -1,7 +1,7 @@
 // range_set.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_RANGESET_HH__
-#define __SNOW_RANGESET_HH__
+#ifndef __SNOW_COMMON__RANGESET_HH__
+#define __SNOW_COMMON__RANGESET_HH__
 
 #include <stdexcept>
 #include <list>
@@ -178,4 +178,4 @@ public:
 
 }
 
-#endif /* end __SNOW_RANGESET_HH__ include guard */
+#endif /* end __SNOW_COMMON__RANGESET_HH__ include guard */

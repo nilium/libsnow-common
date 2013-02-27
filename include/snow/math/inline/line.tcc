@@ -1,5 +1,5 @@
-#ifndef __SNOW_LINE_TCC__
-#define __SNOW_LINE_TCC__
+#ifndef __SNOW_COMMON__LINE_TCC__
+#define __SNOW_COMMON__LINE_TCC__
 
 template <typename T>
 auto line_t<T>::end() const -> vec3
@@ -45,4 +45,4 @@ auto line_t<T>::nearest_to(const vec3& p) const -> vec3
   return end().scale(dist.dot_product(p - origin) / dist.dot_product(dist));
 }
 
-#endif /* end __SNOW_LINE_TCC__ include guard */
+#endif /* end __SNOW_COMMON__LINE_TCC__ include guard */

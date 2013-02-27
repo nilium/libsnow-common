@@ -1,7 +1,7 @@
 // snow-common.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_COMMON_HH__
-#define __SNOW_COMMON_HH__
+#ifndef __SNOW_COMMON__SNOW_COMMON_HH__
+#define __SNOW_COMMON__SNOW_COMMON_HH__
 
 #include "snow/config.hh"
 
@@ -29,4 +29,4 @@ and linked to. So, it would produce some errors if in here.
 // Data
 #include "snow/data/sparse.hh"
 
-#endif /* end __SNOW_COMMON_HH__ include guard */
+#endif /* end __SNOW_COMMON__SNOW_COMMON_HH__ include guard */

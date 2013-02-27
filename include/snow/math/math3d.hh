@@ -1,7 +1,7 @@
 // math3d.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_MATH3D_HH__
-#define __SNOW_MATH3D_HH__
+#ifndef __SNOW_COMMON__MATH3D_HH__
+#define __SNOW_COMMON__MATH3D_HH__
 
 /*==============================================================================
                                    REFERENCE
@@ -39,4 +39,4 @@ in the structures being packed.
 #include "line.hh"
 #include "mat4.hh"
 
-#endif /* end __SNOW_MATH3D_HH__ include guard */
+#endif /* end __SNOW_COMMON__MATH3D_HH__ include guard */

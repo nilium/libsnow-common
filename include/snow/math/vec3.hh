@@ -1,5 +1,5 @@
-#ifndef __SNOW_VEC3_HH__
-#define __SNOW_VEC3_HH__
+#ifndef __SNOW_COMMON__VEC3_HH__
+#define __SNOW_COMMON__VEC3_HH__
 
 #include "math.hh"
 
@@ -158,4 +158,4 @@ typedef vec3_t<double> vec3d_t;
 
 }
 
-#endif /* end __SNOW_VEC3_HH__ include guard */
+#endif /* end __SNOW_COMMON__VEC3_HH__ include guard */

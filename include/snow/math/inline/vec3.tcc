@@ -1,5 +1,5 @@
-#ifndef __SNOW_VEC3_TCC__
-#define __SNOW_VEC3_TCC__
+#ifndef __SNOW_COMMON__VEC3_TCC__
+#define __SNOW_COMMON__VEC3_TCC__
 
 template <typename T>
 const vec3_t<T> vec3_t<T>::zero = { 0, 0, 0 };
@@ -346,4 +346,4 @@ bool operator != (const vec3_t<T> &lhs, const vec3_t<Q> &rhs)
   return !(lhs == rhs);
 }
 
-#endif /* end __SNOW_VEC3_TCC__ include guard */
+#endif /* end __SNOW_COMMON__VEC3_TCC__ include guard */

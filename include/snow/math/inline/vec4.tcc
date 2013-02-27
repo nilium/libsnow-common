@@ -1,5 +1,5 @@
-#ifndef __SNOW_VEC4_TCC__
-#define __SNOW_VEC4_TCC__
+#ifndef __SNOW_COMMON__VEC4_TCC__
+#define __SNOW_COMMON__VEC4_TCC__
 
 template <typename T>
 const vec4_t<T> vec4_t<T>::zero = { 0, 0, 0, 0 };
@@ -353,4 +353,4 @@ bool operator != (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
   return !(lhs == rhs);
 }
 
-#endif /* end __SNOW_VEC4_TCC__ include guard */
+#endif /* end __SNOW_COMMON__VEC4_TCC__ include guard */

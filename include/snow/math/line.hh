@@ -1,5 +1,5 @@
-#ifndef __SNOW_LINE_HH__
-#define __SNOW_LINE_HH__
+#ifndef __SNOW_COMMON__LINE_HH__
+#define __SNOW_COMMON__LINE_HH__
 
 /*
 line_t<value_type>
@@ -42,4 +42,4 @@ typedef line_t<double> lined_t;
 
 #include "vec3.hh"
 
-#endif /* end __SNOW_LINE_HH__ include guard */
+#endif /* end __SNOW_COMMON__LINE_HH__ include guard */

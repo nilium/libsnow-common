@@ -1,5 +1,5 @@
-#ifndef __SNOW_QUAT_THH__
-#define __SNOW_QUAT_THH__
+#ifndef __SNOW_COMMON__QUAT_THH__
+#define __SNOW_COMMON__QUAT_THH__
 
 /*==============================================================================
 
@@ -98,4 +98,4 @@ bool          operator != (const quat_t<T> &lhs, const quat_t<Q> &rhs);
 
 #include "quat.tcc"
 
-#endif /* end __SNOW_QUAT_THH__ include guard */
+#endif /* end __SNOW_COMMON__QUAT_THH__ include guard */

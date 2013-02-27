@@ -1,5 +1,5 @@
-#ifndef __SNOW_LINE_THH__
-#define __SNOW_LINE_THH__
+#ifndef __SNOW_COMMON__LINE_THH__
+#define __SNOW_COMMON__LINE_THH__
 
 /*==============================================================================
 
@@ -28,4 +28,4 @@ struct line_t
 
 #include "line.tcc"
 
-#endif /* end __SNOW_LINE_THH__ include guard */
+#endif /* end __SNOW_COMMON__LINE_THH__ include guard */

@@ -1,5 +1,5 @@
-#ifndef __SNOW_MAT4_THH__
-#define __SNOW_MAT4_THH__
+#ifndef __SNOW_COMMON__MAT4_THH__
+#define __SNOW_COMMON__MAT4_THH__
 
 /*==============================================================================
 
@@ -136,4 +136,4 @@ bool          operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
 
 #include "mat4.tcc"
 
-#endif /* end __SNOW_MAT4_THH__ include guard */
+#endif /* end __SNOW_COMMON__MAT4_THH__ include guard */

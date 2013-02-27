@@ -1,5 +1,5 @@
-#ifndef __SNOW_MAT4_HH__
-#define __SNOW_MAT4_HH__
+#ifndef __SNOW_COMMON__MAT4_HH__
+#define __SNOW_COMMON__MAT4_HH__
 
 #include "math.hh"
 
@@ -212,4 +212,4 @@ typedef mat4_t<double> mat4d_t;
 #include "vec4.hh"
 #include "quat.hh"
 
-#endif /* end __SNOW_MAT4_HH__ include guard */
+#endif /* end __SNOW_COMMON__MAT4_HH__ include guard */

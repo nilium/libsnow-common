@@ -1,5 +1,5 @@
-#ifndef __SNOW_VEC3_THH__
-#define __SNOW_VEC3_THH__
+#ifndef __SNOW_COMMON__VEC3_THH__
+#define __SNOW_COMMON__VEC3_THH__
 
 /*==============================================================================
 
@@ -92,4 +92,4 @@ bool operator != (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
 
 #include "vec3.tcc"
 
-#endif /* end __SNOW_VEC3_THH__ include guard */
+#endif /* end __SNOW_COMMON__VEC3_THH__ include guard */

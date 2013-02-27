@@ -1,5 +1,5 @@
-#ifndef __SNOW_MATH_HH__
-#define __SNOW_MATH_HH__
+#ifndef __SNOW_COMMON__MATH_HH__
+#define __SNOW_COMMON__MATH_HH__
 
 #include <cfloat>
 #include <cmath>
@@ -114,4 +114,4 @@ constexpr T clamp_value(T val, Q min, R max)
 
 }
 
-#endif /* end __SNOW_MATH_HH__ include guard */
+#endif /* end __SNOW_COMMON__MATH_HH__ include guard */

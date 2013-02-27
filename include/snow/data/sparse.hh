@@ -1,7 +1,7 @@
 // sparse.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_SPARSE_HH__
-#define __SNOW_SPARSE_HH__
+#ifndef __SNOW_COMMON__SPARSE_HH__
+#define __SNOW_COMMON__SPARSE_HH__
 
 #include <snow/config.hh>
 #include <functional>
@@ -120,4 +120,4 @@ private:
 END_SPARSE_NS
 END_SNOW_NS
 
-#endif /* end __SNOW_SPARSE_HH__ include guard */
+#endif /* end __SNOW_COMMON__SPARSE_HH__ include guard */

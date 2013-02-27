@@ -1,5 +1,5 @@
-#ifndef __SNOW_QUAT_HH__
-#define __SNOW_QUAT_HH__
+#ifndef __SNOW_COMMON__QUAT_HH__
+#define __SNOW_COMMON__QUAT_HH__
 
 #include "math.hh"
 
@@ -168,4 +168,4 @@ typedef quat_t<double> quatd_t;
 #include "vec3.hh"
 #include "mat4.hh"
 
-#endif /* end __SNOW_QUAT_HH__ include guard */
+#endif /* end __SNOW_COMMON__QUAT_HH__ include guard */

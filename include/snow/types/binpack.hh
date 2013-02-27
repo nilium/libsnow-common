@@ -1,7 +1,7 @@
 // binpack.hh -- Noel Cower -- Public Domain
 
-#ifndef __SNOW_BINPACK_HH__
-#define __SNOW_BINPACK_HH__
+#ifndef __SNOW_COMMON__BINPACK_HH__
+#define __SNOW_COMMON__BINPACK_HH__
 
 #include <snow/config.hh>
 #include "types_2d.hh"
@@ -106,4 +106,4 @@ public:
 
 END_SNOW_NS
 
-#endif /* end __SNOW_BINPACK_HH__ include guard */
+#endif /* end __SNOW_COMMON__BINPACK_HH__ include guard */

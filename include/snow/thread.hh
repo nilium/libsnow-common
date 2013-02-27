@@ -1,5 +1,5 @@
-#ifndef __SNOW_THREAD_HH__
-#define __SNOW_THREAD_HH__
+#ifndef __SNOW_COMMON__THREAD_HH__
+#define __SNOW_COMMON__THREAD_HH__
 
 #include <snow/config.hh>
 
@@ -17,4 +17,4 @@ void async_thread(FNT &&func, ARGS&&... args)
 
 END_SNOW_NS
 
-#endif /* end __SNOW_THREAD_HH__ include guard */
+#endif /* end __SNOW_COMMON__THREAD_HH__ include guard */
