@@ -87,7 +87,7 @@ bool pattern_match(const string &pattern, const string &other)
       break;
 
     default:
-      if (*(p_cstr++) != *(o_cstr++) || (p_cstr == p_end && o_cstr != o_end)) {
+      if (*(p_cstr++) != *(o_cstr++) || (p_cstr >= p_end && o_cstr < o_end)) {
         // If we reach the end of p_cstr too quickly or the strings stop
         // matching, try to back up to the last match. Repeat this as many times
         // as needed.
@@ -101,7 +101,7 @@ bool pattern_match(const string &pattern, const string &other)
       }
     }
 
-  return p_cstr == p_end && o_cstr == o_end;
+  return p_cstr >= p_end && o_cstr >= o_end;
 }
 
 END_SNOW_NS
