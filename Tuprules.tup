@@ -10,7 +10,6 @@ else
 endif
 
 CFLAGS += -Wall -m64
-CFLAGS += -iquote "$(include_base)"
 CFLAGS += -I "$(include_base)"
 
 CXXFLAGS += -std=c++11 -stdlib=libc++
@@ -38,6 +37,7 @@ endif
 
 module_objects += $(src_base)/types/*.o
 module_objects += $(src_base)/data/*.o
+module_objects += $(src_base)/logging/*.o
 
 c_files = *.c *.m
 cxx_files = *.cpp *.cc *.cxx *.mm

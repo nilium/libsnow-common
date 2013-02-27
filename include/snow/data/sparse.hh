@@ -3,7 +3,7 @@
 #ifndef __SNOW_SPARSE_HH__
 #define __SNOW_SPARSE_HH__
 
-#include <snow-common.hh>
+#include <snow/config.hh>
 #include <functional>
 #include <iostream>
 #include <stack>

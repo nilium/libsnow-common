@@ -12,7 +12,7 @@ extern "C" {
 #include <lua.h>
 }
 
-#include <snow-common.hh>
+#include <snow/config.hh>
 
 BEGIN_SNOW_NS
 

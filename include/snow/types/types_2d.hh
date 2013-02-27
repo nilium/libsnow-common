@@ -3,7 +3,7 @@
 #ifndef __SNOW_TYPES_2D_HH__
 #define __SNOW_TYPES_2D_HH__
 
-#include <snow-common.hh>
+#include <snow/config.hh>
 #include <iostream>
 #include <algorithm>
 

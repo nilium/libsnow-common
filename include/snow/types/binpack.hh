@@ -3,7 +3,7 @@
 #ifndef __SNOW_BINPACK_HH__
 #define __SNOW_BINPACK_HH__
 
-#include <snow-common.hh>
+#include <snow/config.hh>
 #include "types_2d.hh"
 
 BEGIN_SNOW_NS
