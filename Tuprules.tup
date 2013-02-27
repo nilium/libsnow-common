@@ -3,7 +3,7 @@ src_base = $(base)/src
 include_base = $(base)/include
 lib_base = $(base)/lib
 
-BUILD_DEBUG=0
+BUILD_DEBUG=1
 ifeq ($(BUILD_DEBUG),0)
   CFLAGS += -O4
 else
