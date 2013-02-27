@@ -1,3 +1,5 @@
+// compare.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__COMMON__COMPARE_HH__
 #define __SNOW_COMMON__COMMON__COMPARE_HH__
 

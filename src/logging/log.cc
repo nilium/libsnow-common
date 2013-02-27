@@ -1,9 +1,4 @@
-/*
-  Logging routines / macros
-  Written by Noel Cower
-
-  See LICENSE.md for license information
-*/
+// log.cc -- Noel Cower -- Public Domain
 
 #include "snow/logging/log.hh"
 #include <stdarg.h>

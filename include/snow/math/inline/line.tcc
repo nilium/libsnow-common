@@ -1,3 +1,5 @@
+// line.tcc -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__LINE_TCC__
 #define __SNOW_COMMON__LINE_TCC__
 

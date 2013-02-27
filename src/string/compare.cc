@@ -1,3 +1,5 @@
+// compare.cc -- Noel Cower -- Public Domain
+
 #include <snow/string/compare.hh>
 #include <cstdint>
 #include <stack>

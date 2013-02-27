@@ -1,3 +1,5 @@
+// config.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__CONFIG_HH__
 #define __SNOW_COMMON__CONFIG_HH__
 

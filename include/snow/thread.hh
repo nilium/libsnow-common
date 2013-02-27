@@ -1,3 +1,5 @@
+// thread.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__THREAD_HH__
 #define __SNOW_COMMON__THREAD_HH__
 

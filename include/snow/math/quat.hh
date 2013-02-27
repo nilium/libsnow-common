@@ -1,3 +1,5 @@
+// quat.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__QUAT_HH__
 #define __SNOW_COMMON__QUAT_HH__
 

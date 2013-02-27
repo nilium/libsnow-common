@@ -1,9 +1,4 @@
-/*
-  Logging routines / macros
-  Written by Noel Cower
-
-  See LICENSE.md for license information
-*/
+// log.hh -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__COMMON__LOG_HH__
 #define __SNOW_COMMON__COMMON__LOG_HH__

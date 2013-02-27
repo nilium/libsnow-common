@@ -1,3 +1,5 @@
+// mat4.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__MAT4_HH__
 #define __SNOW_COMMON__MAT4_HH__
 

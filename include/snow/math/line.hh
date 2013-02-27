@@ -1,3 +1,5 @@
+// line.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__LINE_HH__
 #define __SNOW_COMMON__LINE_HH__
 

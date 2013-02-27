@@ -1,3 +1,5 @@
+// math.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__MATH_HH__
 #define __SNOW_COMMON__MATH_HH__
 
