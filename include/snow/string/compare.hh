@@ -26,7 +26,7 @@ size_t score_strings(const string &source, const string &other);
     Tries to match a string against a pattern using * and ? for wildcards, like
     the shell. Unlike the shell, * can consume as much as it needs in order to
     successfully match the string against the pattern. So, trying to match
-    "foo/*bar" against "foo/bar/baz/quux/bar" will result in a match, as it will
+    "foo*bar" against "foo/bar/baz/quux/bar" will result in a match, as it will
     go back to the last * wilcard when it fails to match the string and consume
     the first instance of "bar".
 
