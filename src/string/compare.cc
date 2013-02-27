@@ -58,7 +58,7 @@ bool pattern_match(const string &pattern, const string &other)
   const auto p_end = p_cstr + pattern.length();
   const auto o_end = o_cstr + other.length();
 
-  while (p_cstr < p_end && o_cstr < o_end)
+  while (p_cstr < p_end && o_cstr < o_end) {
     switch (*p_cstr) {
     case '*': {
         // automatic match if * is at the end of the pattern
@@ -79,12 +79,12 @@ bool pattern_match(const string &pattern, const string &other)
         // for both strings.
         p_cstr += 2;
         o_cstr += 1;
-      } break;
+      } break; // case '*'
 
     case '?':
       ++p_cstr;
       ++o_cstr;
-      break;
+      break; // case '?'
 
     default:
       if (*(p_cstr++) != *(o_cstr++) || (p_cstr >= p_end && o_cstr < o_end)) {
@@ -99,7 +99,9 @@ bool pattern_match(const string &pattern, const string &other)
           return false;
         }
       }
-    }
+      break; // default
+    } // switch
+  } // while
 
   return p_cstr >= p_end && o_cstr >= o_end;
 }
