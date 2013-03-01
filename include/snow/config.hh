@@ -86,9 +86,15 @@
 # include <PDL.h>
 #endif
 
+#ifndef BEGIN_NS
+#define BEGIN_NS(NAME) namespace NAME {
+// completely meaningless to have any arguments to END_NS but it looks nice
+#define END_NS(NAME...)   }
+#endif
+
 #ifndef BEGIN_SNOW_NS
-#define BEGIN_SNOW_NS namespace snow {
-#define END_SNOW_NS   }
+#define BEGIN_SNOW_NS BEGIN_NS(snow)
+#define END_SNOW_NS   END_NS(snow)
 #endif
 
 // Define string type
