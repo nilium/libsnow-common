@@ -36,14 +36,15 @@ ifeq (@(TUP_PLATFORM),freebsd)
   CFLAGS += -DTARGET_OS_BSD
 endif
 
-module_objects += $(src_base)/types/*.o
-module_objects += $(src_base)/string/*.o
-module_objects += $(src_base)/data/*.o
-module_objects += $(src_base)/logging/*.o
-
 c_files = *.c *.m
 cxx_files = *.cpp *.cc *.cxx *.mm
 object_files = *.o
+
+module_objects += $(src_base)/$(object_files)
+module_objects += $(src_base)/types/$(object_files)
+module_objects += $(src_base)/string/$(object_files)
+module_objects += $(src_base)/data/$(object_files)
+module_objects += $(src_base)/logging/$(object_files)
 
 lib_name = libsnow-common.a
 lib_path = $(lib_base)/$(lib_name)
