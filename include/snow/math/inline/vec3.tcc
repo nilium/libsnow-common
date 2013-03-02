@@ -4,6 +4,24 @@
 #define __SNOW_COMMON__VEC3_TCC__
 
 template <typename T>
+const vec3_t<T> vec3_t<T>::pos_X = { 1, 0, 0 };
+
+template <typename T>
+const vec3_t<T> vec3_t<T>::pos_Y = { 0, 1, 0 };
+
+template <typename T>
+const vec3_t<T> vec3_t<T>::pos_Z = { 0, 0, 1 };
+
+template <typename T>
+const vec3_t<T> vec3_t<T>::neg_X = { -1, 0, 0 };
+
+template <typename T>
+const vec3_t<T> vec3_t<T>::neg_Y = { 0, -1, 0 };
+
+template <typename T>
+const vec3_t<T> vec3_t<T>::neg_Z = { 0, 0, -1 };
+
+template <typename T>
 const vec3_t<T> vec3_t<T>::zero = { 0, 0, 0 };
 
 template <typename T>
