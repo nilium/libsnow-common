@@ -9,11 +9,12 @@ namespace sparse {
 #define CHECK_FLAG(FLAGS, FLAG) (((FLAGS)&(FLAG))==(FLAG))
 
 /// Static function declarations
+namespace {
 
 // Gets the escaped form of a given character code
-static inline char escaped_char(char ch);
+inline char escaped_char(char ch);
 // Used for basic error messages
-static inline string error_with_position(position_t pos, const string &str);
+inline string error_with_position(position_t pos, const string &str);
 
 
 
@@ -25,14 +26,14 @@ const size_t SP_INIT_BUFFER_CAPACITY = 64;
 
 /// Static function definitions
 
-static inline string error_with_position(position_t pos, const string &str)
+inline string error_with_position(position_t pos, const string &str)
 {
   std::stringstream stream;
   stream << pos << ' ' << str;
   return stream.str();
 }
 
-static inline char escaped_char(char ch) {
+inline char escaped_char(char ch) {
   switch (ch) {
   case 'n': case 'N': return '\n';
   case 'r': case 'R': return '\r';
@@ -45,7 +46,7 @@ static inline char escaped_char(char ch) {
   }
 }
 
-
+} // anonymous namespace
 
 /// position_t
 
