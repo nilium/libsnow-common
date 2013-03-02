@@ -86,6 +86,10 @@
 # include <PDL.h>
 #endif
 
+#ifndef S_EXPORT
+#define S_EXPORT __attribute__((visibility("default")))
+#endif
+
 // Define string type
 #include <string>
 

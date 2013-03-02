@@ -80,6 +80,7 @@ const parser_t::state_t parser_t::DEFAULT_STATE = {
   parser_t::position_stack_t() // openings
 };
 
+S_EXPORT
 parser_t::parser_t(int options, parse_func_t callback)
   : options_({
       // consume_ws
@@ -103,14 +104,17 @@ parser_t::parser_t(int options, parse_func_t callback)
   }
 }
 
+S_EXPORT
 parser_t::parser_t(const parser_t &other)
   : options_(other.options_), state_(other.state_)
 {}
 
+S_EXPORT
 parser_t::~parser_t()
 {
 }
 
+S_EXPORT
 void parser_t::add_source(const string &source)
 {
   const char *source_cst = source.c_str();
@@ -224,6 +228,7 @@ void parser_t::add_source(const string &source)
   }
 }
 
+S_EXPORT
 void parser_t::close()
 {
   if (state_.closed)
@@ -253,6 +258,7 @@ void parser_t::close()
 
 
 // Note: source may be a reference to state_.buffer.
+S_EXPORT
 inline void parser_t::state_t::send_buffer_and_reset(source_kind_t kind, const options_t &options)
 {
   // Unlike send_string, send the starting position for a token instead of the
@@ -261,11 +267,13 @@ inline void parser_t::state_t::send_buffer_and_reset(source_kind_t kind, const o
   buffer.clear();
 }
 
+S_EXPORT
 void parser_t::state_t::send_string(source_kind_t kind, const string &source)
 {
   if (func) func(kind, source, pos);
 }
 
+S_EXPORT
 void parser_t::state_t::buffer_char(char c, const options_t &options)
 {
   if (c != ' ' || escaped)
@@ -276,6 +284,7 @@ void parser_t::state_t::buffer_char(char c, const options_t &options)
   buffer.push_back(c);
 }
 
+S_EXPORT
 void parser_t::state_t::close_with_error(const string &error)
 {
   if (closed)
@@ -286,6 +295,7 @@ void parser_t::state_t::close_with_error(const string &error)
 }
 
 // Returns the buffer byref after resizing it
+S_EXPORT
 const string &parser_t::state_t::trimmed_buffer(const options_t &options)
 {
   if (options.trim_spaces && space_count > 0) {
