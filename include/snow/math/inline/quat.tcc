@@ -277,6 +277,65 @@ auto quat_t<T>::from_mat4(const mat4_t<T> &mat) -> quat_t
 }
 
 template <typename T>
+auto quat_t<T>::from_mat3(const mat3_t<T> &mat) -> quat_t
+{
+  quat_t out;
+  T r;
+  const T trace = mat.r.x + mat.s.y + mat.t.z;
+  const T *m = (T *)m;
+  const T m01 = mat.s.x, m02 = mat.t.x, m10 = mat.r.y,
+          m12 = mat.t.y, m20 = mat.r.z, m21 = mat.s.z;
+
+  if (trace > 0) {
+    r = std::sqrt(trace + 1);
+    out.w = r * 0.5;
+    r = 0.5 / r;
+    out.xyz = {
+      (m12 - m21) * r,
+      (m20 - m02) * r,
+      (m01 - m10) * r
+    };
+  } else {
+    int index = 0;
+    if (mat.s.y > mat.r.x) {
+      index = 1;
+    }
+    if (mat.t.z > (index ? mat.s.y : mat.r.x)) {
+      index = 2;
+    }
+
+    switch (index) {
+    default:
+    case 0:
+      r = out.xyz.x = std::sqrt(mat.r.x - (mat.s.y + mat.t.z) + 1) * 0.5;
+      if (r != 0) r = 0.5 / r;
+      out.xyz.y = (m10 + m01) * r;
+      out.xyz.z = (m20 + m02) * r;
+      out.w     = (m12 - m21) * r;
+      break;
+
+    case 1:
+      r = out.xyz.y = std::sqrt(mat.s.y - (mat.t.z + mat.r.x) + 1) * 0.5;
+      if (r != 0) r = 0.5 / r;
+      out.xyz.x = (m10 + m01) * r;
+      out.xyz.z = (m12 + m21) * r;
+      out.w     = (m20 - m02) * r;
+      break;
+
+    case 2:
+      r = out.xyz.z = std::sqrt(mat.s.y - (mat.r.x + mat.s.y) + 1) * 0.5;
+      if (r != 0) r = 0.5 / r;
+      out.xyz.x = (m20 + m02) * r;
+      out.xyz.y = (m21 + m12) * r;
+      out.w     = (m01 - m10) * r;
+      break;
+    }
+  }
+
+  return out;
+}
+
+template <typename T>
 auto quat_t<T>::slerp(const quat_t &to, T delta) const -> quat_t
 {
   T dot, scale0, scale1, angle, inv_sin;

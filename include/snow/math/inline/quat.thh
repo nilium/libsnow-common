@@ -30,6 +30,7 @@ struct alignas(4) quat_t {
   static quat_t make(vec3 xyz, T w);
   static quat_t from_angle_axis(T angle, const vec3 &axis);
   static quat_t from_mat4(const mat4_t<T> &mat);
+  static quat_t from_mat3(const mat3_t<T> &mat);
 
   value_type    length() const;
   value_type    magnitude() const;
