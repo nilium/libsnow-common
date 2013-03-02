@@ -12,12 +12,16 @@ endif
 
 CFLAGS += -Wall -m64
 CFLAGS += -I "$(include_base)"
+CFLAGS += -I "/usr/local/opt/openssl/include"
 CFLAGS += -fvisibility=hidden
 
 CXXFLAGS += -std=c++11 -stdlib=libc++
 
 LDFLAGS += -lc++
 LDFLAGS += -arch x86_64
+# OpenSSL
+LDFLAGS += -L "/usr/local/opt/openssl/lib"
+LDFLAGS += -lz -lcrypto -lssl
 
 LD = ld
 
