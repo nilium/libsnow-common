@@ -20,6 +20,12 @@ struct alignas(4) vec4_t {
 
   value_type x, y, z, w;
 
+  static const vec4_t pos_X;
+  static const vec4_t pos_Y;
+  static const vec4_t pos_Z;
+  static const vec4_t neg_X;
+  static const vec4_t neg_Y;
+  static const vec4_t neg_Z;
   static const vec4_t zero;
   static const vec4_t one;
 
