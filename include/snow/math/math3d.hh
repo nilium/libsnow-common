@@ -38,5 +38,6 @@ in the structures being packed.
 #include "quat.hh"
 #include "line.hh"
 #include "mat4.hh"
+#include "mat3.hh"
 
 #endif /* end __SNOW_COMMON__MATH3D_HH__ include guard */
