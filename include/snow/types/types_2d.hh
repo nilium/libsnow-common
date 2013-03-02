@@ -7,7 +7,7 @@
 #include <iostream>
 #include <algorithm>
 
-BEGIN_SNOW_NS
+namespace snow {
 
 template <typename T>
 struct rect_t;
@@ -273,6 +273,6 @@ typedef rect_t<double> rectd_t;
 typedef rect_t<long> rectl_t;
 typedef rect_t<int> recti_t;
 
-END_SNOW_NS
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__TYPES_2D_HH__ include guard */

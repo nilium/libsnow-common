@@ -3,8 +3,8 @@
 #include "snow/data/sparse.hh"
 #include <sstream>
 
-BEGIN_SNOW_NS
-BEGIN_SPARSE_NS
+namespace snow {
+namespace sparse {
 
 #define CHECK_FLAG(FLAGS, FLAG) (((FLAGS)&(FLAG))==(FLAG))
 
@@ -295,5 +295,5 @@ const string &parser_t::state_t::trimmed_buffer(const options_t &options)
 }
 
 
-END_SPARSE_NS
-END_SNOW_NS
+} // namespace sparse
+} // namespace snow

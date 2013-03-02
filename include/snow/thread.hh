@@ -7,7 +7,7 @@
 
 #include <thread>
 
-BEGIN_SNOW_NS
+namespace snow {
 
 // Basically std::async but without potential blocking due to std::future. In
 // turn, there is no return value, but you can use std::async for that.
@@ -17,6 +17,6 @@ void async_thread(FNT &&func, ARGS&&... args)
   std::thread(func, args...).detach();
 }
 
-END_SNOW_NS
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__THREAD_HH__ include guard */

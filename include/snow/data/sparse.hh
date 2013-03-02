@@ -9,13 +9,8 @@
 #include <stack>
 #include <stdexcept>
 
-#ifndef BEGIN_SPARSE_NS
-#define BEGIN_SPARSE_NS namespace sparse {
-#define END_SPARSE_NS   }
-#endif
-
-BEGIN_SNOW_NS
-BEGIN_SPARSE_NS
+namespace snow {
+namespace sparse {
 
 enum source_kind_t : int
 {
@@ -117,7 +112,7 @@ private:
   static const state_t DEFAULT_STATE;
 };
 
-END_SPARSE_NS
-END_SNOW_NS
+} // namespace sparse
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__SPARSE_HH__ include guard */

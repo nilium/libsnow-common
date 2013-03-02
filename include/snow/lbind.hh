@@ -15,7 +15,7 @@ extern "C" {
 #include <snow/config.hh>
 #include <type_traits>
 
-BEGIN_SNOW_NS
+namespace snow {
 
 /*==============================================================================
 
@@ -272,6 +272,6 @@ void lb_push_function(lua_State *L, F f)
   lua_pushcclosure(L, lb_glue_binding_fn(f), 1);
 }
 
-END_SNOW_NS
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__LBIND_HH__ include guard */

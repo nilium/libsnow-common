@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <utility>
 
-BEGIN_SNOW_NS
+namespace snow {
 
 size_t score_strings(const string &lhs, const string &rhs)
 {
@@ -106,4 +106,4 @@ bool pattern_match(const string &pattern, const string &other)
   return p_cstr >= p_end && o_cstr >= o_end;
 }
 
-END_SNOW_NS
+} // namespace snow

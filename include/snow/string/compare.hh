@@ -5,7 +5,7 @@
 
 #include <snow/config.hh>
 
-BEGIN_SNOW_NS
+namespace snow {
 
 /*==============================================================================
   score_strings
@@ -38,6 +38,6 @@ size_t score_strings(const string &source, const string &other);
 ==============================================================================*/
 bool pattern_match(const string &pattern, const string &other);
 
-END_SNOW_NS
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__COMMON__COMPARE_HH__ include guard */

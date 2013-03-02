@@ -6,7 +6,7 @@
 #include <snow/config.hh>
 #include "types_2d.hh"
 
-BEGIN_SNOW_NS
+namespace snow {
 
 class binpack_t
 {
@@ -104,6 +104,6 @@ public:
 
 };
 
-END_SNOW_NS
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__BINPACK_HH__ include guard */
