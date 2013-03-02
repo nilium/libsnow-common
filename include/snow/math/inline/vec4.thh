@@ -100,4 +100,6 @@ bool operator != (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
 
 #include "vec4.tcc"
 
+#define splat_vec4(V) (V).x, (V).y, (V).z, (V).w
+
 #endif /* end __SNOW_COMMON__VEC4_THH__ include guard */

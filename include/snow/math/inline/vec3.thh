@@ -94,4 +94,6 @@ bool operator != (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
 
 #include "vec3.tcc"
 
+#define splat_vec3(V) (V).x, (V).y, (V).z
+
 #endif /* end __SNOW_COMMON__VEC3_THH__ include guard */
