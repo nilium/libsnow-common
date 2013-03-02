@@ -12,6 +12,7 @@ endif
 
 CFLAGS += -Wall -m64
 CFLAGS += -I "$(include_base)"
+CFLAGS += -fvisibility=hidden
 
 CXXFLAGS += -std=c++11 -stdlib=libc++
 
@@ -21,18 +22,22 @@ LDFLAGS += -arch x86_64
 LD = ld
 
 ifeq (@(TUP_PLATFORM),macosx)
+  lib_shared_ext = dylib
   CFLAGS += -fblocks
   CFLAGS += -DTARGET_OS_MAC
   CXXFLAGS += -ObjC++
   LDFLAGS += -framework Cocoa
 endif
 ifeq (@(TUP_PLATFORM),linux)
+  lib_shared_ext = so
   CFLAGS += -DTARGET_OS_LINUX
 endif
 ifeq (@(TUP_PLATFORM),win32)
+  lib_shared_ext = dll
   CFLAGS += -DTARGET_OS_WINDOWS
 endif
 ifeq (@(TUP_PLATFORM),freebsd)
+  lib_shared_ext = so
   CFLAGS += -DTARGET_OS_BSD
 endif
 
@@ -46,8 +51,10 @@ module_objects += $(src_base)/string/$(object_files)
 module_objects += $(src_base)/data/$(object_files)
 module_objects += $(src_base)/logging/$(object_files)
 
-lib_name = libsnow-common.a
-lib_path = $(lib_base)/$(lib_name)
+lib_name = snow-common
+lib_version = 0.0.2
+lib_static_name = lib$(lib_name).$(lib_version).a
+lib_shared_name = lib$(lib_name).$(lib_version).$(lib_shared_ext)
 
 ifndef CC
   CC = clang
@@ -62,6 +69,6 @@ endif
 !cc_object = |> $(CC) $(CFLAGS) -c -o %o %f |> %B.o
 !cxx_object = |> $(CXX) $(CFLAGS) $(CXXFLAGS) -c -o %o %f |> %B.o
 !cxx_bin = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |>
-!cxx_tests_bin = | $(lib_path) |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -L$(lib_base) -lsnow-common -o %o %f |>
+!cxx_tests_bin = | $(lib_base)/$(lib_shared_name) |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(lib_base)/$(lib_shared_name) -o %o %f |>
 !ar_lib = |> ar cr %o %f |>
 !ld_exe = |> $(CXX) %f $(LDFLAGS) -ObjC -o %o |>

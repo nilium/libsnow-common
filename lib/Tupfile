@@ -1,3 +1,4 @@
 include_rules
 
-: $(module_objects) |> ar -rcs %o %f |> $(lib_name)
+: $(module_objects) |> ar -rcs %o %f |> $(lib_static_name)
+: $(module_objects) |> $(CXX) -dynamiclib $(LDFLAGS) $(CFLAGS) $(CXXFLAGS) -current_version $(lib_version) -compatibility_version $(lib_version) %f -o %o |> $(lib_shared_name)
