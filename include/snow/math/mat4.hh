@@ -202,6 +202,7 @@ namespace snow
 template <typename t> struct vec3_t;
 template <typename t> struct vec4_t;
 template <typename t> struct quat_t;
+template <typename t> struct mat3_t;
 
 #include "inline/mat4.thh"
 

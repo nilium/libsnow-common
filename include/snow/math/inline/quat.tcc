@@ -391,6 +391,18 @@ quat_t<T>::operator const T* () const
 }
 
 template <typename T>
+quat_t<T>::operator mat3_t<T> () const
+{
+  return mat3_t<T>::from_quat(*this);
+}
+
+template <typename T>
+quat_t<T>::operator mat4_t<T> () const
+{
+  return mat4_t<T>::from_quat(*this);
+}
+
+template <typename T>
 template <typename Q>
 quat_t<T>::operator quat_t<Q> () const
 {

@@ -157,6 +157,7 @@ namespace snow
 
 template <typename t> struct vec3_t;
 template <typename t> struct quat_t;
+template <typename t> struct mat4_t;
 
 #include "inline/mat3.thh"
 
@@ -168,5 +169,6 @@ typedef mat3_t<double> mat3d_t;
 #include "vec3.hh"
 #include "vec4.hh"
 #include "quat.hh"
+#include "mat4.hh"
 
 #endif /* end __SNOW_COMMON__MAT3_HH__ include guard */

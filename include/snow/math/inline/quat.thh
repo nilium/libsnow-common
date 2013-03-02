@@ -72,6 +72,8 @@ struct alignas(4) quat_t {
   value_type    operator[] (int index) const;
                 operator value_type* ();
                 operator const T* () const;
+                operator mat4_t<T>() const;
+                operator mat3_t<T>() const;
 
   template <typename Q>
                 operator quat_t<Q> () const;

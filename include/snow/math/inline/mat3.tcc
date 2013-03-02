@@ -448,6 +448,23 @@ mat3_t<T>::operator const T* () const
 }
 
 template <typename T>
+mat3_t<T>::operator mat4_t<T> () const
+{
+  return {
+    splat_vec3(r), 0,
+    splat_vec3(s), 0,
+    splat_vec3(t), 0,
+    0, 0, 0, 1
+  };
+}
+
+template <typename T>
+mat3_t<T>::operator quat_t<T> () const
+{
+  return quat_t<T>::from_mat3(*this);
+}
+
+template <typename T>
 auto mat3_t<T>::operator *= (const mat3_t &other) -> mat3_t &
 {
   return multiply(other);

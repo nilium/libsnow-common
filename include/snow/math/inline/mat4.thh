@@ -103,6 +103,9 @@ struct alignas(4) mat4_t
                 operator T* ();
                 operator const T* () const;
 
+                operator quat_t<T>() const;
+                operator mat3_t<T>() const;
+
   mat4_t &      operator *= (const mat4_t &other);
   mat4_t &      operator *= (T scalar);
 

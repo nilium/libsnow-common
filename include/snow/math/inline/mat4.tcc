@@ -889,6 +889,22 @@ mat4_t<T>::operator const T* () const
 }
 
 template <typename T>
+mat4_t<T>::operator mat3_t<T> () const
+{
+  return {
+    rowvec3(0),
+    rowvec3(1),
+    rowvec3(2)
+  };
+}
+
+template <typename T>
+mat4_t<T>::operator quat_t<T> () const
+{
+  return quat_t<T>::from_mat4(*this);
+}
+
+template <typename T>
 auto mat4_t<T>::operator *= (const mat4_t &other) -> mat4_t &
 {
   return multiply(other);
