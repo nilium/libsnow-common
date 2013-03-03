@@ -2,6 +2,8 @@ include_rules
 
 ifeq ($(BUILD_SHARED),0)
   : $(module_objects) |> !ar_lib |> $(lib_static_name)
+  : $(lib_static_name) |> ln -s %f %o |> lib$(lib_name).a
 else
   : $(module_objects) |> $(CXX) -dynamiclib $(LDFLAGS) $(CFLAGS) $(CXXFLAGS) -current_version $(lib_version) -compatibility_version $(lib_version) %f -o %o |> $(lib_shared_name)
+  : $(lib_shared_name) |> ln -s %f %o |> lib$(lib_name).$(lib_shared_ext)
 endif
