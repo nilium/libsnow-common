@@ -13,6 +13,10 @@
 #include <PDL.h>
 #endif
 
+#ifndef S_EXPORT
+#define S_EXPORT __attribute__((visibility("default")))
+#endif
+
 #define SNOW_LOG_NOTHING          (0)
 #define SNOW_LOG_ERRORS           (1)
 #define SNOW_LOG_WARNINGS_ERRORS  (2)
@@ -43,7 +47,7 @@ extern "C"
  *  @param[in] error The error code to exit with.
  */
 #define USE_FATAL_ERROR_IMPL 1
-void s_fatal_error_impl(const char *format, ...);
+S_EXPORT void s_fatal_error_impl(const char *format, ...);
 
 /*! \brief Macro around ::log_fatal_ to pass in additional file, line number,
   and callee information to the format string.  This is never a no-op.

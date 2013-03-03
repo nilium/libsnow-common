@@ -90,6 +90,10 @@
 #define S_EXPORT __attribute__((visibility("default")))
 #endif
 
+#ifndef S_HIDDEN
+#define S_HIDDEN __attribute__((visibility("hidden")))
+#endif
+
 // Define string type
 #include <string>
 

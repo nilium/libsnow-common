@@ -5,7 +5,6 @@
 
 namespace snow {
 
-S_EXPORT
 void sha256(const char *data, size_t length, char hash[SHA256_DIGEST_LENGTH])
 {
   SHA256_CTX context;

@@ -8,7 +8,7 @@
 
 namespace snow {
 
-void sha256(const char *data, size_t length, char hash[SHA256_DIGEST_LENGTH] /* extra char for \0 */);
+S_EXPORT void sha256(const char *data, size_t length, char hash[SHA256_DIGEST_LENGTH]);
 
 template <typename T>
 inline void sha256(const std::basic_string<T> &string, char hash[65])

@@ -5,17 +5,14 @@
 namespace snow
 {
 
-S_EXPORT
 binpack_t::binpack_t(const recti_t &frame, binpack_t *right, binpack_t *bottom) :
   pack_right_(right), pack_bottom_(bottom), frame_(frame), loaded_(false)
 {}
 
-S_EXPORT
 binpack_t::binpack_t(const recti_t &frame) :
   pack_right_(nullptr), pack_bottom_(nullptr), frame_(frame), loaded_(false)
 {}
 
-S_EXPORT
 binpack_t::binpack_t(const binpack_t &other) :
   pack_right_(nullptr), pack_bottom_(nullptr), frame_(other.frame()), loaded_(other.loaded())
 {
@@ -26,14 +23,12 @@ binpack_t::binpack_t(const binpack_t &other) :
     pack_bottom_ = new binpack_t(*other.pack_bottom_);
 }
 
-S_EXPORT
 binpack_t::~binpack_t()
 {
   if (pack_right_) delete pack_right_;
   if (pack_bottom_) delete pack_bottom_;
 }
 
-S_EXPORT
 auto binpack_t::find_unused_bin(const dimensi_t &size) -> binpack_t*
 {
   const int f_width = frame_.size.width;
@@ -112,7 +107,6 @@ auto binpack_t::find_unused_bin(const dimensi_t &size) -> binpack_t*
   return this;
 }
 
-S_EXPORT
 void binpack_t::merge_empty_recursive()
 {
   const int f_width = frame_.size.width;
@@ -157,21 +151,18 @@ void binpack_t::merge_empty_recursive()
   }
 }
 
-S_EXPORT
 void binpack_t::unload()
 {
   loaded_ = false;
   merge_empty_recursive();
 }
 
-S_EXPORT
 void binpack_t::reset()
 {
   reset_recursive();
   merge_empty_recursive();
 }
 
-S_EXPORT
 void binpack_t::reset_recursive()
 {
   loaded_ = false;

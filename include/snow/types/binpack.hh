@@ -8,7 +8,7 @@
 
 namespace snow {
 
-class binpack_t
+class S_EXPORT binpack_t
 {
 private:
   binpack_t *pack_right_;

@@ -4,10 +4,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
-#ifndef S_EXPORT
-#define S_EXPORT __attribute__((visibility("default")))
-#endif
-
 #if defined(s_fatal_error) && USE_FATAL_ERROR_IMPL
 
 #if defined(__cplusplus)
@@ -15,7 +11,6 @@ extern "C"
 {
 #endif
 
-S_EXPORT
 void s_fatal_error_impl(const char *format, ...)
 {
   va_list args;

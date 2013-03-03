@@ -33,18 +33,18 @@ enum option_flags_t : int
                              SP_CONSUME_WHITESPACE)
 };
 
-struct position_t {
+struct S_EXPORT position_t {
   size_t line;
   size_t column;
 
   operator string() const;
 };
 
-std::ostream &operator << (std::ostream&, const position_t&);
+S_EXPORT std::ostream &operator << (std::ostream&, const position_t&);
 
 typedef std::function<void(source_kind_t, const string&, position_t)> parse_func_t;
 
-struct parser_t
+struct S_EXPORT parser_t
 {
   parser_t(int options, parse_func_t callback);
   parser_t(const parser_t &other); // Copies parser state, callback, and options
@@ -71,14 +71,14 @@ private:
     READ_COMMENT = 0x1 << 4,
   };
 
-  struct options_t {
+  struct S_HIDDEN options_t {
     bool consume_ws;
     bool trim_spaces;
     bool nameless_roots;
     bool nameless_nodes;
   };
 
-  struct state_t {
+  struct S_EXPORT state_t {
 
     bool closed;
     position_t pos;
@@ -98,12 +98,12 @@ private:
     position_stack_t openings;
 
     // Note: source may be a reference to state_.buffer.
-    void send_buffer_and_reset(source_kind_t kind, const options_t &options);
-    void send_string(source_kind_t kind, const string &source);
-    void buffer_char(char c, const options_t &options);
-    void close_with_error(const string &error);
+    S_HIDDEN void send_buffer_and_reset(source_kind_t kind, const options_t &options);
+    S_HIDDEN void send_string(source_kind_t kind, const string &source);
+    S_HIDDEN void buffer_char(char c, const options_t &options);
+    S_EXPORT void close_with_error(const string &error);
     // Copies the buffer after resizing it
-    const string &trimmed_buffer(const options_t &options);
+    S_HIDDEN const string &trimmed_buffer(const options_t &options);
   };
 
   options_t options_;

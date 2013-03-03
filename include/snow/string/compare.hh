@@ -18,7 +18,7 @@ namespace snow {
     enough string, but it also won't attempt to do complex scoring. This is very
     far from fuzzy string matching.
 ==============================================================================*/
-size_t score_strings(const string &source, const string &other);
+S_EXPORT size_t score_strings(const string &source, const string &other);
 
 /*==============================================================================
   pattern_match
@@ -36,7 +36,7 @@ size_t score_strings(const string &source, const string &other);
     Both * and ? must consume at least one character. They are essentially
     equivalent to .+? and . in a regex.
 ==============================================================================*/
-bool pattern_match(const string &pattern, const string &other);
+S_EXPORT bool pattern_match(const string &pattern, const string &other);
 
 } // namespace snow
 

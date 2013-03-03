@@ -8,7 +8,6 @@
 
 namespace snow {
 
-S_EXPORT
 size_t score_strings(const string &lhs, const string &rhs)
 {
   string::size_type src_length = lhs.length();
@@ -51,7 +50,6 @@ size_t score_strings(const string &lhs, const string &rhs)
   return score;
 }
 
-S_EXPORT
 bool pattern_match(const string &pattern, const string &other)
 {
   const char *backup = nullptr;
