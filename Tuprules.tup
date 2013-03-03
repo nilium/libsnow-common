@@ -3,7 +3,14 @@ src_base = $(base)/src
 include_base = $(base)/include
 lib_base = $(base)/lib
 
-BUILD_DEBUG=1
+ifndef BUILD_SHARED
+  BUILD_SHARED=0
+endif
+
+ifndef BUILD_DEBUG
+  BUILD_DEBUG=1
+endif
+
 ifeq ($(BUILD_DEBUG),0)
   CFLAGS += -O4
 else
@@ -12,18 +19,20 @@ endif
 
 CFLAGS += -Wall -m64
 CFLAGS += -I "$(include_base)"
-CFLAGS += -I "/usr/local/opt/openssl/include"
 CFLAGS += -fvisibility=hidden
 
 CXXFLAGS += -std=c++11 -stdlib=libc++
 
 LDFLAGS += -lc++
 LDFLAGS += -arch x86_64
-# OpenSSL
-LDFLAGS += -L "/usr/local/opt/openssl/lib"
-LDFLAGS += -lz -lcrypto -lssl
 
-LD = ld
+# OpenSSL
+CFLAGS += `pkg-config openssl --cflags`
+LDFLAGS += `pkg-config openssl --libs`
+
+ifneq ($(BUILD_SHARED),0)
+  CFLAGS += -dynamic
+endif
 
 ifeq (@(TUP_PLATFORM),macosx)
   lib_shared_ext = dylib
@@ -49,6 +58,7 @@ c_files = *.c *.m
 cxx_files = *.cpp *.cc *.cxx *.mm
 object_files = *.o
 
+# Add globs for module objects
 module_objects += $(src_base)/$(object_files)
 module_objects += $(src_base)/types/$(object_files)
 module_objects += $(src_base)/string/$(object_files)
@@ -68,11 +78,23 @@ ifndef CXX
   CXX = clang++
 endif
 
+ifndef LD
+  LD = ld
+endif
+
+ifndef AR
+  AR = ar -rcs
+endif
+
 !cc_file = |> $(CC) $(CFLAGS) $(LDFLAGS) -o %o %f |> %B
 !cxx_file = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |> %B
 !cc_object = |> $(CC) $(CFLAGS) -c -o %o %f |> %B.o
 !cxx_object = |> $(CXX) $(CFLAGS) $(CXXFLAGS) -c -o %o %f |> %B.o
 !cxx_bin = |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) -o %o %f |>
-!cxx_tests_bin = | $(lib_base)/$(lib_shared_name) |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(lib_base)/$(lib_shared_name) -o %o %f |>
-!ar_lib = |> ar cr %o %f |>
+ifeq ($(BUILD_SHARED),1)
+  !cxx_tests_bin = | $(lib_base)/$(lib_shared_name) |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(lib_base)/$(lib_shared_name) -o %o %f |>
+else
+  !cxx_tests_bin = | $(lib_base)/$(lib_static_name) |> $(CXX) $(CFLAGS) $(CXXFLAGS) $(LDFLAGS) $(lib_base)/$(lib_static_name) -o %o %f |>
+endif
+!ar_lib = |> $(AR) %o %f |>
 !ld_exe = |> $(CXX) %f $(LDFLAGS) -ObjC -o %o |>
