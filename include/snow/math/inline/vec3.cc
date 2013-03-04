@@ -1,4 +1,4 @@
-// vec3.tcc -- Noel Cower -- Public Domain
+// vec3.cc -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__VEC3_TCC__
 #define __SNOW_COMMON__VEC3_TCC__

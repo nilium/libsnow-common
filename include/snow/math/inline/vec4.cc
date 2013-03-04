@@ -1,4 +1,4 @@
-// vec4.tcc -- Noel Cower -- Public Domain
+// vec4.cc -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__VEC4_TCC__
 #define __SNOW_COMMON__VEC4_TCC__

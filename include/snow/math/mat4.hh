@@ -204,7 +204,7 @@ template <typename t> struct vec4_t;
 template <typename t> struct quat_t;
 template <typename t> struct mat3_t;
 
-#include "inline/mat4.thh"
+#include "inline/mat4.hh"
 
 typedef mat4_t<float> mat4f_t;
 typedef mat4_t<double> mat4d_t;

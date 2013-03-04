@@ -1,4 +1,4 @@
-// mat4.tcc -- Noel Cower -- Public Domain
+// mat4.cc -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__MAT4_TCC__
 #define __SNOW_COMMON__MAT4_TCC__

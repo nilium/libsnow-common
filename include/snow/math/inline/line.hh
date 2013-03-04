@@ -1,4 +1,4 @@
-// line.thh -- Noel Cower -- Public Domain
+// line.hh -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__LINE_THH__
 #define __SNOW_COMMON__LINE_THH__
@@ -28,6 +28,6 @@ struct line_t
   auto nearest_to(const vec3& p) const -> vec3;
 };
 
-#include "line.tcc"
+#include "line.cc"
 
 #endif /* end __SNOW_COMMON__LINE_THH__ include guard */

@@ -153,7 +153,7 @@ vec3_t<value_type>
 namespace snow
 {
 
-#include "inline/vec3.thh"
+#include "inline/vec3.hh"
 
 typedef vec3_t<float> vec3f_t;
 typedef vec3_t<double> vec3d_t;

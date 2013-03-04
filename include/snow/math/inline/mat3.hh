@@ -1,4 +1,4 @@
-// mat4.thh -- Noel Cower -- Public Domain
+// mat4.hh -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__MAT3_THH__
 #define __SNOW_COMMON__MAT3_THH__
@@ -124,6 +124,6 @@ bool          operator == (const mat3_t<T> &rhs, const mat3_t<Q> &lhs);
 template <typename T, typename Q>
 bool          operator != (const mat3_t<T> &rhs, const mat3_t<Q> &lhs);
 
-#include "mat3.tcc"
+#include "mat3.cc"
 
 #endif /* end __SNOW_COMMON__MAT3_THH__ include guard */

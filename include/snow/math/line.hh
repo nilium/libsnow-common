@@ -35,7 +35,7 @@ namespace snow
 
 template <typename T> struct vec3_t;
 
-#include "inline/line.thh"
+#include "inline/line.hh"
 
 typedef line_t<float> linef_t;
 typedef line_t<double> lined_t;

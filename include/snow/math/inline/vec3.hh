@@ -1,4 +1,4 @@
-// vec3.thh -- Noel Cower -- Public Domain
+// vec3.hh -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__VEC3_THH__
 #define __SNOW_COMMON__VEC3_THH__
@@ -98,7 +98,7 @@ bool operator == (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
 template <typename T, typename Q>
 bool operator != (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
 
-#include "vec3.tcc"
+#include "vec3.cc"
 
 #define splat_vec3(V) (V).x, (V).y, (V).z
 

@@ -151,7 +151,7 @@ vec4_t<value_type>
 namespace snow
 {
 
-#include "inline/vec4.thh"
+#include "inline/vec4.hh"
 
 typedef vec4_t<float> vec4f_t;
 typedef vec4_t<double> vec4d_t;

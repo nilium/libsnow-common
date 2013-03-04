@@ -1,4 +1,4 @@
-// quat.thh -- Noel Cower -- Public Domain
+// quat.hh -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__QUAT_THH__
 #define __SNOW_COMMON__QUAT_THH__
@@ -101,6 +101,6 @@ bool          operator == (const quat_t<T> &lhs, const quat_t<Q> &rhs);
 template <typename T, typename Q>
 bool          operator != (const quat_t<T> &lhs, const quat_t<Q> &rhs);
 
-#include "quat.tcc"
+#include "quat.cc"
 
 #endif /* end __SNOW_COMMON__QUAT_THH__ include guard */

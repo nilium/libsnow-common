@@ -161,7 +161,7 @@ template <typename T> struct vec3_t;
 template <typename T> struct mat4_t;
 template <typename T> struct mat3_t;
 
-#include "inline/quat.thh"
+#include "inline/quat.hh"
 
 typedef quat_t<float> quatf_t;
 typedef quat_t<double> quatd_t;

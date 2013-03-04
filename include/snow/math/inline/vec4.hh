@@ -1,4 +1,4 @@
-// vec4.thh -- Noel Cower -- Public Domain
+// vec4.hh -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__VEC4_THH__
 #define __SNOW_COMMON__VEC4_THH__
@@ -104,7 +104,7 @@ bool operator == (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
 template <typename T, typename Q>
 bool operator != (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
 
-#include "vec4.tcc"
+#include "vec4.cc"
 
 #define splat_vec4(V) (V).x, (V).y, (V).z, (V).w
 

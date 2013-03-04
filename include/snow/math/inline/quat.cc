@@ -1,4 +1,4 @@
-// quat.tcc -- Noel Cower -- Public Domain
+// quat.cc -- Noel Cower -- Public Domain
 
 #ifndef __SNOW_COMMON__QUAT_TCC__
 #define __SNOW_COMMON__QUAT_TCC__
