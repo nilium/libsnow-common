@@ -39,12 +39,22 @@
    before config.h in a Mac OS build, we can just assume YES/NO are 1 and 0 or
    at least mapped similarly.
 */
+#ifndef __cplusplus
 #if !defined(YES)
 # define YES (1)
 #endif
 
 #if !defined(NO)
 # define NO (0)
+#endif
+#else
+#if !defined(YES)
+# define YES (true)
+#endif
+
+#if !defined(NO)
+# define NO (false)
+#endif
 #endif
 
 /* set up some macros for platforms */
@@ -53,7 +63,7 @@
 #define S_PLATFORM_APPLE    (defined(__APPLE__))
 #define S_PLATFORM_WINDOWS  (defined(_WIN32) || defined(__MINGW32__))
 #define S_PLATFORM_LINUX    (defined(__linux__) || defined(linux) || defined(__linux))
-#define S_PLATFORM_MAC      (S_PLATFORM_APPLE && TARGET_OS_MAC && !TARGET_OS_IPHONE)
+#define S_PLATFORM_MAC      (S_PLATFORM_APPLE && TARGET_OS_MAC && !(TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR))
 #define S_PLATFORM_IOS      (S_PLATFORM_APPLE && TARGET_OS_IPHONE)
 #define S_PLATFORM_IOS_SIM  (S_PLATFORM_APPLE && TARGET_IPHONE_SIMULATOR)
 #define S_PLATFORM_QNX      (defined(__QNX__))
