@@ -19,9 +19,9 @@ struct alignas(4) plane_t
   value_type d;
 
   static plane_t   make(const vec3_t &normal, float d);
-  // A plane specifically for three points forming a triangle
+  // A plane specifically for three points forming a triangle. Uses CCW winding order.
   static plane_t   for_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_t &v2);
-  // A plane for four or more points.
+  // A plane for four or more points. Uses CCW winding order.
   template <typename C> // where C provides cbegin/cend and a forward const_iterator
   static plane_t   for_points(const C &points);
 
