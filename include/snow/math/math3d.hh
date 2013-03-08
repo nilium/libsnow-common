@@ -37,6 +37,7 @@ in the structures being packed.
 #include "vec4.hh"
 #include "quat.hh"
 #include "line.hh"
+#include "plane.hh"
 #include "mat4.hh"
 #include "mat3.hh"
 
