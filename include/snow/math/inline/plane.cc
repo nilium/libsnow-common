@@ -25,15 +25,16 @@ template <typename T>
 template <typename C>
 auto plane_t<T>::for_points(const C &points) -> plane_t
 {
-  if (points.size <= 3)
-    throw std::invalid_argument("Points container must have four or more points.");
-
   typename C::const_iterator iter, end;
   iter = points.cbegin();
   end = points.cend();
+
+  if (std::distance(iter, end) < 4)
+    throw std::invalid_argument("Points container must have four or more points.");
+
   vec3_t normal, last;
   vec3_t first = *iter;
-  value_type count;
+  value_type count = 0;
   value_type d = 0;
   for (;;) {
     typename C::const_iterator cur = iter++;
@@ -42,7 +43,9 @@ auto plane_t<T>::for_points(const C &points) -> plane_t
     if (iter == end)
       break;
 
-    normal += last.cross_product(*iter);
+    normal.x += (last.z + iter->z) * (last.y - iter->y);
+    normal.y += (last.x + iter->x) * (last.z - iter->z);
+    normal.z += (last.y + iter->y) * (last.x - iter->x);
     count += 1;
   }
   normal += last.cross_product(first);
