@@ -10,7 +10,7 @@
 ==============================================================================*/
 
 template <typename T = float>
-struct alignas(4) mat4_t
+struct alignas(T) mat4_t
 {
  static_assert(std::is_floating_point<T>::value,
                 "value_type must be floating point type");

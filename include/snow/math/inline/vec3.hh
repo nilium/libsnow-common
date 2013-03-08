@@ -10,7 +10,7 @@
 ==============================================================================*/
 
 template <typename T = float>
-struct alignas(4) vec3_t {
+struct alignas(T) vec3_t {
   static_assert(std::is_floating_point<T>::value,
                 "value_type must be floating point type");
   static_assert(std::is_scalar<T>::value,
