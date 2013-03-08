@@ -48,7 +48,9 @@ auto plane_t<T>::for_points(const C &points) -> plane_t
     normal.z += (last.y + iter->y) * (last.x - iter->x);
     count += 1;
   }
-  normal += last.cross_product(first);
+  normal.x += (last.z + first.z) * (last.y - first.y);
+  normal.y += (last.x + first.x) * (last.z - first.z);
+  normal.z += (last.y + first.y) * (last.x - first.x);
 
   normal.normalize();
 
