@@ -38,7 +38,7 @@ In other cases, there may be no documentation.
 Except where noted otherwise, all source code in Snow-Common is public
 domain. You are free to do with it as you like on the condition that you are not
 a dick. I cannot enforce this condition, so it's meaningless and still public
-domain.
+domain. Be excellent.
 
 See COPYING for further details.
 
