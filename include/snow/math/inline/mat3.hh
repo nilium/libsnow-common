@@ -12,10 +12,6 @@
 template <typename T = float>
 struct alignas(4) mat3_t
 {
- static_assert(std::is_floating_point<T>::value,
-                "value_type must be floating point type");
- static_assert(std::is_scalar<T>::value,
-                "value_type must be scalar type");
 
   typedef T value_type;
   typedef vec3_t<T> vec3;
