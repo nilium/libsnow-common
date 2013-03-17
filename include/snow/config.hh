@@ -108,6 +108,12 @@
 #define S_HIDDEN __attribute__((visibility("hidden")))
 #endif
 
+#include <stdexcept>
+#include <utility>
+#include <type_traits>
+#include <cstdint>
+#include <cfloat>
+
 // Define string type
 #include <string>
 
