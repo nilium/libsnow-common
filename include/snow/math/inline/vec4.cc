@@ -218,6 +218,25 @@ auto vec4_t<T>::dot_product(const vec4_t &other) const -> value_type
 }
 
 template <typename T>
+auto vec4_t<T>::rotate_elems() -> vec4_t &
+{
+  value_type wt = w;
+  w = z;
+  z = y;
+  y = x;
+  x = w;
+  return *this;
+}
+
+template <typename T>
+auto vec4_t<T>::rotated_elems() const -> vec4_t
+{
+  return {
+    w, x, y, z
+  };
+}
+
+template <typename T>
 auto vec4_t<T>::operator += (const vec4_t &other) -> vec4_t&
 {
   return add(other);

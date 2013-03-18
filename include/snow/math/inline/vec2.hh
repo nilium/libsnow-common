@@ -42,6 +42,8 @@ struct alignas(T) vec2_t {
   vec2_t        inverse() const;
   vec2_t &      invert();
   value_type    dot_product(const vec2_t &other) const;
+  vec2_t &      rotate_elems();
+  vec2_t        rotated_elems() const;
 
   vec2_t &      operator += (const vec2_t &other);
   vec2_t &      operator -= (const vec2_t &other);

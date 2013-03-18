@@ -182,6 +182,21 @@ auto vec2_t<T>::dot_product(const vec2_t &other) const -> value_type
 }
 
 template <typename T>
+auto vec2_t<T>::rotate_elems() -> vec2_t &
+{
+  std::swap(x, y);
+  return *this;
+}
+
+template <typename T>
+auto vec2_t<T>::rotated_elems() const -> vec2_t
+{
+  return {
+    y, x
+  };
+}
+
+template <typename T>
 auto vec2_t<T>::operator += (const vec2_t &other) -> vec2_t&
 {
   return add(other);

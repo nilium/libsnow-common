@@ -213,6 +213,24 @@ auto vec3_t<T>::dot_product(const vec3_t &other) const -> value_type
 }
 
 template <typename T>
+auto vec3_t<T>::rotate_elems() -> vec3_t &
+{
+  value_type zt = z;
+  z = y;
+  y = x;
+  x = zt;
+  return *this;
+}
+
+template <typename T>
+auto vec3_t<T>::rotated_elems() const -> vec3_t
+{
+  return {
+    z, x, y
+  };
+}
+
+template <typename T>
 auto vec3_t<T>::operator += (const vec3_t &other) -> vec3_t&
 {
   return add(other);
