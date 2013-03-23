@@ -372,9 +372,9 @@ auto mat3_t<T>::product(const mat3_t &other) const -> mat3_t
 
   for (int cindex = 0; cindex < 3; ++cindex) {
     const vec3 column = colvec3(cindex);
-    m[cindex    ] = column.dot_product(r);
-    m[cindex + 3] = column.dot_product(s);
-    m[cindex + 6] = column.dot_product(t);
+    m[cindex    ] = column.dot_product(other.r);
+    m[cindex + 3] = column.dot_product(other.s);
+    m[cindex + 6] = column.dot_product(other.t);
   }
 
   return temp;
@@ -387,9 +387,9 @@ auto mat3_t<T>::multiply(const mat3_t &other) -> mat3_t &
 
   for (int cindex = 0; cindex < 3; ++cindex) {
     const vec3 column = colvec3(cindex);
-    m[cindex    ] = column.dot_product(r);
-    m[cindex + 3] = column.dot_product(s);
-    m[cindex + 6] = column.dot_product(t);
+    m[cindex    ] = column.dot_product(other.r);
+    m[cindex + 3] = column.dot_product(other.s);
+    m[cindex + 6] = column.dot_product(other.t);
   }
 
   return *this;
