@@ -694,10 +694,10 @@ auto mat4_t<T>::product(const mat4_t &other) const -> mat4_t
   mat4_t temp;
   T *m = &temp.m00;
   const vec4 rowvecs[4] = {
-    rowvec4(0),
-    rowvec4(1),
-    rowvec4(2),
-    rowvec4(3)
+    other.rowvec4(0),
+    other.rowvec4(1),
+    other.rowvec4(2),
+    other.rowvec4(3)
   };
 
   for (int cindex = 0; cindex < 4; ++cindex) {
@@ -716,10 +716,10 @@ auto mat4_t<T>::multiply(const mat4_t &other) -> mat4_t &
 {
   T *m = &m00;
   const vec4 rowvecs[4] = {
-    rowvec4(0),
-    rowvec4(1),
-    rowvec4(2),
-    rowvec4(3)
+    other.rowvec4(0),
+    other.rowvec4(1),
+    other.rowvec4(2),
+    other.rowvec4(3)
   };
 
   for (int cindex = 0; cindex < 4; ++cindex) {
