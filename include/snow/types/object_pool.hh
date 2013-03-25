@@ -27,17 +27,18 @@ struct object_pool_t
 
 
 
-  index_t reserve()
+  template <typename... ARGS>
+  index_t reserve(ARGS&&... args)
   {
     index_t index = 0;
     if (unused_indices_.empty()) {
       index = objects_.size();
-      objects_.emplace(objects_.end());
+      objects_.emplace(objects_.end(), args...);
     } else {
       auto index_begin = unused_indices_.begin();
       index = *index_begin;
       unused_indices_.erase(index_begin);
-      new(&objects_[index]) object_t();
+      new(&objects_[index]) object_t(args...);
     }
     return index;
   }
