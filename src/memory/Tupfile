@@ -1,0 +1,4 @@
+include_rules
+
+: foreach $(c_files) |> !c_object |>
+: foreach $(cxx_files) |> !cxx_object |>

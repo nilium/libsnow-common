@@ -33,4 +33,7 @@ and linked to. So, it would produce some errors if in here.
 // Strings
 #include "snow/string/string.hh"
 
+// Memory
+#include "snow/memory/ref_counter.hh"
+
 #endif /* end __SNOW_COMMON__SNOW_COMMON_HH__ include guard */

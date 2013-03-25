@@ -60,10 +60,11 @@ object_files = *.o
 
 # Add globs for module objects
 module_objects += $(src_base)/$(object_files)
-module_objects += $(src_base)/types/$(object_files)
-module_objects += $(src_base)/string/$(object_files)
 module_objects += $(src_base)/data/$(object_files)
 module_objects += $(src_base)/logging/$(object_files)
+module_objects += $(src_base)/memory/$(object_files)
+module_objects += $(src_base)/string/$(object_files)
+module_objects += $(src_base)/types/$(object_files)
 
 lib_name = snow-common
 lib_version = 0.0.2
