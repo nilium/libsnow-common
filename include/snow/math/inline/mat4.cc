@@ -308,7 +308,7 @@ auto mat4_t<T>::set_colvec3(int index, const vec3 &col) -> mat4_t &
 }
 
 template <typename T>
-auto mat4_t<T>::inverse_orthogonal() -> mat4_t
+auto mat4_t<T>::inverse_orthogonal() const -> mat4_t
 {
   vec3_t<T> row = { m03, m13, m23 };
   mat4_t temp = {

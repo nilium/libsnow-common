@@ -78,7 +78,7 @@ struct alignas(T) mat4_t
   mat4_t        scaled(const vec3 &vec) const;
   mat4_t &      scale(const vec3 &vec);
 
-  mat4_t        inverse_orthogonal();
+  mat4_t        inverse_orthogonal() const;
   bool          inverse_affine(mat4_t &out) const;
   bool          inverse_general(mat4_t &out) const;
   T             cofactor(int r0, int r1, int r2, int c0, int c1, int c2) const;
