@@ -224,7 +224,7 @@ auto vec4_t<T>::rotate_elems() -> vec4_t &
   w = z;
   z = y;
   y = x;
-  x = w;
+  x = wt;
   return *this;
 }
 
