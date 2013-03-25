@@ -21,6 +21,7 @@ and linked to. So, it would produce some errors if in here.
 
 // Types
 #include "snow/types/binpack.hh"
+#include "snow/types/object_pool.hh"
 #include "snow/types/range.hh"
 #include "snow/types/range_set.hh"
 #include "snow/types/triple_buffer.hh"
