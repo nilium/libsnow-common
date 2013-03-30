@@ -153,11 +153,17 @@ vec3_t<value_type>
 namespace snow
 {
 
+template <typename T> struct vec2_t;
+template <typename T> struct vec4_t;
+
 #include "inline/vec3.hh"
 
 typedef vec3_t<float> vec3f_t;
 typedef vec3_t<double> vec3d_t;
 
 }
+
+#include "vec2.hh"
+#include "vec4.hh"
 
 #endif /* end __SNOW_COMMON__VEC3_HH__ include guard */

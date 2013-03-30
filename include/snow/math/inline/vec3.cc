@@ -312,12 +312,34 @@ vec3_t<T>::operator const value_type* () const
 
 template <typename T>
 template <typename Q>
+vec3_t<T>::operator vec2_t<Q> () const
+{
+  return {
+    static_cast<Q>(x),
+    static_cast<Q>(y)
+  };
+}
+
+template <typename T>
+template <typename Q>
 vec3_t<T>::operator vec3_t<Q> () const
 {
   return {
     static_cast<Q>(x),
     static_cast<Q>(y),
     static_cast<Q>(z)
+  };
+}
+
+template <typename T>
+template <typename Q>
+vec3_t<T>::operator vec4_t<Q> () const
+{
+  return {
+    static_cast<Q>(x),
+    static_cast<Q>(y),
+    static_cast<Q>(z),
+    Q(1)
   };
 }
 

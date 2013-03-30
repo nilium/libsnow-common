@@ -65,6 +65,10 @@ struct alignas(T) vec2_t {
 
   template <typename Q>
                 operator vec2_t<Q> () const;
+  template <typename Q>
+                operator vec3_t<Q> () const;
+  template <typename Q>
+                operator vec4_t<Q> () const;
 };
 
 template <typename T>

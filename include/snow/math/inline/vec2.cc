@@ -287,6 +287,29 @@ vec2_t<T>::operator vec2_t<Q> () const
 }
 
 template <typename T>
+template <typename Q>
+vec2_t<T>::operator vec3_t<Q> () const
+{
+  return {
+    static_cast<Q>(x),
+    static_cast<Q>(y),
+    Q(0)
+  };
+}
+
+template <typename T>
+template <typename Q>
+vec2_t<T>::operator vec4_t<Q> () const
+{
+  return {
+    static_cast<Q>(x),
+    static_cast<Q>(y),
+    Q(0),
+    Q(1)
+  };
+}
+
+template <typename T>
 std::ostream &operator << (std::ostream &out, const vec2_t<T> &in)
 {
   return out << "{x:" << in.x << ", y:" << in.y << "}";
