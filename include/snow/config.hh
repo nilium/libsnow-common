@@ -119,7 +119,7 @@
 
 namespace snow {
 
-typedef std::string string;
+using string = std::string;
 
 } // namespace snow
 
