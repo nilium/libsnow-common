@@ -23,12 +23,26 @@ struct slot_image_t
   using count_t = typename slot_row_t::count_t;
   using dim_t = vec2_t<size_t>;
 
-  slot_image_t(size_t width, size_t height);
+  slot_image_t(const dim_t &size = dim_t::one);
+  slot_image_t(const slot_image_t &) = default;
+  slot_image_t &operator = (const slot_image_t &) = default;
   ~slot_image_t() = default;
+  slot_image_t(slot_image_t &&other) : slot_rows_(std::move(other.slot_rows_)) {}
+  slot_image_t &operator = (slot_image_t &&other)
+  {
+    if (&other != this) {
+      slot_rows_ = std::move(other.slot_rows_);
+      width_ = other.width_;
+      height_ = other.height_;
+      other.width_ = 0;
+      other.height_ = 0;
+    }
+    return *this;
+  }
 
   inline size_t width() const { return width_; }
   inline size_t height() const { return height_; }
-  void resize(size_t width, size_t height);
+  void resize(const dim_t &size);
 
   size_t columns_free_at(const dim_t &pos) const;
   size_t rows_free_at(const dim_t &pos) const;
@@ -77,10 +91,10 @@ std::ostream &operator << (std::ostream &out, const slot_image_t<HT, CT> &in)
 
 
 template <typename HT, typename CT>
-slot_image_t<HT, CT>::slot_image_t(size_t width, size_t height) :
-  width_(width),
-  height_(height),
-  slot_rows_(height, slot_row_t(width))
+slot_image_t<HT, CT>::slot_image_t(const dim_t &size) :
+  width_(size.x),
+  height_(size.y),
+  slot_rows_(size.y, slot_row_t(size.x))
 {
   // nop
 }
@@ -88,28 +102,28 @@ slot_image_t<HT, CT>::slot_image_t(size_t width, size_t height) :
 
 
 template <typename HT, typename CT>
-void slot_image_t<HT, CT>::resize(size_t width, size_t height)
+void slot_image_t<HT, CT>::resize(const dim_t &size)
 {
-  if (height == 0) {
+  if (size.y == 0) {
     throw std::invalid_argument("Height of slot image cannot be zero");
-  } else if (width == 0) {
+  } else if (size.x == 0) {
     throw std::invalid_argument("Height of slot image cannot be zero");
   }
 
-  if (width_ != width) {
-    width_ = width;
+  if (width_ != size.x) {
+    width_ = size.x;
     for (slot_row_t &row : slot_rows_) {
-      row.resize(width);
+      row.resize(size.x);
     }
   }
 
-  if (height != height_) {
-    if (height_ < height) {
-      slot_rows_.resize(height, slot_row_t(width));
+  if (size.y != height_) {
+    if (height_ < size.y) {
+      slot_rows_.resize(size.y, slot_row_t(size.x));
     } else {
-      slot_rows_.resize(height);
+      slot_rows_.resize(size.y);
     }
-    height_ = height;
+    height_ = size.y;
   }
 }
 
@@ -155,7 +169,6 @@ bool slot_image_t<HT, CT>::pos_is_free(const dim_t &pos) const
 template <typename HT, typename CT>
 auto slot_image_t<HT, CT>::find_free_pos(const dim_t &size) const -> std::pair<bool, dim_t>
 {
-  const size_t max_col = width_ - size.x;
   const size_t max_row = height_ - size.y;
 
   dim_t pos = {0, 0};

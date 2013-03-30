@@ -23,8 +23,18 @@ struct slot_mask_t
 
   static const handle_t NO_HANDLE = 0;
 
-  slot_mask_t(size_t size);
+  slot_mask_t(size_t size = 1);
   ~slot_mask_t() = default;
+  slot_mask_t(const slot_mask_t &) = default;
+  slot_mask_t &operator = (const slot_mask_t &) = default;
+  slot_mask_t(slot_mask_t &&other) : slots_(std::move(other.slots_)) {}
+  slot_mask_t &operator = (slot_mask_t &&other)
+  {
+    if (&other != this) {
+      slots_ = std::move(other.slots_);
+    }
+    return *this;
+  }
 
   inline size_t size() const { return slots_.size(); }
   void resize(size_t new_size);
