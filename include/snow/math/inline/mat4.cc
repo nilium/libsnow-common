@@ -755,6 +755,35 @@ auto mat4_t<T>::multiply(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
+auto mat4_t<T>::multiply(const vec2 &vec) const -> vec2
+{
+  return {
+    vec.dot_product(colvec3(0)) + m03,
+    vec.dot_product(colvec3(1)) + m13
+  };
+}
+
+template <typename T>
+auto mat4_t<T>::rotate(const vec4 &vec) const -> vec4
+{
+  return {
+    vec.dot_product(colvec4(0)),
+    vec.dot_product(colvec4(1)),
+    vec.dot_product(colvec4(2))
+  };
+}
+
+template <typename T>
+auto mat4_t<T>::inverse_rotate(const vec4 &vec) const -> vec4
+{
+  return {
+    vec.dot_product(rowvec4(0)),
+    vec.dot_product(rowvec4(1)),
+    vec.dot_product(rowvec4(2))
+  };
+}
+
+template <typename T>
 auto mat4_t<T>::rotate(const vec3 &vec) const -> vec3
 {
   return {
@@ -771,6 +800,24 @@ auto mat4_t<T>::inverse_rotate(const vec3 &vec) const -> vec3
     vec.dot_product(rowvec3(0)),
     vec.dot_product(rowvec3(1)),
     vec.dot_product(rowvec3(2))
+  };
+}
+
+template <typename T>
+auto mat4_t<T>::rotate(const vec2 &vec) const -> vec2
+{
+  return {
+    vec.dot_product(colvec3(0)),
+    vec.dot_product(colvec3(1))
+  };
+}
+
+template <typename T>
+auto mat4_t<T>::inverse_rotate(const vec2 &vec) const -> vec2
+{
+  return {
+    vec.dot_product(rowvec3(0)),
+    vec.dot_product(rowvec3(1))
   };
 }
 
@@ -963,6 +1010,13 @@ vec4_t<T> operator * (const mat4_t<T> &rhs, const vec4_t<Q> &lhs)
 
 template <typename T, typename Q>
 vec3_t<T> operator * (const mat4_t<T> &rhs, const vec3_t<Q> &lhs)
+{
+  return rhs.multiply(lhs);
+}
+
+
+template <typename T, typename Q>
+vec2_t<T> operator * (const mat4_t<T> &rhs, const vec2_t<Q> &lhs)
 {
   return rhs.multiply(lhs);
 }

@@ -15,6 +15,7 @@ struct alignas(4) mat3_t
 
   typedef T value_type;
   typedef vec3_t<T> vec3;
+  typedef vec2_t<T> vec2;
   typedef quat_t<T> quat;
 
   vec3 r, s, t;
@@ -80,6 +81,9 @@ struct alignas(4) mat3_t
   vec3          rotate(const vec3 &vec) const;
   vec3          inverse_rotate(const vec3 &vec) const;
 
+  vec2          rotate(const vec2 &vec) const;
+  vec2          inverse_rotate(const vec2 &vec) const;
+
   T &           operator [] (int index);
   T             operator [] (int index) const;
 
@@ -105,6 +109,8 @@ template <typename T, typename Q>
 mat3_t<T>     operator *  (const mat3_t<T> &rhs, const mat3_t<Q> &lhs);
 template <typename T, typename Q>
 vec3_t<T>     operator *  (const mat3_t<T> &rhs, const vec3_t<Q> &lhs);
+template <typename T, typename Q>
+vec2_t<T>     operator *  (const mat3_t<T> &rhs, const vec2_t<Q> &lhs);
 template <typename T, typename Q>
 mat3_t<T>     operator *  (const mat3_t<T> &rhs, const Q &lhs);
 template <typename T, typename Q>

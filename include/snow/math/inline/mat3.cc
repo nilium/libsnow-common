@@ -416,6 +416,24 @@ auto mat3_t<T>::inverse_rotate(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
+auto mat3_t<T>::rotate(const vec2 &vec) const -> vec2
+{
+  return {
+    vec.dot_product(colvec3(0)),
+    vec.dot_product(colvec3(1))
+  };
+}
+
+template <typename T>
+auto mat3_t<T>::inverse_rotate(const vec2 &vec) const -> vec2
+{
+  return {
+    vec.dot_product(r),
+    vec.dot_product(s)
+  };
+}
+
+template <typename T>
 auto mat3_t<T>::operator[] (int index) -> T&
 {
   static_assert(std::is_pod<mat3_t>::value, "mat4 must be POD to use subscript operator");
@@ -520,6 +538,12 @@ mat3_t<T> operator * (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 
 template <typename T, typename Q>
 vec3_t<T> operator * (const mat3_t<T> &rhs, const vec3_t<Q> &lhs)
+{
+  return rhs.rotate(lhs);
+}
+
+template <typename T, typename Q>
+vec2_t<T> operator * (const mat3_t<T> &rhs, const vec2_t<Q> &lhs)
 {
   return rhs.rotate(lhs);
 }
