@@ -54,48 +54,6 @@ struct object_pool_t
 
 
 
-  index_t reserve_with(const object_t &obj)
-  {
-    static_assert(std::is_copy_constructible<object_t>::value,
-                  "Cannot reserve with object - pool object type is not copy-constructible");
-    index_t index = 0;
-    lock_.lock();
-    if (unused_indices_.empty()) {
-      index = objects_.size();
-      objects_.emplace(objects_.end(), obj);
-    } else {
-      auto index_begin = unused_indices_.begin();
-      index = *index_begin;
-      unused_indices_.erase(index_begin);
-      new(&objects_.at(index)) object_t(obj);
-    }
-    lock_.unlock();
-    return index;
-  }
-
-
-
-  index_t reserve_with(object_t &&obj)
-  {
-    static_assert(std::is_move_constructible<object_t>::value,
-                  "Cannot reserve with rvalue - pool object type is not move-constructible");
-    index_t index = 0;
-    lock_.lock();
-    if (unused_indices_.empty()) {
-      index = objects_.size();
-      objects_.emplace(objects_.end(), obj);
-    } else {
-      auto index_begin = unused_indices_.begin();
-      index = *index_begin;
-      unused_indices_.erase(index_begin);
-      new(&objects_.at(index)) object_t(obj);
-    }
-    lock_.unlock();
-    return index;
-  }
-
-
-
   void collect(const index_t index)
   {
     lock_.lock();
