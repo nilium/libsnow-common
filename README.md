@@ -25,6 +25,11 @@ tup and specifying the dylib as an input _will_ result in a race condition in
 tup or fusefs or something. This is unavoidable, just run `tup upd` again if you
 end up adding little bits of test code to the project for whatever reason.
 
+## Dependencies
+
+libsnow-common currently depends only on OpenSSL for its sha256 functions. If
+you choose to use the lbind.hh header, it also requires Lua, of course.
+
 ## Documentation
 
 Documentation can be found over on [The Codex], my personal TiddlyWiki. It's a
