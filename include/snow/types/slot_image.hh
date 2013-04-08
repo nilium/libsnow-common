@@ -1,3 +1,5 @@
+// slot_image.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__SLOT_IMAGE_HH__
 #define __SNOW_COMMON__SLOT_IMAGE_HH__
 

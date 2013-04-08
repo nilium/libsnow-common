@@ -1,3 +1,5 @@
+// plane.cc -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__PLANE_TCC__
 #define __SNOW_COMMON__PLANE_TCC__
 

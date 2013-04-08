@@ -1,3 +1,5 @@
+// slot_mask.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__SLOT_MASK_HH__
 #define __SNOW_COMMON__SLOT_MASK_HH__
 

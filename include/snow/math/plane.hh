@@ -1,3 +1,5 @@
+// plane.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__PLANE_HH__
 #define __SNOW_COMMON__PLANE_HH__
 

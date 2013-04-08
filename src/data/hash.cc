@@ -1,3 +1,5 @@
+// hash.cc -- Noel Cower -- Public Domain
+
 #include <snow/data/hash.hh>
 
 

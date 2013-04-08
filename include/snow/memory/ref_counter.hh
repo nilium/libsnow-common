@@ -1,4 +1,5 @@
 // ref_counter.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__REF_COUNTER_HH__
 #define __SNOW_COMMON__REF_COUNTER_HH__
 

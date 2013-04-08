@@ -1,3 +1,5 @@
+// hash.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__HASH_HH__
 #define __SNOW_COMMON__HASH_HH__
 

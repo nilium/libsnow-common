@@ -1,4 +1,5 @@
 // ref_counter.cc -- Noel Cower -- Public Domain
+
 #include <snow/memory/ref_counter.hh>
 
 
