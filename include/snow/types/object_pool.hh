@@ -25,12 +25,24 @@ template <typename T, typename IT = size_t, bool THREADSAFE = true,
           template <class CIT, class CIA = std::allocator<CIT>> class IC = std::vector>
 struct object_pool_t
 {
+  struct store_t
+  {
+    char data[sizeof(T)];
+  };
+
   using object_t            = T;
   using index_t             = IT;
-  using objects_t           = OC<object_t>;
+  using objects_t           = OC<store_t>;
   using indices_t           = IC<index_t>;
   using object_iter_t       = std::function<void(object_t &, const index_t &)>;
   using const_object_iter_t = std::function<void(const object_t &, const index_t &)>;
+
+
+
+  ~object_pool_t()
+  {
+    clear();
+  }
 
 
 
@@ -41,13 +53,13 @@ struct object_pool_t
     lock_.lock();
     if (unused_indices_.empty()) {
       index = objects_.size();
-      objects_.emplace(objects_.end(), args...);
+      objects_.emplace(objects_.end());
     } else {
       auto index_begin = unused_indices_.begin();
       index = *index_begin;
       unused_indices_.erase(index_begin);
-      new(&objects_.at(index)) object_t(args...);
     }
+    new(ptr_for_index(index)) object_t(args...);
     lock_.unlock();
     return index;
   }
@@ -57,7 +69,7 @@ struct object_pool_t
   void collect(const index_t index)
   {
     lock_.lock();
-    objects_.at(index).~object_t();
+    destroy(index);
     unused_indices_.insert(unused_indices_.end(), index);
     lock_.unlock();
   }
@@ -72,7 +84,7 @@ struct object_pool_t
     index_t index = 0;
     const auto length = objects_.size();
     for (; index < length; ++index) {
-      if (&objects_.at(index) == addr) {
+      if (ptr_for_index(index) == addr) {
         result = { true, index };
         break;
       }
@@ -86,7 +98,7 @@ struct object_pool_t
   object_t &at(const index_t index)
   {
     lock_.lock();
-    object_t &ret = objects_.at(index);
+    object_t &ret = *ptr_for_index(index);
     lock_.unlock();
     return ret;
   }
@@ -96,7 +108,7 @@ struct object_pool_t
   const object_t &at(const index_t index) const
   {
     lock_.lock();
-    object_t &ret = objects_.at(index);
+    object_t &ret = *ptr_for_index(index);
     lock_.unlock();
     return ret;
   }
@@ -106,7 +118,7 @@ struct object_pool_t
   object_t &operator [](const index_t index)
   {
     lock_.lock();
-    object_t &ret = objects_.at(index);
+    object_t &ret = *ptr_for_index(index);
     lock_.unlock();
     return ret;
   }
@@ -115,7 +127,7 @@ struct object_pool_t
 
   const object_t &operator [](const index_t index) const {
     lock_.lock();
-    object_t &ret = objects_.at(index);
+    object_t &ret = *ptr_for_index(index);
     lock_.unlock();
     return ret;
   }
@@ -126,12 +138,12 @@ struct object_pool_t
   {
     lock_.lock();
     std::set<index_t> index_set(unused_indices_.begin(), unused_indices_.end());
-    const auto index_term = index_set.end();
+    const auto index_term = index_set.cend();
     index_t index = 0;
     const auto size = objects_.size();
     for (; index < size; ++index) {
       if (index_set.find(index) != index_term) {
-        iter(objects_.at(index), index);
+        iter(*ptr_for_index(index), index);
       }
     }
     lock_.unlock();
@@ -143,12 +155,12 @@ struct object_pool_t
   {
     lock_.lock();
     std::set<index_t> index_set(unused_indices_.begin(), unused_indices_.end());
-    const auto index_term = index_set.end();
+    const auto index_term = index_set.cend();
     index_t index = 0;
     const auto size = objects_.size();
     for (; index < size; ++index) {
       if (index_set.find(index) != index_term) {
-        iter(objects_.at(index), index);
+        iter(*ptr_for_index(index), index);
       }
     }
     lock_.unlock();
@@ -159,6 +171,7 @@ struct object_pool_t
   void clear()
   {
     lock_.lock();
+    destroy_all();
     objects_.clear();
     unused_indices_.clear();
     lock_.unlock();
@@ -167,12 +180,50 @@ struct object_pool_t
 
 
 private:
+
+  void destroy(index_t index)
+  {
+    ptr_for_index(index)->~object_t();
+  }
+
+
+
+  void destroy_all()
+  {
+    std::set<index_t> indices(unused_indices_.cbegin(), unused_indices_.cend());
+    const auto length = objects_.size();
+    const auto index_term = indices.cend();
+    for (int index = 0; index < length; ++index) {
+      if (indices.find(index) == index_term) {
+        destroy(index);
+      }
+    }
+  }
+
+
+
+  object_t *ptr_for_index(index_t index)
+  {
+    return (object_t *)&objects_.at(index);
+  }
+
+
+
+  const object_t *ptr_for_index(index_t index) const
+  {
+    return (const object_t *)&objects_.at(index);
+  }
+
+
+
   struct dummylock_t {
     void lock() {}
     void unlock() {}
   };
 
+
   using lock_t = typename std::conditional<THREADSAFE, std::mutex, dummylock_t>::type;
+
 
   objects_t   objects_;
   indices_t   unused_indices_;
