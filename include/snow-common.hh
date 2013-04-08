@@ -24,10 +24,14 @@ and linked to. So, it would produce some errors if in here.
 #include "snow/types/object_pool.hh"
 #include "snow/types/range.hh"
 #include "snow/types/range_set.hh"
+#include "snow/types/slot_image.hh"
+#include "snow/types/slot_mask.hh"
 #include "snow/types/triple_buffer.hh"
 #include "snow/types/types_2d.hh"
 
 // Data
+#include "snow/data/hash.hh"
+#include "snow/data/sha256.hh"
 #include "snow/data/sparse.hh"
 
 // Strings
