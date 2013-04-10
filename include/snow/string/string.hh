@@ -4,5 +4,6 @@
 #define __SNOW_COMMON__COMMON__STRING_HH__
 
 #include "compare.hh"
+#include "split.hh"
 
 #endif /* end __SNOW_COMMON__COMMON__STRING_HH__ include guard */
