@@ -1,3 +1,5 @@
+// split.hh -- Noel Cower -- Public Domain
+
 #ifndef __SNOW_COMMON__SPLIT_HH__
 #define __SNOW_COMMON__SPLIT_HH__
 
