@@ -3,43 +3,39 @@
 #ifndef __SNOW_COMMON__OBJECT_POOL_HH__
 #define __SNOW_COMMON__OBJECT_POOL_HH__
 
-#include <new>
-#include <set>
-#include <vector>
 #include <functional>
-#include <type_traits>
 #include <mutex>
+#include <new>
+#include <type_traits>
+#include <unordered_set>
+#include <vector>
 
 
 namespace snow {
 
-/*
-  OC requires emplace(iter, T), end(), size(), clear(), and operator[](index)
-  IC requires insert(iter, T), end(), begin(), erase(iter), clear(), and empty()
 
-  Basically, OC, the object container, could reasonably be a deque or vector.
-  IC, the index container, could be a set, deque, list, or vector. Both default
-  to vector because there's not much point in changing either.
-*/
-template <typename T, typename IT = size_t, bool THREADSAFE = true,
-          template <class COT, class COA = std::allocator<COT>> class OC = std::vector,
-          template <class CIT, class CIA = std::allocator<CIT>> class IC = std::vector>
+// Note: because this is backed by a vector, you _should not_ store pointers or
+// references to objects in the pool. Use the indices to access the objects when
+// you need them.
+template <typename T, typename IT = size_t, bool THREADSAFE = true>
 struct object_pool_t
 {
-  struct store_t
-  {
-    char data[sizeof(T)];
-  };
-
+  using store_t             = typename std::aligned_storage<sizeof(T)>::type;
   using object_t            = T;
   using index_t             = IT;
-  using objects_t           = OC<store_t>;
-  using indices_t           = IC<index_t>;
+  using objects_t           = std::vector<store_t>;
+  using indices_t           = std::unordered_set<index_t>;
   using object_iter_t       = std::function<void(object_t &, const index_t &)>;
   using const_object_iter_t = std::function<void(const object_t &, const index_t &)>;
 
 
 
+/*==============================================================================
+  dtor
+
+    Destroys the pool and calls the destructor for any uncollected objects in
+    the pool.
+==============================================================================*/
   ~object_pool_t()
   {
     clear();
@@ -47,40 +43,70 @@ struct object_pool_t
 
 
 
+/*==============================================================================
+  reserve
+
+    Attempts to reserve enough memory for the given number of objects.
+==============================================================================*/
+  void reserve(size_t num_objects)
+  {
+    objects_.reserve(num_objects);
+  }
+
+
+
+/*==============================================================================
+  reserve
+
+    Reserves an object in the pool. Arguments correspond to whatever constructor
+    of the pool's object type they match. Returns the object's index.
+==============================================================================*/
   template <typename... ARGS>
   index_t reserve(ARGS&&... args)
   {
     index_t index = 0;
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
     if (unused_indices_.empty()) {
       index = objects_.size();
-      objects_.emplace(objects_.end());
+      objects_.emplace_back();
     } else {
-      auto index_begin = unused_indices_.begin();
+      auto index_begin = unused_indices_.cbegin();
       index = *index_begin;
       unused_indices_.erase(index_begin);
     }
-    new(ptr_for_index(index)) object_t(args...);
-    lock_.unlock();
+    object_t *store = ptr_for_index(index);
+    new(store) object_t(std::forward<ARGS>(args)...);
     return index;
   }
 
 
 
+/*==============================================================================
+  collect
+
+    Collects an object's index, calls its dtor, and prepares it to be reused
+    later.
+==============================================================================*/
   void collect(const index_t index)
   {
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
+    throw_unallocated(index);
     destroy(index);
-    unused_indices_.insert(unused_indices_.end(), index);
-    lock_.unlock();
+    unused_indices_.insert(index);
   }
 
 
 
+/*==============================================================================
+  index_of
+
+    Gets the index of an object, if it's in the pool. Only tests for whether the
+    object address matches that of one in the pool.
+==============================================================================*/
   std::pair<bool, index_t> index_of(const object_t &obj) const
   {
     std::pair<bool, index_t> result { false, 0 };
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
     const object_t *addr = &obj;
     index_t index = 0;
     const auto length = objects_.size();
@@ -90,17 +116,22 @@ struct object_pool_t
         break;
       }
     }
-    lock_.unlock();
     return result;
   }
 
 
 
+/*==============================================================================
+  at
+
+    Gets an object at the given index. Will throw an exception if the index
+    doesn't match an allocated object.
+==============================================================================*/
   object_t &at(const index_t index)
   {
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
+    throw_unallocated(index);
     object_t &ret = *ptr_for_index(index);
-    lock_.unlock();
     return ret;
   }
 
@@ -108,80 +139,107 @@ struct object_pool_t
 
   const object_t &at(const index_t index) const
   {
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
+    throw_unallocated(index);
     object_t &ret = *ptr_for_index(index);
-    lock_.unlock();
     return ret;
   }
 
 
 
+/*==============================================================================
+  operator []
+
+    See 'at'
+==============================================================================*/
   object_t &operator [](const index_t index)
   {
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
+    throw_unallocated(index);
     object_t &ret = *ptr_for_index(index);
-    lock_.unlock();
     return ret;
   }
 
 
 
-  const object_t &operator [](const index_t index) const {
-    lock_.lock();
+  const object_t &operator [](const index_t index) const
+  {
+    std::lock_guard<lock_t> lock(lock_);
+    throw_unallocated(index);
     object_t &ret = *ptr_for_index(index);
-    lock_.unlock();
     return ret;
   }
 
 
 
+/*==============================================================================
+  each_object
+
+    Calls the object iter function for each allocated object in the pool. The
+    iter function must not cause any objects other than the one currently being
+    evaluated to be collected. If possible, just don't try to collect stuff in
+    this loop.
+==============================================================================*/
   void each_object(object_iter_t &iter)
   {
-    lock_.lock();
-    std::set<index_t> index_set(unused_indices_.begin(), unused_indices_.end());
-    const auto index_term = index_set.cend();
+    std::lock_guard<lock_t> lock(lock_);
+    const auto index_term = unused_indices_.cend();
     index_t index = 0;
     const auto size = objects_.size();
     for (; index < size; ++index) {
-      if (index_set.find(index) != index_term) {
+      if (unused_indices_.find(index) != index_term) {
         iter(*ptr_for_index(index), index);
       }
     }
-    lock_.unlock();
   }
 
 
 
+/*==============================================================================
+  each_object_const
+
+    Same as each_object. Again, objects should not be collected while the iter
+    function is running unless you're very careful.
+==============================================================================*/
   void each_object_const(const const_object_iter_t &iter) const
   {
-    lock_.lock();
-    std::set<index_t> index_set(unused_indices_.begin(), unused_indices_.end());
-    const auto index_term = index_set.cend();
+    std::lock_guard<lock_t> lock(lock_);
+    const auto index_term = unused_indices_.cend();
     index_t index = 0;
     const auto size = objects_.size();
     for (; index < size; ++index) {
-      if (index_set.find(index) != index_term) {
+      if (unused_indices_.find(index) != index_term) {
         iter(*ptr_for_index(index), index);
       }
     }
-    lock_.unlock();
   }
 
 
 
+/*==============================================================================
+  clear
+
+    Wipes out all objects in the collection. Does call the dtor on each object
+    in the pool. This does not assure anything with respect to memory usage.
+==============================================================================*/
   void clear()
   {
-    lock_.lock();
+    std::lock_guard<lock_t> lock(lock_);
     destroy_all();
     objects_.clear();
     unused_indices_.clear();
-    lock_.unlock();
   }
 
 
 
 private:
 
+/*==============================================================================
+  destroy
+
+    Destroys an object at the given index. Performs basic bounds-checking, but
+    does not check to see if the object has been allocated.
+==============================================================================*/
   void destroy(index_t index)
   {
     ptr_for_index(index)->~object_t();
@@ -189,13 +247,17 @@ private:
 
 
 
+/*==============================================================================
+  destroy_all
+
+    Destroys all allocated objects in the pool.
+==============================================================================*/
   void destroy_all()
   {
-    std::set<index_t> indices(unused_indices_.cbegin(), unused_indices_.cend());
     const auto length = objects_.size();
-    const auto index_term = indices.cend();
+    const auto index_term = unused_indices_.cend();
     for (int index = 0; index < length; ++index) {
-      if (indices.find(index) == index_term) {
+      if (unused_indices_.find(index) == index_term) {
         destroy(index);
       }
     }
@@ -203,6 +265,27 @@ private:
 
 
 
+/*==============================================================================
+  throw_unallocated
+
+    Throws an out_of_range exception if the given index isn't already allocated.
+==============================================================================*/
+  void throw_unallocated(index_t index) const
+  {
+    if (unused_indices_.find(index) != unused_indices_.cend()) {
+      throw std::out_of_range("Index is out of range");
+    }
+  }
+
+
+
+/*==============================================================================
+  ptr_for_index
+
+    Returns a pointer to the object at the given index. No guarantee it has
+    been allocated, though the vector will throw an exception if the index is
+    out of range.
+==============================================================================*/
   object_t *ptr_for_index(index_t index)
   {
     return (object_t *)&objects_.at(index);
@@ -210,6 +293,11 @@ private:
 
 
 
+/*==============================================================================
+  ptr_for_index
+
+    Const version of above ptr_for_index.
+==============================================================================*/
   const object_t *ptr_for_index(index_t index) const
   {
     return (const object_t *)&objects_.at(index);
@@ -217,18 +305,24 @@ private:
 
 
 
+/*==============================================================================
+
+  Dummy lock type that implements the BasicLockable concept. lock and unlock are
+  no-ops.
+
+==============================================================================*/
   struct dummylock_t {
     void lock() {}
     void unlock() {}
   };
 
 
-  using lock_t = typename std::conditional<THREADSAFE, std::mutex, dummylock_t>::type;
+  using lock_t = typename std::conditional<THREADSAFE, std::recursive_mutex, dummylock_t>::type;
 
 
-  objects_t   objects_;
-  indices_t   unused_indices_;
-  mutable lock_t lock_;
+  objects_t         objects_;
+  indices_t         unused_indices_;
+  mutable lock_t    lock_;
 
 }; // struct object_pool_t
 
