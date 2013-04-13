@@ -336,10 +336,6 @@ linkoptions { "`pkg-config openssl --libs`" }
 -- Exceptions
 configuration "no-exceptions"
 flags { "NoExceptions" }
-defines { "USE_EXCEPTIONS=0" }
-
-configuration "not no-exceptions"
-defines { "USE_EXCEPTIONS=1" }
 
 -- OS X specific options
 configuration "macosx"
@@ -351,6 +347,7 @@ links { "Cocoa.framework" }
 
 configuration {}
 
+-- Generate build-config/pkg-config
 local config_src = "'include/snow/build-config.hh.in'"
 local config_dst = "'include/snow/build-config.hh'"
 
