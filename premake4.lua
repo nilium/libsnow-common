@@ -213,7 +213,7 @@ newaction {
     end
 
     -- Generate snow-common.pc
-    print("Creating snow-common.pc...")
+    print("Creating 'snow-common.pc'...")
     local formatrb_exec = "./format.rb 'snow-common.pc.in' 'snow-common.pc'" .. snow.formatrb_string(g_pkgconfig_opts)
 
     if g_verbose_install then
