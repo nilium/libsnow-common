@@ -8,22 +8,37 @@ and a few other projects).
 
 ## Building
 
-To build libsnow-common, you'll need [tup] and a version of OpenSSL >= 1.0.0.
-This means the default OS X OpenSSL is off-limits. You'll also need libc++,
-clang, and so on since this uses C++11 a bit. Once you have those, just run
+To build libsnow-common, you'll need [premake] and a version of OpenSSL,
+preferably >= 1.0.0. This means the default OS X OpenSSL is sort of off-limits
+due to the entire thing being marked as deprecated. You'll also need a C++11
+compatible compiler and standard library (Clang and libc++, for example).
 
-[tup]: http://gittup.org/tup/
+When all that's make, just do the following:
 
-    $ tup upd
+[premake]: http://industriousone.com/premake
 
-That should build the static library and dylib.
+    $ premake4 gmake
+    $ make
 
-Though this only occurs in the tests I don't ship in libsnow-common (because
-they're not unit tests, just tests for me to see if they produce the expected
-output since full-on unit tests are a pain in the neck), on OS X, building with
-tup and specifying the dylib as an input _will_ result in a race condition in
-tup or fusefs or something. This is unavoidable, just run `tup upd` again if you
-end up adding little bits of test code to the project for whatever reason.
+That should build the static library. The default configuration is
+`release-static`, though there is also `release-shared`, `debug-static`, and
+`debug-shared`. These're for what they sound like they're for.
+
+If you want to install the library, you can do the following:
+
+    $ premake install
+
+Optionally, you can also specify the prefix (it defaults to `/usr/local`) using
+the `--prefix=/foo/bar/baz` argument. This must come before `install` on the
+command line. This method of installation is not currently suited to anything
+non-UNIX-esque. So, basically, just the Windows users are left out. Seems like
+a fair deal.
+
+There is currently no `uninstall` action, mostly because I don't like the idea
+of letting a script delete things, potentially with super-user access. So, if
+you feel the need to remove the library, it'll just be libsnow-common.* under
+your prefix/lib directory and the entire prefix/include/snow directory. It tries
+to keep to itself, so you probably won't blow a foot off.
 
 ## Dependencies
 
