@@ -26,7 +26,7 @@ That should build the static library. The default configuration is
 
 If you want to install the library, you can do the following:
 
-    $ premake install
+    $ premake4 install
 
 Optionally, you can also specify the prefix (it defaults to `/usr/local`) using
 the `--prefix=/foo/bar/baz` argument. This must come before `install` on the
