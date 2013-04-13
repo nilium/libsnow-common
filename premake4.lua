@@ -231,19 +231,6 @@ newaction {
       end
     end
 
-    -- Generate snow-common.pc
-    print("Creating 'snow-common.pc'...")
-    local formatrb_exec = "./format.rb 'snow-common.pc.in' 'snow-common.pc'" .. snow.formatrb_string(g_pkgconfig_opts)
-
-    if g_verbose_install then
-      print (formatrb_exec)
-    end
-
-    if os.execute(formatrb_exec) ~= 0 then
-      print("Could not create 'snow-common.pc', unable to continue installation")
-      return false
-    end
-
     -- Make sure prefix/lib/pkgconfig exists
     dirs_needed[g_pkgconfig_dir] = g_pkgconfig_dir
 
@@ -368,6 +355,16 @@ local config_src = "'include/snow/build-config.hh.in'"
 local config_dst = "'include/snow/build-config.hh'"
 
 if _ACTION ~= "install" then
+  -- Generate build-config.hh
   print("Generating 'include/snow/build-config.hh'...")
   os.execute("./format.rb " .. config_src .. " " .. config_dst .. snow.formatrb_string(g_build_config_opts))
+
+  -- Generate snow-common.pc
+  print("Generating 'snow-common.pc'...")
+  local formatrb_exec = "./format.rb 'snow-common.pc.in' 'snow-common.pc'" .. snow.formatrb_string(g_pkgconfig_opts)
+
+  if os.execute(formatrb_exec) ~= 0 then
+    print("Could not create 'snow-common.pc', unable to continue installation")
+    return false
+  end
 end
