@@ -1,0 +1,12 @@
+#ifndef __SNOW_COMMON__BUILD_CONFIG_HH_IN__
+#define __SNOW_COMMON__BUILD_CONFIG_HH_IN__
+
+// May be optionally overridden on a per-include basis
+#ifndef USE_EXCEPTIONS
+#define USE_EXCEPTIONS (${USE_EXCEPTIONS})
+#endif
+
+#define HAS_SHA256 (${HAS_SHA256})
+#define HAS_LBIND  (${HAS_LBIND})
+
+#endif /* end __SNOW_COMMON__BUILD_CONFIG_HH_IN__ include guard */

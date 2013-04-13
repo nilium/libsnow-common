@@ -25,6 +25,25 @@ function snow.join_arrays(...)
 end
 
 
+function snow.tostring(e)
+  if e == nil then
+    return ""
+  elseif type(e) == "function" then
+    return snow.tostring(e())
+  elseif type(e) == "number" then
+    return tostring(e)
+  elseif type(e) == "boolean" then
+    if e then
+      return "1"
+    else
+      return "0"
+    end
+  else
+    return tostring(e)
+  end
+end
+
+
 --[[----------------------------------------------------------------------------
   formatrb_string
 
@@ -33,7 +52,7 @@ end
 function snow.formatrb_string(t)
   local result = ""
   for k,v in pairs(t) do
-    result = result .. " '" .. k .. "=" .. v .. "'"
+    result = result .. " '" .. snow.tostring(k) .. "=" .. snow.tostring(v) .. "'"
   end
   return result
 end
@@ -294,6 +313,12 @@ configuration "Debug-*"
 defines { "DEBUG" }
 flags { "Symbols" }
 
+g_build_config_opts = {
+  USE_EXCEPTIONS = not _OPTIONS["no-exceptions"],
+  HAS_SHA256 = not _OPTIONS["exclude-openssl"],
+  HAS_LBIND = not _OPTIONS["exclude-lua"]
+}
+
 g_pkgconfig_opts = {
   PREFIX = g_prefix,
   VERSION = g_version,
@@ -338,3 +363,11 @@ configuration { "macosx", "*-Shared" }
 links { "Cocoa.framework" }
 
 configuration {}
+
+local config_src = "'include/snow/build-config.hh.in'"
+local config_dst = "'include/snow/build-config.hh'"
+
+if _ACTION ~= "install" then
+  print("Generating 'include/snow/build-config.hh'...")
+  os.execute("./format.rb " .. config_src .. " " .. config_dst .. snow.formatrb_string(g_build_config_opts))
+end
