@@ -124,7 +124,7 @@ auto mat3_t<T>::colvec3(int index) const -> vec3
     case 0: return { r.x, s.x, t.x };
     case 1: return { r.y, s.y, t.y };
     case 2: return { r.z, s.z, t.z };
-    default: throw std::out_of_range("attempt to access out of range column");
+    default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
 }
 
@@ -135,7 +135,7 @@ auto mat3_t<T>::set_colvec3(int index, const vec3 &col) -> mat3_t &
     case 0: r.x = col.x; r.y = col.y; r.z = col.z; break;
     case 1: s.x = col.x; s.y = col.y; s.z = col.z; break;
     case 2: t.x = col.x; t.y = col.y; t.z = col.z; break;
-    default: throw std::out_of_range("attempt to access out of range column");
+    default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
   return *this;
 }
@@ -438,7 +438,7 @@ auto mat3_t<T>::operator[] (int index) -> T&
 {
   static_assert(std::is_pod<mat3_t>::value, "mat4 must be POD to use subscript operator");
   if (index < 0 || index > 9)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&r.x)[index];
 }
 
@@ -447,7 +447,7 @@ auto mat3_t<T>::operator[] (int index) const -> T
 {
   static_assert(std::is_pod<mat3_t>::value, "mat4 must be POD to use subscript operator");
   if (index < 0 || index > 9)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&r.x)[index];
 }
 

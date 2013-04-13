@@ -289,7 +289,7 @@ auto vec4_t<T>::operator[] (int index) -> value_type&
 {
   static_assert(std::is_pod<vec4_t<T>>::value, "vec4 must be POD to use subscript operator");
   if (index < 0 || index > 3)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&x)[index];
 }
 
@@ -298,7 +298,7 @@ auto vec4_t<T>::operator[] (int index) const -> value_type
 {
   static_assert(std::is_pod<vec4_t<T>>::value, "vec4 must be POD to use subscript operator");
   if (index < 0 || index > 3)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&x)[index];
 }
 

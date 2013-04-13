@@ -227,7 +227,7 @@ void parser_t::add_source(const string &source)
 void parser_t::close()
 {
   if (state_.closed)
-    throw std::runtime_error("Attempt to close already-closed parser.");
+    s_throw(std::runtime_error, "Attempt to close already-closed parser.");
 
   switch (state_.mode) {
   case READ_NAME:  state_.send_buffer_and_reset(SP_NAME, options_);
@@ -279,7 +279,7 @@ void parser_t::state_t::buffer_char(char c, const options_t &options)
 void parser_t::state_t::close_with_error(const string &error)
 {
   if (closed)
-    throw std::runtime_error("Attempt to close with error when already closed.");
+    s_throw(std::runtime_error, "Attempt to close with error when already closed.");
   send_string(SP_ERROR, error);
   this->error = error;
   closed = true;

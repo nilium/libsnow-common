@@ -422,7 +422,7 @@ auto quat_t<T>::operator[] (int index) -> T&
 {
   static_assert(std::is_pod<quat_t>::value, "quaternion must be POD to use subscript operator");
   if (index < 0 || index > 15)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&xyz.x)[index];
 }
 
@@ -431,7 +431,7 @@ auto quat_t<T>::operator[] (int index) const -> T
 {
   static_assert(std::is_pod<quat_t>::value, "quaternion must be POD to use subscript operator");
   if (index < 0 || index > 15)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&xyz.x)[index];
 }
 

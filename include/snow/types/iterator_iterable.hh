@@ -8,7 +8,7 @@
 namespace snow {
 
 template <typename T>
-class iterable_iterator_t :
+class S_EXPORT iterable_iterator_t :
   public std::iterator<std::forward_iterator_tag, T>
 {
 public:
@@ -76,7 +76,7 @@ bool operator != (const iterable_iterator_t<T> &lhs,
 }
 
 template <typename T>
-class iterator_iterable_t
+class S_EXPORT iterator_iterable_t
 {
 public:
   typedef T inner_iterator;

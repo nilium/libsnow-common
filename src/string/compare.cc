@@ -70,9 +70,9 @@ bool pattern_match(const string &pattern, const string &other)
         const char next = p_cstr[1];
         // validate pattern - throw an exception for ** and *?
         if (next == '*')
-          throw std::runtime_error("Invalid pattern: contains '**'");
+          s_throw(std::runtime_error, "Invalid pattern: contains '**'");
         else if (next == '?')
-          throw std::runtime_error("Invalid pattern: contains '*?'");
+          s_throw(std::runtime_error, "Invalid pattern: contains '*?'");
 
         for (;o_cstr < o_end && *o_cstr != next; ++o_cstr) ;
         // We know the next character matches or something went awry, so skip it

@@ -3,11 +3,14 @@
 #ifndef __SNOW_COMMON__MATH_HH__
 #define __SNOW_COMMON__MATH_HH__
 
+#include <snow/config.hh>
 #include <cfloat>
 #include <cmath>
 #include <stdexcept>
 
+
 namespace snow {
+
 
 // General degrees-to-radians constant
 #define S_DEG2RAD (0.01745329251)
@@ -24,29 +27,31 @@ namespace snow {
     For all other types, simply returns (v == 0).
 ==============================================================================*/
 template <typename T>
-inline
 bool is_zero(T value)
 {
   return value == T(0);
 }
 
+
+
 template <>
-inline
-bool is_zero<float>(float value)
+inline bool is_zero<float>(float value)
 {
   return std::abs(value) < S_EPSILON;
 }
 
+
+
 template <>
-inline
-bool is_zero<double>(double value)
+inline bool is_zero<double>(double value)
 {
   return std::abs(value) < S_EPSILON;
 }
 
+
+
 template <>
-inline
-bool is_zero<long double>(long double value)
+inline bool is_zero<long double>(long double value)
 {
   return std::abs(value) < S_EPSILON;
 }
@@ -76,22 +81,25 @@ bool are_equiv(T lhs, T rhs)
 
     Returns the maximum value for a given type. Only intended for use with
     float, double, and long double. Other types will throw a runtime_error.
+    Really only useful for some specific cases.
 ==============================================================================*/
 template <typename T>
-inline
-T max_value() { throw std::runtime_error("no set maximum for type"); }
+T max_value() { s_throw(std::runtime_error, "no set maximum for type"); }
+
+
 
 template <>
-inline
-float max_value<float>() { return FLT_MAX; }
+inline float max_value<float>() { return FLT_MAX; }
+
+
 
 template <>
-inline
-double max_value<double>() { return DBL_MAX; }
+inline double max_value<double>() { return DBL_MAX; }
+
+
 
 template <>
-inline
-long double max_value<long double>() { return LDBL_MAX; }
+inline long double max_value<long double>() { return LDBL_MAX; }
 
 
 
@@ -101,19 +109,21 @@ long double max_value<long double>() { return LDBL_MAX; }
     Clamps a value from the given minimum value to the maximum value.
 ==============================================================================*/
 template <typename T>
-inline
 constexpr T clamp_value(T val, T min, T max)
 {
   return (val < min ? min : (val > max ? max : val));
 }
 
+
+
+
 template <typename T, typename Q, typename R>
-inline
 constexpr T clamp_value(T val, Q min, R max)
 {
   return (val < min ? static_cast<T>(min) : (val > max ? static_cast<T>(max) : val));
 }
 
-}
+
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__MATH_HH__ include guard */

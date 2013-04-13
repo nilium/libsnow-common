@@ -6,25 +6,30 @@
 #include <iostream>
 #include <algorithm>
 
-#ifdef TARGET_OS_MAC
+#if TARGET_OS_MAC && __OBJC__
 #import <Foundation/NSRange.h>
 #endif
 
 namespace snow
 {
 
+
 template <typename T> struct range_t;
 
+
 template <typename T>
-struct range_iterator_t
+struct S_EXPORT range_iterator_t
     : public std::iterator<std::bidirectional_iterator_tag, T>
 {
 private:
+
   T begin_, end_;
   T step_;
   T location_;
 
+
 public:
+
   range_iterator_t(const range_t<T> &range, const T &step = 1, bool at_end = false) :
     begin_(range.location), end_(range.location + range.length),
     step_(step < 0 ? -step : step)
@@ -45,6 +50,8 @@ public:
       --location_;
     }
   }
+
+
 
   range_iterator_t(const T &location, const T& length, const T &step = 1, bool at_end = false) :
     begin_(location), end_(location + length),
@@ -67,10 +74,14 @@ public:
     }
   }
 
+
+
   auto operator *  () const -> const T&
   {
     return location_;
   }
+
+
 
   auto operator ++ () -> range_iterator_t&
   {
@@ -83,6 +94,8 @@ public:
     }
     return *this;
   }
+
+
 
   auto operator -- () -> range_iterator_t&
   {
@@ -97,6 +110,8 @@ public:
     return *this;
   }
 
+
+
   auto operator ++ (int dummy) const -> range_iterator_t
   {
     (void)dummy;
@@ -104,6 +119,8 @@ public:
     ++(*this);
     return temp;
   }
+
+
 
   auto operator -- (int dummy) const -> range_iterator_t
   {
@@ -113,20 +130,28 @@ public:
     return temp;
   }
 
+
+
   auto less_than(const range_iterator_t &lhs) -> bool
   {
     return location_ < lhs.location_;
   }
+
+
 
   auto greater_than(const range_iterator_t &lhs) -> bool
   {
     return location_ > lhs.location_;
   }
 
+
+
   auto at_end() const -> bool
   {
     return (begin_ <= end_ ? location_ >= end_ : end_ >= location_);
   }
+
+
 
   auto equal(const range_iterator_t &rhs) const -> bool
   {
@@ -135,16 +160,20 @@ public:
   }
 };
 
+
+
 template <typename T = int>
-struct range_t
+struct S_EXPORT range_t
 {
-  typedef T value_type;
+
+  using value_type = T;
+  using const_iterator = range_iterator_t<value_type>;
+  using iterator       = const_iterator;
+
 
   value_type location;
   value_type length;
 
-  typedef range_iterator_t<value_type> const_iterator;
-  typedef const_iterator iterator;
 
   static
   auto make(const value_type &location, const value_type &length) -> range_t
@@ -155,6 +184,8 @@ struct range_t
     };
   }
 
+
+
   auto max() const -> value_type
   {
     if (length >= 0)
@@ -162,6 +193,8 @@ struct range_t
     else
       return location;
   }
+
+
 
   auto min() const -> value_type
   {
@@ -171,15 +204,21 @@ struct range_t
       return location + length;
   }
 
+
+
   auto contains(const value_type &loc) const -> bool
   {
     return min() <= loc && loc <= max();
   }
 
+
+
   auto contains(const range_t &other) const -> bool
   {
     return min() <= other.min() && other.max() <= max();
   }
+
+
 
   auto inverted() const -> range_t
   {
@@ -192,6 +231,8 @@ struct range_t
     };
   }
 
+
+
   auto invert() -> range_t&
   {
     if (length == 0)
@@ -202,6 +243,8 @@ struct range_t
     return *this;
   }
 
+
+
   auto normalized() const -> range_t
   {
     if (length < 0) {
@@ -209,6 +252,8 @@ struct range_t
     }
     return *this;
   }
+
+
 
   auto normalize() -> range_t&
   {
@@ -218,6 +263,8 @@ struct range_t
   }
 
   // Always results in a range with length >= 0.
+
+
   // Would be called 'union' but that's reserved.
   auto joined(const range_t &other) const -> range_t
   {
@@ -227,6 +274,8 @@ struct range_t
       std::max(max(), other.max()) - minLocation
     };
   }
+
+
 
   auto join(const range_t &other) -> range_t&
   {
@@ -241,6 +290,8 @@ struct range_t
   // If this region contains but is not equal to the other region, this region
   // is returned without changes.
   // If successful, `success` will be set to true, if provided. If not, it will
+
+
   // be set to false.
   auto difference(const range_t &other, bool *success = nullptr) const -> range_t
   {
@@ -283,6 +334,8 @@ struct range_t
 
   // For ranges where other is contained by this region, splits this region into
   // two regions (left and right respectively). Returns true if successfully
+
+
   // split, false if not.
   auto split(const range_t &other, range_t *left_out, range_t *right_out) const -> bool
   {
@@ -328,10 +381,14 @@ struct range_t
     }
   }
 
+
+
   auto intersects(const range_t &other) const -> bool
   {
     return max() > other.min() && min() < other.max();
   }
+
+
 
   auto intersection(const range_t &other) const -> range_t
   {
@@ -343,10 +400,14 @@ struct range_t
     };
   }
 
+
+
   auto operator ^ (const range_t &other) const -> bool
   {
     return intersects(other);
   }
+
+
 
   // Intersects range
   auto operator % (const range_t &other) const -> bool
@@ -354,11 +415,15 @@ struct range_t
     return contains(other);
   }
 
+
+
   // Contains location
   auto operator % (const value_type &value) const -> bool
   {
     return contains(value);
   }
+
+
 
   // union
   auto operator + (const range_t &other) const -> range_t
@@ -366,10 +431,14 @@ struct range_t
     return joined(other);
   }
 
+
+
   auto operator += (const range_t &other) -> range_t&
   {
     return join(other);
   }
+
+
 
   // intersection
   auto operator / (const range_t &other) const -> range_t
@@ -377,35 +446,49 @@ struct range_t
     return intersection(other);
   }
 
+
+
   auto operator /= (const range_t &other) -> range_t&
   {
     return *this = intersection(other);
   }
+
+
 
   auto operator < (const range_t &other) const -> bool
   {
     return min() < other.min();
   }
 
+
+
   auto operator > (const range_t &other) const -> bool
   {
     return min() > other.min();
   }
+
+
 
   auto operator == (const range_t &other) const -> bool
   {
     return min() == other.min() && max() == other.max();
   }
 
+
+
   auto operator != (const range_t &other) const -> bool
   {
     return min() != other.min() || max() != other.max();
   }
 
+
+
   auto operator >= (const range_t &other) const -> bool
   {
     return *this > other || *this == other;
   }
+
+
 
   auto operator <= (const range_t &other) const -> bool
   {
@@ -414,52 +497,72 @@ struct range_t
 
   // All range iterators are const_iterators, technically.
   // Note about steps: it's recommended you use a step that the range's length
+
+
   // can be evenly divided by, otherwise you won't get the end location.
   auto end(const value_type &step = 1) const -> iterator
   {
     return iterator(*this, step, true);
   }
 
+
+
   auto begin(const value_type &step = 1) const -> iterator
   {
     return iterator(*this, step, false);
   }
+
+
 
   auto rbegin(const value_type &step = 1) const -> iterator
   {
     return iterator(inverted(), step, false);
   }
 
+
+
   auto rend(const value_type &step = 1) const -> iterator
   {
     return iterator(inverted(), step, true);
   }
+
+
 
   auto cend(const value_type &step = 1) const -> const_iterator
   {
     return const_iterator(*this, step, true);
   }
 
+
+
   auto cbegin(const value_type &step = 1) const -> const_iterator
   {
     return const_iterator(*this, step, false);
   }
+
+
 
   auto crbegin(const value_type &step = 1) const -> const_iterator
   {
     return const_iterator(inverted(), step, false);
   }
 
+
+
   auto crend(const value_type &step = 1) const -> const_iterator
   {
     return const_iterator(inverted(), step, true);
   }
 
+
+
 #ifdef TARGET_OS_MAC
-  inline operator NSRange () const
+  operator NSRange () const
   {
     return to_nsrange();
   }
+
+
 
   auto to_nsrange() const -> NSRange
   {
@@ -469,6 +572,8 @@ struct range_t
     };
   }
 #endif
+
+
 
   template <typename Q>
   operator range_t<Q> () const
@@ -482,6 +587,8 @@ struct range_t
 
 }; // struct range_t
 
+
+
 template <typename T = int>
 auto make_range(T location, T length) -> range_t<T>
 {
@@ -490,6 +597,8 @@ auto make_range(T location, T length) -> range_t<T>
     length
   };
 }
+
+
 
 #ifdef TARGET_OS_MAC
 template <typename T = int>
@@ -502,12 +611,16 @@ auto make_range(const NSRange &range) -> range_t<T>
 }
 #endif
 
+
+
 template <typename T>
 bool operator > (const range_iterator_t<T> &lhs,
                  const range_iterator_t<T> &rhs)
 {
   return lhs.greater_than(rhs);
 }
+
+
 
 template <typename T>
 bool operator < (const range_iterator_t<T> &lhs,
@@ -516,12 +629,16 @@ bool operator < (const range_iterator_t<T> &lhs,
   return lhs.less_than(rhs);
 }
 
+
+
 template <typename T>
 bool operator ==(const range_iterator_t<T> &lhs,
                  const range_iterator_t<T> &rhs)
 {
   return lhs.equal(rhs);
 }
+
+
 
 template <typename T>
 bool operator !=(const range_iterator_t<T> &lhs,
@@ -530,18 +647,26 @@ bool operator !=(const range_iterator_t<T> &lhs,
   return !lhs.equal(rhs);
 }
 
+
+
 template <typename T>
 std::ostream &operator << (std::ostream &out, const range_t<T> in)
 {
   return out << "{ location: " << in.location << ", length: " << in.length << " }";
 }
 
-typedef range_t<int>           rangei_t;
-typedef range_t<long>          rangel_t;
-typedef range_t<unsigned int>  rangeui_t;
-typedef range_t<unsigned long> rangeul_t;
-typedef range_t<float>         rangef_t;
-typedef range_t<double>        ranged_t;
+
+
+/*******************************************************************************
+*                                Common Aliases                                *
+*******************************************************************************/
+
+using rangei_t  = range_t<int>;
+using rangel_t  = range_t<long>;
+using rangeui_t = range_t<unsigned int>;
+using rangeul_t = range_t<unsigned long>;
+using rangef_t  = range_t<float>;
+using ranged_t  = range_t<double>;
 
 }
 

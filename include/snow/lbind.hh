@@ -139,7 +139,7 @@ void lb_glue_from_<std::string>(lua_State *L, int index, std::string &out)
   size_t length;
   const char *cstring = lua_tolstring(L, index, &length);
   if (cstring == NULL)
-    throw std::runtime_error("Non-string value passed to string parameter of C function");
+    s_throw(std::runtime_error, "Non-string value passed to string parameter of C function");
   out = std::string(cstring, length);
 }
 

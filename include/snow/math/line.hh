@@ -3,6 +3,9 @@
 #ifndef __SNOW_COMMON__LINE_HH__
 #define __SNOW_COMMON__LINE_HH__
 
+#include <snow/config.hh>
+
+
 /*
 line_t<value_type>
 {
@@ -35,12 +38,16 @@ namespace snow
 
 template <typename T> struct vec3_t;
 
+
 #include "inline/line.hh"
+
 
 typedef line_t<float> linef_t;
 typedef line_t<double> lined_t;
 
-}
+
+} // namespace snow
+
 
 #include "vec3.hh"
 

@@ -3,28 +3,22 @@
 #ifndef __SNOW_COMMON__RANGESET_HH__
 #define __SNOW_COMMON__RANGESET_HH__
 
+#include <snow/config.hh>
 #include <stdexcept>
 #include <list>
 
+
 namespace snow {
 
+
 template <typename T>
-class range_set_t {
-public:
-  typedef T range_type;
+struct S_EXPORT range_set_t
+{
+  using range_type             = T;
+  using value_type             = typename range_type::value_type;
+  using const_iterator         = typename range_list_t::const_iterator;
+  using const_reverse_iterator = typename range_list_t::const_reverse_iterator;
 
-private:
-  // Currently backed by a linked list. Could probably be backed by a set with
-  // some changes to the routines below.
-  typedef std::list<T> range_list_t;
-  typedef typename range_list_t::iterator iterator;
-
-  range_list_t ranges_;
-
-public:
-  typedef typename range_type::value_type value_type;
-  typedef typename range_list_t::const_iterator const_iterator;
-  typedef typename range_list_t::const_reverse_iterator const_reverse_iterator;
 
   auto add(const range_type &range) -> range_set_t&
   {
@@ -62,6 +56,8 @@ public:
     return *this;
   }
 
+
+
   auto subtract(const range_type &range) -> range_set_t&
   {
     if (range.length == 0)
@@ -93,7 +89,7 @@ public:
             }
           }
         } else {
-          throw std::runtime_error("Failed to split range");
+          s_throw(std::runtime_error, "Failed to split range");
         }
         break;
       } else if (range.intersects(*iter)) {
@@ -112,16 +108,22 @@ public:
     return *this;
   }
 
+
+
   auto clear() -> range_set_t&
   {
     ranges_.clear();
     return *this;
   }
 
+
+
   auto empty() const -> bool
   {
     return ranges_.empty();
   }
+
+
 
   auto intersects(const range_type &range) const -> bool
   {
@@ -130,6 +132,8 @@ public:
 
     return false;
   }
+
+
 
   // Returns true if any portion of range is contained by a range in the set.
   template <typename Q>
@@ -142,40 +146,68 @@ public:
     return false;
   }
 
+
+
   auto begin() const -> const_iterator {
     return ranges_.cbegin();
   }
+
+
 
   auto end() const -> const_iterator {
     return ranges_.cend();
   }
 
+
+
   auto cbegin() const -> const_iterator {
     return ranges_.cbegin();
   }
+
+
 
   auto cend() const -> const_iterator {
     return ranges_.cend();
   }
 
+
+
   auto rbegin() const -> const_reverse_iterator {
     return ranges_.crbegin();
   }
+
+
 
   auto rend() const -> const_reverse_iterator {
     return ranges_.crend();
   }
 
+
+
   auto crbegin() const -> const_reverse_iterator {
     return ranges_.crbegin();
   }
+
+
 
   auto crend() const -> const_reverse_iterator {
     return ranges_.crend();
   }
 
+
+private:
+  // Currently backed by a linked list. Could probably be backed by a set with
+  // some changes to the routines below.
+  using range_list_t = std::list<T>;
+  using iterator     = typename range_list_t::iterator;
+
+
+  range_list_t ranges_;
+
 };
 
-}
+
+} // namespace snow
+
 
 #endif /* end __SNOW_COMMON__RANGESET_HH__ include guard */

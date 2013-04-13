@@ -10,6 +10,7 @@
 #include <memory>
 #include <mutex>
 
+
 namespace snow {
 
 
@@ -25,7 +26,7 @@ struct S_EXPORT ref_counter_t
       if (object != nullptr)
         delete object;
       else
-        throw std::invalid_argument("Attempt to default-finalize nullptr");
+        s_throw(std::invalid_argument, "Attempt to default-finalize nullptr");
     }
 
     template <typename T>
@@ -52,7 +53,7 @@ template <typename T>
 void  ref_counter_t::retain(const T *object)
 {
   if (object == NULL)
-    throw std::invalid_argument("Attempt to retain nullptr");
+    s_throw(std::invalid_argument, "Attempt to retain nullptr");
 
   retain_object_locked((void *)object);
 }
@@ -63,7 +64,7 @@ template <typename T>
 void  ref_counter_t::release(T *object, finalizer_t<T> finalize)
 {
   if (object == nullptr)
-    throw std::invalid_argument("Attempt to release nullptr");
+    s_throw(std::invalid_argument, "Attempt to release nullptr");
 
   release_object_locked(object, (finalizer_t<void>)finalize);
 }

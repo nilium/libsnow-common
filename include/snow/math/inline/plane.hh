@@ -11,7 +11,7 @@ enum plane_side_t : int
 };
 
 template <typename T>
-struct alignas(T) plane_t
+struct S_EXPORT alignas(T) plane_t
 {
   typedef T value_type;
   typedef vec3_t<T> vec3_t;

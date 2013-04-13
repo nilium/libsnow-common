@@ -10,7 +10,7 @@
 ==============================================================================*/
 
 template <typename T = float>
-struct alignas(T) vec2_t {
+struct S_EXPORT alignas(T) vec2_t {
 
   typedef T value_type;
 

@@ -215,7 +215,7 @@ auto mat4_t<T>::rowvec4(int index) const -> vec4
     case 1: return { m01, m11, m21, m31 };
     case 2: return { m02, m12, m22, m32 };
     case 3: return { m03, m13, m23, m33 };
-    default: throw std::out_of_range("attempt to access out of range row");
+    default: s_throw(std::out_of_range, "attempt to access out of range row");
   }
 }
 
@@ -227,7 +227,7 @@ auto mat4_t<T>::colvec4(int index) const -> vec4
     case 1: return { m10, m11, m12, m13 };
     case 2: return { m20, m21, m22, m23 };
     case 3: return { m30, m31, m32, m33 };
-    default: throw std::out_of_range("attempt to access out of range column");
+    default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
 }
 
@@ -239,7 +239,7 @@ auto mat4_t<T>::set_rowvec4(int index, const vec4 &row) -> mat4_t &
     case 1: m01 = row.x; m11 = row.y; m21 = row.z; m31 = row.w; break;
     case 2: m02 = row.x; m12 = row.y; m22 = row.z; m32 = row.w; break;
     case 3: m03 = row.x; m13 = row.y; m23 = row.z; m33 = row.w; break;
-    default: throw std::out_of_range("attempt to access out of range row");
+    default: s_throw(std::out_of_range, "attempt to access out of range row");
   }
   return *this;
 }
@@ -252,7 +252,7 @@ auto mat4_t<T>::set_colvec4(int index, const vec4 &col) -> mat4_t &
     case 1: m10 = col.x; m11 = col.y; m12 = col.z; m13 = col.w; break;
     case 2: m20 = col.x; m21 = col.y; m22 = col.z; m23 = col.w; break;
     case 3: m30 = col.x; m31 = col.y; m32 = col.z; m33 = col.w; break;
-    default: throw std::out_of_range("attempt to access out of range column");
+    default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
   return *this;
 }
@@ -265,7 +265,7 @@ auto mat4_t<T>::rowvec3(int index) const -> vec3
     case 1: return { m01, m11, m21 };
     case 2: return { m02, m12, m22 };
     case 3: return { m03, m13, m23 };
-    default: throw std::out_of_range("attempt to access out of range row");
+    default: s_throw(std::out_of_range, "attempt to access out of range row");
   }
 }
 
@@ -277,7 +277,7 @@ auto mat4_t<T>::colvec3(int index) const -> vec3
     case 1: return { m10, m11, m12 };
     case 2: return { m20, m21, m22 };
     case 3: return { m30, m31, m32 };
-    default: throw std::out_of_range("attempt to access out of range column");
+    default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
 }
 
@@ -289,7 +289,7 @@ auto mat4_t<T>::set_rowvec3(int index, const vec3 &row) -> mat4_t &
     case 1: m01 = row.x; m11 = row.y; m21 = row.z; break;
     case 2: m02 = row.x; m12 = row.y; m22 = row.z; break;
     case 3: m03 = row.x; m13 = row.y; m23 = row.z; break;
-    default: throw std::out_of_range("attempt to access out of range row");
+    default: s_throw(std::out_of_range, "attempt to access out of range row");
   }
   return *this;
 }
@@ -302,7 +302,7 @@ auto mat4_t<T>::set_colvec3(int index, const vec3 &col) -> mat4_t &
     case 1: m10 = col.x; m11 = col.y; m12 = col.z; break;
     case 2: m20 = col.x; m21 = col.y; m22 = col.z; break;
     case 3: m30 = col.x; m31 = col.y; m32 = col.z; break;
-    default: throw std::out_of_range("attempt to access out of range column");
+    default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
   return *this;
 }
@@ -903,7 +903,7 @@ auto mat4_t<T>::operator[] (int index) -> T&
 {
   static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to use subscript operator");
   if (index < 0 || index > 15)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&m00)[index];
 }
 
@@ -912,7 +912,7 @@ auto mat4_t<T>::operator[] (int index) const -> T
 {
   static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to use subscript operator");
   if (index < 0 || index > 15)
-    throw std::out_of_range("attempt to access out of range element");
+    s_throw(std::out_of_range, "attempt to access out of range element");
   return (&m00)[index];
 }
 

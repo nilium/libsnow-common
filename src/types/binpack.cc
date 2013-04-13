@@ -40,7 +40,7 @@ auto binpack_t::find_unused_bin(const dimensi_t &size) -> binpack_t*
     if (pack_right_ && pack_bottom_ && ! (pack_bottom_->loaded() || pack_right_->loaded())) {
       int delta, opposite;
 
-      if (size.width >= size.height) {
+      if (size.width <= size.height) {
         delta = pack_bottom_->width() - size.width;
         opposite = pack_right_->width();
       } else {
@@ -48,7 +48,7 @@ auto binpack_t::find_unused_bin(const dimensi_t &size) -> binpack_t*
         opposite = pack_right_->height();
       }
 
-      const bool bottom_first = (0 < delta && delta < opposite);
+      const bool bottom_first = !(0 < delta && delta < opposite);
 
 
       if (! (result = (bottom_first ? pack_bottom_ : pack_right_)->find_unused_bin(size)))

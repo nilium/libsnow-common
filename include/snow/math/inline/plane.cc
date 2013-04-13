@@ -33,7 +33,7 @@ auto plane_t<T>::for_points(const C &points) -> plane_t
 
   value_type count;
   if ((count = std::distance(iter, end)) < value_type(3.5))
-    throw std::invalid_argument("Points container must have four or more points.");
+    s_throw(std::invalid_argument, "Points container must have four or more points.");
 
   vec3_t normal, last;
   vec3_t first = *iter;

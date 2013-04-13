@@ -273,7 +273,7 @@ private:
   void throw_unallocated(index_t index) const
   {
     if (unused_indices_.find(index) != unused_indices_.cend()) {
-      throw std::out_of_range("Index is out of range");
+      s_throw(std::out_of_range, "Index is out of range");
     }
   }
 

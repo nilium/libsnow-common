@@ -4,13 +4,18 @@
 #define __SNOW_COMMON__SPARSE_HH__
 
 #include <snow/config.hh>
+
 #include <functional>
 #include <iostream>
 #include <stack>
 #include <stdexcept>
 
+
 namespace snow {
+
+
 namespace sparse {
+
 
 enum source_kind_t : int
 {
@@ -21,6 +26,7 @@ enum source_kind_t : int
   SP_VALUE      =  3,
   SP_DONE       =  4
 };
+
 
 enum option_flags_t : int
 {
@@ -33,6 +39,7 @@ enum option_flags_t : int
                              SP_CONSUME_WHITESPACE)
 };
 
+
 struct S_EXPORT position_t {
   size_t line;
   size_t column;
@@ -40,9 +47,12 @@ struct S_EXPORT position_t {
   operator string() const;
 };
 
+
 S_EXPORT std::ostream &operator << (std::ostream&, const position_t&);
 
-typedef std::function<void(source_kind_t, const string&, position_t)> parse_func_t;
+
+using parse_func_t = std::function<void(source_kind_t, const string&, position_t)>;
+
 
 struct S_EXPORT parser_t
 {
@@ -59,8 +69,10 @@ struct S_EXPORT parser_t
 
   inline virtual bool is_open() const { return !state_.closed; }
 
+
 private:
-  typedef std::stack<position_t> position_stack_t;
+  using position_stack_t = std::stack<position_t>;
+
 
   enum parse_mode_t : int
   {
@@ -71,12 +83,14 @@ private:
     READ_COMMENT = 0x1 << 4,
   };
 
+
   struct S_HIDDEN options_t {
     bool consume_ws;
     bool trim_spaces;
     bool nameless_roots;
     bool nameless_nodes;
   };
+
 
   struct S_EXPORT state_t {
 
@@ -106,13 +120,18 @@ private:
     S_HIDDEN const string &trimmed_buffer(const options_t &options);
   };
 
+
   options_t options_;
   state_t state_;
+
 
   static const state_t DEFAULT_STATE;
 };
 
+
 } // namespace sparse
+
+
 } // namespace snow
 
 #endif /* end __SNOW_COMMON__SPARSE_HH__ include guard */

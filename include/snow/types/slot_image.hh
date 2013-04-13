@@ -107,9 +107,9 @@ template <typename HT, typename CT>
 void slot_image_t<HT, CT>::resize(const dim_t &size)
 {
   if (size.y == 0) {
-    throw std::invalid_argument("Height of slot image cannot be zero");
+    s_throw(std::invalid_argument, "Height of slot image cannot be zero");
   } else if (size.x == 0) {
-    throw std::invalid_argument("Height of slot image cannot be zero");
+    s_throw(std::invalid_argument, "Height of slot image cannot be zero");
   }
 
   if (width_ != size.x) {

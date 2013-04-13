@@ -12,7 +12,7 @@
 ==============================================================================*/
 
 template <typename T>
-struct line_t
+struct S_EXPORT line_t
 {
   typedef T value_type;
   typedef vec3_t<T> vec3;

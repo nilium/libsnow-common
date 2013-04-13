@@ -10,7 +10,7 @@
 ==============================================================================*/
 
 template <typename T = float>
-struct alignas(4) mat3_t
+struct S_EXPORT alignas(4) mat3_t
 {
 
   typedef T value_type;

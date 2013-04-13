@@ -3,6 +3,7 @@
 #ifndef __SNOW_COMMON__SPLIT_HH__
 #define __SNOW_COMMON__SPLIT_HH__
 
+#include <snow/config.hh>
 #include <string>
 
 
@@ -97,7 +98,7 @@ out_iter split_string_quoted(const T &str, const C &delim, out_iter result)
   }
 
   if (in_quote) {
-    throw std::invalid_argument("Unclosed quote");
+    s_throw(std::invalid_argument, "Unclosed quote");
   } else if (!buffer.empty()) {
     *(result++) = T(last, iter);
   }

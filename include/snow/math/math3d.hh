@@ -33,6 +33,7 @@ but is completely untested and may break anything that depends on the data types
 in the structures being packed.
 */
 
+#include <snow/config.hh>
 #include "vec2.hh"
 #include "vec3.hh"
 #include "vec4.hh"

@@ -3,6 +3,7 @@
 #ifndef __SNOW_COMMON__MAT4_HH__
 #define __SNOW_COMMON__MAT4_HH__
 
+#include <snow/config.hh>
 #include "math.hh"
 
 #include <cmath>
