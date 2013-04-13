@@ -37,8 +37,9 @@ a fair deal.
 There is currently no `uninstall` action, mostly because I don't like the idea
 of letting a script delete things, potentially with super-user access. So, if
 you feel the need to remove the library, it'll just be libsnow-common.* under
-your prefix/lib directory and the entire prefix/include/snow directory. It tries
-to keep to itself, so you probably won't blow a foot off.
+your prefix/lib directory and the entire prefix/include/snow directory as well
+as snow-common.hh from prefix/include. It tries to keep to itself, so you
+probably won't blow a foot off.
 
 ## Dependencies
 
