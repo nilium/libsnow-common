@@ -1,6 +1,9 @@
 // sha256.cc -- Noel Cower -- Public Domain
 
 #include <snow/data/sha256.hh>
+
+#if HAS_SHA256
+
 #include <stdexcept>
 
 namespace snow {
@@ -26,3 +29,5 @@ void sha256(const char *data, size_t length, char hash[SHA256_DIGEST_LENGTH])
 #endif
 
 }
+
+#endif

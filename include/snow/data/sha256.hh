@@ -4,6 +4,9 @@
 #define __SNOW_COMMON__SHA256_HH__
 
 #include <snow/config.hh>
+
+#if HAS_SHA256
+
 #include <openssl/sha.h>
 
 namespace snow {
@@ -21,5 +24,7 @@ inline void sha256(const std::basic_string<T> &string, char hash[65])
 
 
 } // namespace snow
+
+#endif
 
 #endif /* end __SNOW_COMMON__SHA256_HH__ include guard */

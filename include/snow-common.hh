@@ -31,7 +31,9 @@ and linked to. So, it would produce some errors if in here.
 
 // Data
 #include "snow/data/hash.hh"
+#if HAS_SHA256
 #include "snow/data/sha256.hh"
+#endif
 #include "snow/data/sparse.hh"
 
 // Strings

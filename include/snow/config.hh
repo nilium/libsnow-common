@@ -3,6 +3,8 @@
 #ifndef __SNOW_COMMON__CONFIG_HH__
 #define __SNOW_COMMON__CONFIG_HH__
 
+#include "build-config.hh"
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wundef"
 
