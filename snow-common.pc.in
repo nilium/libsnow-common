@@ -8,6 +8,6 @@ Description: Snow engine common library
 Version: ${VERSION}
 URL: https://github.com/nilium/libsnow-common
 Requires.private: ${PRIVATE_PKGS}
-Libs: -L${LIBDIR} -lsnow-common
+Libs: -L${PREFIX}/lib -lsnow-common
 Libs.private: ${PRIVATE_LIBS}
 Cflags: -I${PREFIX}/include
