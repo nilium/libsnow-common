@@ -178,6 +178,11 @@ newoption {
 }
 
 newoption {
+  trigger = "no-exceptions",
+  description = "Disables exceptions in snow-common -- replaces throws with exit(1)"
+}
+
+newoption {
   trigger = "exclude-openssl",
   description = "Do not compile SHA-256 hash function into library or link to OpenSSL"
 }
@@ -315,6 +320,14 @@ excludes { "src/data/sha256.cc" }
 configuration "not exclude-openssl"
 buildoptions { "`pkg-config openssl --cflags`" }
 linkoptions { "`pkg-config openssl --libs`" }
+
+-- Exceptions
+configuration "no-exceptions"
+flags { "NoExceptions" }
+defines { "USE_EXCEPTIONS=0" }
+
+configuration "not no-exceptions"
+defines { "USE_EXCEPTIONS=1" }
 
 -- OS X specific options
 configuration "macosx"
