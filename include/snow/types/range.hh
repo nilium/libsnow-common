@@ -556,7 +556,7 @@ struct S_EXPORT range_t
 
 
 
-#ifdef TARGET_OS_MAC
+#if TARGET_OS_MAC && __OBJC__
   operator NSRange () const
   {
     return to_nsrange();
@@ -600,7 +600,7 @@ auto make_range(T location, T length) -> range_t<T>
 
 
 
-#ifdef TARGET_OS_MAC
+#if TARGET_OS_MAC && __OBJC__
 template <typename T = int>
 auto make_range(const NSRange &range) -> range_t<T>
 {
