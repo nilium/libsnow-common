@@ -16,6 +16,10 @@ struct S_EXPORT range_set_t
 {
   using range_type             = T;
   using value_type             = typename range_type::value_type;
+  // Currently backed by a linked list. Could probably be backed by a set with
+  // some changes to the routines below.
+  using range_list_t           = std::list<range_type>;
+  using iterator               = typename range_list_t::iterator;
   using const_iterator         = typename range_list_t::const_iterator;
   using const_reverse_iterator = typename range_list_t::const_reverse_iterator;
 
@@ -196,11 +200,6 @@ struct S_EXPORT range_set_t
 
 
 private:
-  // Currently backed by a linked list. Could probably be backed by a set with
-  // some changes to the routines below.
-  using range_list_t = std::list<T>;
-  using iterator     = typename range_list_t::iterator;
-
 
   range_list_t ranges_;
 
