@@ -51,14 +51,13 @@ void s_log_impl(const char *format, ARGS&&... args)
 
 
 #if !defined(s_fatal_error)
-/*! Writes an error message to stderr then kills the program with the given
- *  error code.  This should be used only when an error absolutely cannot be
- *  recovered from.  It should be obvious, but this function does not return.
- *  Preferably, you should use the ::log_fatal macro to additionally pass file
- *  and line number information along with the error message.
+/*! Writes an error message to clog then either throws an exception of type EX_T
+ *  or calls std::abort(). The former only happens if USE_EXCEPTIONS is defined
+ *  as nonzero. The remaining arguments to the function are those passed to
+ *  the string formatting function as inputs.
  *
  *  @param[in] format The format for the error message.
- *  @param[in] error The error code to exit with.
+ *  @param[in] args   Inputs for the string formatting code.
  */
 template <typename EX_T, typename... ARGS>
 void s_fatal_error_impl(const char *format, ARGS&&... args)
@@ -72,7 +71,7 @@ void s_fatal_error_impl(const char *format, ARGS&&... args)
 #if USE_EXCEPTIONS
   throw EX_T(str_temp);
 #else
-  exit(1);
+  abort();
 #endif
 } /* log_fatal */
 
