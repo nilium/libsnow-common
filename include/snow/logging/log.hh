@@ -3,12 +3,17 @@
 #ifndef __SNOW_COMMON__COMMON__LOG_HH__
 #define __SNOW_COMMON__COMMON__LOG_HH__
 
+#include <snow/build-config.hh>
 #include <cstdio>
+#include <cstdlib>
 #include <iostream>
-#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
+
+#if USE_EXCEPTIONS
+#include <stdexcept>
+#endif
 
 
 #ifndef S_EXPORT
