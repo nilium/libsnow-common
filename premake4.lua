@@ -351,7 +351,7 @@ configuration {}
 local config_src = "'include/snow/build-config.hh.in'"
 local config_dst = "'include/snow/build-config.hh'"
 
-if _ACTION ~= "install" then
+if _ACTION and _ACTION ~= "install" then
   -- Generate build-config.hh
   print("Generating 'include/snow/build-config.hh'...")
   os.execute("./format.rb " .. config_src .. " " .. config_dst .. snow.formatrb_string(g_build_config_opts))
