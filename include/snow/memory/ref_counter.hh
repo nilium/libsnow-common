@@ -21,52 +21,65 @@ struct S_EXPORT ref_counter_t
     using retain_map_t = std::map<const void *, uint_fast32_t>;
 
     template <typename T>
-    static void default_finalizer(T *object)
-    {
-      if (object != nullptr)
-        delete object;
-      else
-        s_throw(std::invalid_argument, "Attempt to default-finalize nullptr");
-    }
+    auto  retain(T *object) -> T *;
 
     template <typename T>
-    void  retain(const T *object);
+    bool  release(T *object, finalizer_t<T> finalize);
 
     template <typename T>
-    void  release(T *object, finalizer_t<T> finalize = default_finalizer<T>);
+    bool  release(T *object);
 
     template <typename T>
     auto  retain_count(const T *object) const -> uint_fast32_t;
+
+    // Clears any retained objects from the ref counter. Does not attempt to
+    // finalize them in any way -- assumes this has already been forced on the
+    // objects in the counter.
+    void clear();
 
 private:
   retain_map_t                  retained_;
   mutable std::recursive_mutex  lock_;
 
   void  retain_object_locked(const void *obj);
-  void  release_object_locked(void *obj, finalizer_t<void> finalize);
-  int   object_retain_count_locked(const void *obj) const;
+  bool  release_object_locked(void *obj, finalizer_t<void> finalize);
+  bool  release_object_locked(void *obj, std::nullptr_t);
+  auto  object_retain_count_locked(const void *obj) const -> uint_fast32_t;
 
 }; // struct ref_counter_t
 
 
 template <typename T>
-void  ref_counter_t::retain(const T *object)
+auto  ref_counter_t::retain(T *object) -> T *
 {
   if (object == NULL)
     s_throw(std::invalid_argument, "Attempt to retain nullptr");
 
   retain_object_locked((void *)object);
+
+  return object;
 }
 
 
 
 template <typename T>
-void  ref_counter_t::release(T *object, finalizer_t<T> finalize)
+bool  ref_counter_t::release(T *object, finalizer_t<T> finalize)
 {
   if (object == nullptr)
     s_throw(std::invalid_argument, "Attempt to release nullptr");
 
-  release_object_locked(object, (finalizer_t<void>)finalize);
+  return release_object_locked(object, (finalizer_t<void>)finalize);
+}
+
+
+
+template <typename T>
+bool  ref_counter_t::release(T *object)
+{
+  if (object == nullptr)
+    s_throw(std::invalid_argument, "Attempt to release nullptr");
+
+  return release_object_locked(object, nullptr);
 }
 
 
