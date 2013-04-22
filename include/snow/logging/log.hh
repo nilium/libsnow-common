@@ -26,6 +26,17 @@
 #define SNOW_LOG_WARNINGS_ERRORS  (2)
 #define SNOW_LOG_EVERYTHING       (3)
 
+#ifndef S_LOG_ERROR_PREFIX
+#define S_LOG_ERROR_PREFIX "Error "
+#endif /* S_LOG_ERROR_PREFIX */
+
+#ifndef S_LOG_WARNING_PREFIX
+#define S_LOG_WARNING_PREFIX "Warning "
+#endif /* S_LOG_WARNING_PREFIX */
+
+#ifndef S_LOG_NOTE_PREFIX
+#define S_LOG_NOTE_PREFIX "Note "
+#endif /* S_LOG_NOTE_PREFIX */
 
 /*! Force the inclusion of logging macros regardless of release/debug mode. */
 #if !defined(FORCE_LOGGING)
@@ -89,13 +100,13 @@ void s_fatal_error_impl(const char *format, ARGS&&... args)
 /* if debugging or logging is forcibly enabled, then provide additional logging macros */
 #if !defined(NDEBUG) || FORCE_LOGGING
 #if !defined(s_log_error) && SNOW_LOGGING_LEVEL >= SNOW_LOG_ERRORS
-#define s_log_error(FORMAT, args...)   s_log("Error [%s:%s:%d] "   FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
+#define s_log_error(FORMAT, args...)   s_log(S_LOG_ERROR_PREFIX "[%s:%s:%d] "   FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
 #endif
 #if !defined(s_log_warning) && SNOW_LOGGING_LEVEL >= SNOW_LOG_WARNINGS_ERRORS
-#define s_log_warning(FORMAT, args...) s_log("Warning [%s:%s:%d] " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
+#define s_log_warning(FORMAT, args...) s_log(S_LOG_WARNING_PREFIX  "[%s:%s:%d] " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
 #endif
 #if !defined(s_log_note) && SNOW_LOGGING_LEVEL >= SNOW_LOG_EVERYTHING
-#define s_log_note(FORMAT, args...)    s_log("Note [%s:%s:%d] "    FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
+#define s_log_note(FORMAT, args...)    s_log(S_LOG_NOTE_PREFIX "[%s:%s:%d] "    FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
 #endif
 #endif
 
