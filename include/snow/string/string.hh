@@ -335,16 +335,38 @@ struct string_t
   string_t &operator += (const string_t &rhs);
 
 private:
-  friend std::ostream &operator << (std::ostream &out, const string_t &in);
-
   size_type find_char(char ch, size_type from) const;
   size_type find_substring(const char *str, size_type from, size_type length) const;
 
-  size_type length_ = 0;
-  size_type capacity_ = 0;
-  char *data_ = (char *)&capacity_;
+  struct long_data_t
+  {
+    size_type length_;
+    size_type capacity_;
+  };
 
-  static constexpr size_type short_data_len_ = sizeof(capacity_);
+  struct short_data_dummy_t
+  {
+    uint8_t length_;
+    char short_data_[1];
+  };
+
+  enum : size_type
+  {
+    short_data_len_ = sizeof(long_data_t) - offsetof(short_data_dummy_t, short_data_)
+  };
+
+  struct short_data_t
+  {
+    uint8_t length_;
+    char short_data_[short_data_len_];
+  };
+
+  char *data_ = rep_.short_.short_data_;
+  union {
+    long_data_t long_;
+    short_data_t short_;
+  } rep_;
+
 };
 
 
@@ -352,7 +374,8 @@ private:
 template <string_t::size_type N>
 bool string_t::operator == (const char str[N]) const
 {
-  return std::strncmp(data_, str, N > length_ ? length_ : N) == 0;
+  const size_type len = size();
+  return std::strncmp(data_, str, N > len ? len : N) == 0;
 }
 
 
@@ -360,7 +383,8 @@ bool string_t::operator == (const char str[N]) const
 template <string_t::size_type N>
 bool string_t::operator != (const char str[N]) const
 {
-  return std::strncmp(data_, str, N > length_ ? length_ : N) != 0;
+  const size_type len = size();
+  return std::strncmp(data_, str, N > len ? len : N) != 0;
 }
 
 
