@@ -49,6 +49,12 @@
 #endif
 
 
+using s_log_fn_t = void (*)(const char *msg, size_t length, void *ctx);
+// Log callback functions -- not thread safe
+void s_log_callback(const char *, size_t);
+void s_set_log_callback(s_log_fn_t cb, void *ctx);
+
+
 template <typename ...ARGS>
 void s_log_impl(const char *format, ARGS&&... args)
 {
@@ -58,6 +64,7 @@ void s_log_impl(const char *format, ARGS&&... args)
   snprintf(strbuf.data(), length, format, std::forward<ARGS>(args)...);
   std::string str_temp(strbuf.data(), length - 2); // exclude \n
   std::clog << str_temp << std::endl;
+  s_log_callback(strbuf.data(), length - 1);
 }
 
 
@@ -65,7 +72,7 @@ void s_log_impl(const char *format, ARGS&&... args)
 /*! Writes an error message to clog then either throws an exception of type EX_T
  *  or calls std::abort(). The former only happens if USE_EXCEPTIONS is defined
  *  as nonzero. The remaining arguments to the function are those passed to
- *  the string formatting function as inputs.
+ *  the string formatting function as inputs. Does not call the log callback.
  *
  *  @param[in] format The format for the error message.
  *  @param[in] args   Inputs for the string formatting code.
