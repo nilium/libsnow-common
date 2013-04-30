@@ -77,7 +77,7 @@ void s_fatal_error_impl(const char *format, ARGS&&... args)
   std::vector<char> strbuf;
   strbuf.resize(length);
   snprintf(strbuf.data(), length, format, std::forward<ARGS>(args)...);
-  std::string str_temp(strbuf.data(), length - 2); // exclude \n
+  std::string str_temp(strbuf.data(), length - (strbuf[length - 1] == '\n' ? 2 : 1)); // exclude \n
   std::clog << str_temp << std::endl;
 #if USE_EXCEPTIONS
   throw EX_T(str_temp);
