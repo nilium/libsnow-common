@@ -113,18 +113,18 @@
 #include <stdexcept>
 #include <utility>
 #include <type_traits>
+#include <cstddef>
 #include <cstdint>
 #include <cfloat>
 
-// Define string type
-#include <string>
-
-namespace snow {
-
-using string = std::string;
-
-} // namespace snow
-
 #pragma GCC diagnostic pop
+
+// Define string type
+#include <snow/string/string.hh>
+
+namespace snow
+{
+  using string = struct string_t;
+}
 
 #endif /* end __SNOW_COMMON__CONFIG_HH__ include guard */

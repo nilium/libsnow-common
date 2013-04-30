@@ -40,8 +40,8 @@ size_t score_strings(const string &lhs, const string &rhs)
     } else if (src_index + 1 < src_length) {
       score_increment = 1;
       const auto next_index = lhs.find(dst_char, src_index);
-      if (next_index != string::npos) {
-        src_index = next_index;
+      if (next_index != lhs.cend()) {
+        src_index = lhs.index_of(next_index);
         goto score_find;
       }
     }
