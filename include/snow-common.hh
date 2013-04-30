@@ -38,6 +38,8 @@ and linked to. So, it would produce some errors if in here.
 
 // Strings
 #include "snow/string/string.hh"
+#include "snow/string/compare.hh"
+#include "snow/string/split.hh"
 
 // Memory
 #include "snow/memory/ref_counter.hh"
