@@ -114,7 +114,7 @@ parser_t::~parser_t()
 void parser_t::add_source(const string &source)
 {
   const char *source_cst = source.c_str();
-  const char *source_cst_end = source_cst + source.length();
+  const char *source_cst_end = source_cst + source.size();
 
   for (; source_cst < source_cst_end; ++source_cst) {
     const char current = *source_cst;
@@ -289,7 +289,7 @@ void parser_t::state_t::close_with_error(const string &error)
 const string &parser_t::state_t::trimmed_buffer(const options_t &options)
 {
   if (options.trim_spaces && space_count > 0) {
-    buffer.resize(buffer.length() - space_count);
+    buffer.resize(buffer.size() - space_count);
     space_count = 0;
   }
   return buffer;

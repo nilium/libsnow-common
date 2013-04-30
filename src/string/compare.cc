@@ -10,8 +10,8 @@ namespace snow {
 
 size_t score_strings(const string &lhs, const string &rhs)
 {
-  string::size_type src_length = lhs.length();
-  string::size_type dst_length = rhs.length();
+  string::size_type src_length = lhs.size();
+  string::size_type dst_length = rhs.size();
 
   if (src_length == dst_length && lhs == rhs)
     return SIZE_MAX;
@@ -53,10 +53,10 @@ size_t score_strings(const string &lhs, const string &rhs)
 bool pattern_match(const string &pattern, const string &other)
 {
   const char *backup = nullptr;
-  auto p_cstr = pattern.c_str();
-  auto o_cstr = other.c_str();
-  const auto p_end = p_cstr + pattern.length();
-  const auto o_end = o_cstr + other.length();
+  const char *p_cstr = pattern.c_str();
+  const char *o_cstr = other.c_str();
+  const char *p_end = p_cstr + pattern.size();
+  const char *o_end = o_cstr + other.size();
 
   while (p_cstr < p_end && o_cstr < o_end) {
     switch (*p_cstr) {

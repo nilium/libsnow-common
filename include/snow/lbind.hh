@@ -198,7 +198,7 @@ void lb_push_value__<double>(lua_State *L, const double &&value)
 template <>
 void lb_push_value__<std::string>(lua_State *L, const std::string &&value)
 {
-  lua_pushlstring(L, value.c_str(), value.length());
+  lua_pushlstring(L, value.c_str(), value.size());
 }
 
 template <typename F, typename R, typename... T, int... S>
