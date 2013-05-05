@@ -167,6 +167,8 @@ string_t &string_t::operator = (const std::string &other)
 string_t &string_t::operator = (const char *zstr)
 {
   assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+
   const size_type len = std::strlen(zstr);
   resize(len);
   if (len) {
@@ -193,7 +195,9 @@ string_t &string_t::operator = (const string_t &other)
 
 string_t &string_t::assign(const char *zstr, size_type length)
 {
+  assert(zstr < data_ || zstr > data_ + size());
   assert(zstr);
+
   resize(length);
   if (length) {
     std::memcpy(data_, zstr, length);
@@ -220,36 +224,40 @@ int string_t::compare(const string_t &other) const
 
 
 
-void string_t::append(char ch)
+string_t &string_t::append(char ch)
 {
   const size_type len = size();
   resize(len + 1);
   data_[len] = ch;
+  return *this;
 }
 
 
 
-void string_t::append(const char *zstr)
+string_t &string_t::append(const char *zstr)
 {
   assert(zstr);
-  append(zstr, std::strlen(zstr));
+  return append(zstr, std::strlen(zstr));
 }
 
 
 
-void string_t::append(const char *zstr, size_type length)
+string_t &string_t::append(const char *zstr, size_type length)
 {
   assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+
   const size_type old_len = size();
   if (length) {
     resize(old_len + length);
     std::memcpy(data_ + old_len, zstr, length);
   }
+  return *this;
 }
 
 
 
-void string_t::append(const string_t &str)
+string_t &string_t::append(const string_t &str)
 {
   const size_type old_len = size();
   const size_type other_len = str.size();
@@ -257,45 +265,178 @@ void string_t::append(const string_t &str)
     resize(old_len + other_len);
     std::memcpy(data_ + old_len, str.data(), other_len);
   }
+  return *this;
 }
 
 
 
-void string_t::append(const const_iterator &from, const const_iterator &to)
+string_t &string_t::append(const const_iterator &from, const const_iterator &to)
 {
   if (from == to || from < to) {
-    return;
+    return *this;
   }
 
-  append(from.ptr, size_type(to.ptr - from.ptr));
+  return append(from.ptr, size_type(to.ptr - from.ptr));
 }
 
 
 
-void string_t::push_back(char ch)
+string_t &string_t::insert(const_iterator pos, char ch)
 {
-  append(ch);
+  return insert(index_of(pos), ch);
 }
 
 
 
-void string_t::pop_back()
+string_t &string_t::insert(const_iterator pos, const char *zstr)
+{
+  assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+  return insert(index_of(pos), zstr, std::strlen(zstr));
+}
+
+
+
+string_t &string_t::insert(const_iterator pos, const char *zstr, size_type length)
+{
+  assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+  return insert(index_of(pos), zstr, length);
+}
+
+
+
+string_t &string_t::insert(const_iterator pos, const string_t &str)
+{
+  assert(this != &str);
+  return insert(index_of(pos), str.data(), str.size());
+}
+
+
+
+string_t &string_t::insert(iterator pos, char ch)
+{
+  return insert(index_of(pos), ch);
+}
+
+
+
+string_t &string_t::insert(iterator pos, const char *zstr)
+{
+  assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+  return insert(index_of(pos), zstr, std::strlen(zstr));
+}
+
+
+
+string_t &string_t::insert(iterator pos, const char *zstr, size_type length)
+{
+  assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+  return insert(index_of(pos), zstr, length);
+}
+
+
+
+string_t &string_t::insert(iterator pos, const string_t &str)
+{
+  assert(this != &str);
+  return insert(index_of(pos), str.data(), str.size());
+}
+
+
+
+string_t &string_t::insert(size_type pos, char ch)
+{
+  const size_type len = size();
+
+  assert(pos >= 0);
+  assert(pos <= len);
+
+  if (pos == len) {
+    return append(ch);
+  } else {
+    const size_type new_length = len + 1;
+    resize(new_length);
+    std::memmove(data_ + pos, data_ + pos + 1, (new_length) - pos);
+    data_[pos] = ch;
+  }
+  return *this;
+}
+
+
+
+string_t &string_t::insert(size_type pos, const char *zstr)
+{
+  assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+  return insert(pos, zstr, std::strlen(zstr));
+}
+
+
+
+string_t &string_t::insert(size_type pos, const char *zstr, size_type length)
+{
+  assert(zstr);
+  assert(zstr < data_ || zstr > data_ + size());
+
+  switch (length) {
+  case 1: return insert(pos, *zstr);
+  default: {
+      const size_type this_length = size();
+
+      assert(pos >= 0);
+      assert(pos <= this_length);
+
+      if (pos == this_length) {
+        return append(zstr, length);
+      } else {
+        const size_type new_length = this_length + length;
+        resize(new_length);
+        std::memmove(data_ + pos, data_ + pos + length, (new_length) - pos);
+        std::memcpy(data_ + pos, zstr, length);
+      }
+    }
+  case 0: return *this;
+  }
+}
+
+
+
+string_t &string_t::insert(size_type pos, const string_t &str)
+{
+  assert(this != &str);
+  return insert(pos, str.data_, str.size());
+}
+
+
+
+string_t &string_t::push_back(char ch)
+{
+  return append(ch);
+}
+
+
+
+string_t &string_t::pop_back()
 {
   const size_type len = size();
   assert(len > 0);
   if (len) {
     resize(len - 1);
   }
+  return *this;
 }
 
 
 
-void string_t::erase(size_type from, size_type count)
+string_t &string_t::erase(size_type from, size_type count)
 {
   const size_type len = size();
   size_type to;
   switch (count) {
-  case 0: return;
+  case 0: return *this;
   case npos: to = len - from; break;
   default: to = from + count; break;
   }
@@ -304,61 +445,61 @@ void string_t::erase(size_type from, size_type count)
   assert(from + count <= len);
 
   if (from == len) {
-    return;
+    return *this;
   } else if (from == 0 && to == len) {
     resize(0);
-    return;
+    return *this;
   } else if (to == len) {
     resize(from);
-    return;
+    return *this;
   } else if (from == 0) {
     const size_type new_len = len - to;
     std::memmove(data_, data_ + to, new_len);
     resize(new_len);
-    return;
+    return *this;
   }
 
   const size_type remainder = len - to;
   std::memmove(data_ + from, data_ + to, remainder);
-  resize(from + remainder);
+  return resize(from + remainder);
 }
 
 
 
-void string_t::erase(const const_iterator &pos)
+string_t &string_t::erase(const const_iterator &pos)
 {
   if (pos.ptr == data_ + size()) {
-    return;
+    return *this;
   }
 
-  erase(size_type(data_ - pos.ptr), 1);
+  return erase(index_of(pos), 1);
 }
 
 
 
-void string_t::erase(const const_iterator &from, const const_iterator &to)
+string_t &string_t::erase(const const_iterator &from, const const_iterator &to)
 {
   if (from >= to) {
-    return;
+    return *this;
   }
-  const size_type from_sz = size_type(from.ptr - data_);
-  erase(from_sz, size_type(to.ptr - data_) - from_sz);
+  const size_t from_pos = index_of(from);
+  return erase(from_pos, index_of(to) - from_pos);
 }
 
 
 
-void string_t::clear()
+string_t &string_t::clear()
 {
-  resize(0);
+  return resize(0);
 }
 
 
 
-void string_t::resize(size_type len)
+string_t &string_t::resize(size_type len)
 {
   const size_type old_len = size();
   if (old_len == len) {
-    return;
+    return *this;
   } if (len > old_len) {
     reserve(len + 1);
   }
@@ -368,6 +509,7 @@ void string_t::resize(size_type len)
   } else {
     rep_.long_.length_ = len;
   }
+  return *this;
 }
 
 
@@ -386,12 +528,12 @@ bool string_t::empty() const
 
 
 
-void string_t::shrink_to_fit()
+string_t &string_t::shrink_to_fit()
 {
   if (data_ == rep_.short_.short_data_) {
-    return;
+    return *this;
   } else if (rep_.long_.capacity_ == 0) {
-    return;
+    return *this;
   }
 
   const size_type len = size();
@@ -413,11 +555,12 @@ void string_t::shrink_to_fit()
     rep_.long_.capacity_ = short_data_len_;
     reserve(len);
   }
+  return *this;
 }
 
 
 
-void string_t::reserve(size_type cap)
+string_t &string_t::reserve(size_type cap)
 {
   static size_type fixed_alignments[128] = {
     /* 0 - 7: 16 bytes */
@@ -449,7 +592,7 @@ void string_t::reserve(size_type cap)
   const size_type is_short = (data_ == rep_.short_.short_data_);
 
   if ((!is_short && cap <= rep_.long_.capacity_) || (is_short && cap <= short_data_len_)) {
-    return;
+    return *this;
   }
 
   size_type cap_align_diff;
@@ -484,6 +627,7 @@ void string_t::reserve(size_type cap)
   data_ = newbuf;
   rep_.long_.length_ = old_len;
   rep_.long_.capacity_ = cap;
+  return *this;
 }
 
 
@@ -591,7 +735,11 @@ char string_t::back() const
 
 auto string_t::index_of(const iterator &iter) const -> size_type
 {
-  if (iter.ptr < data_ || iter.ptr > data_ + size()) {
+  const size_t len = size();
+  // Bounds-check, though admittedly only in debug mode.
+  assert(iter.ptr >= data_);
+  assert(iter.ptr <= data_ + len);
+  if (iter.ptr < data_ || iter.ptr > data_ + len) {
     return npos;
   } else {
     return size_type(iter.ptr - data_);
@@ -602,7 +750,10 @@ auto string_t::index_of(const iterator &iter) const -> size_type
 
 auto string_t::index_of(const const_iterator &iter) const -> size_type
 {
-  if (iter.ptr < data_ || iter.ptr > data_ + size()) {
+  const size_t len = size();
+  assert(iter.ptr >= data_);
+  assert(iter.ptr <= data_ + len);
+  if (iter.ptr < data_ || iter.ptr > data_ + len) {
     return npos;
   } else {
     return size_type(iter.ptr - data_);
@@ -855,56 +1006,56 @@ auto string_t::find(const char *str, size_type from, size_type length) const -> 
 
 auto string_t::find(char ch, const const_iterator &from) -> iterator
 {
-  return iterator(data_ + find_char(ch, size_type(from.ptr - data_)));
+  return iterator(data_ + find_char(ch, index_of(from)));
 }
 
 
 
 auto string_t::find(const string_t &other, const const_iterator &from) -> iterator
 {
-  return iterator(data_ + find_substring(other.data_, size_type(from.ptr - data_), other.size()));
+  return iterator(data_ + find_substring(other.data_, index_of(from), other.size()));
 }
 
 
 
 auto string_t::find(const char *str, const const_iterator &from) -> iterator
 {
-  return iterator(data_ + find_substring(str, size_type(from.ptr - data_), std::strlen(str)));
+  return iterator(data_ + find_substring(str, index_of(from), std::strlen(str)));
 }
 
 
 
 auto string_t::find(const char *str, const const_iterator &from, size_type length) -> iterator
 {
-  return iterator(data_ + find_substring(str, size_type(from.ptr - data_), length));
+  return iterator(data_ + find_substring(str, index_of(from), length));
 }
 
 
 
 auto string_t::find(char ch, const const_iterator &from) const -> const_iterator
 {
-  return const_iterator(data_ + find_char(ch, size_type(from.ptr - data_)));
+  return const_iterator(data_ + find_char(ch, index_of(from)));
 }
 
 
 
 auto string_t::find(const string_t &other, const const_iterator &from) const -> const_iterator
 {
-  return const_iterator(data_ + find_substring(other.data_, size_type(from.ptr - data_), other.size()));
+  return const_iterator(data_ + find_substring(other.data_, index_of(from), other.size()));
 }
 
 
 
 auto string_t::find(const char *str, const const_iterator &from) const -> const_iterator
 {
-  return const_iterator(data_ + find_substring(str, size_type(from.ptr - data_), std::strlen(str)));
+  return const_iterator(data_ + find_substring(str, index_of(from), std::strlen(str)));
 }
 
 
 
 auto string_t::find(const char *str, const const_iterator &from, size_type length) const -> const_iterator
 {
-  return const_iterator(data_ + find_substring(str, size_type(from.ptr - data_), length));
+  return const_iterator(data_ + find_substring(str, index_of(from), length));
 }
 
 
@@ -943,7 +1094,7 @@ auto string_t::find_index(const char *str, size_type from, size_type length) con
 
 auto string_t::find_index(char ch, const const_iterator &from) const -> size_type
 {
-  const size_type result = find_char(ch, size_type(from.ptr - data_));
+  const size_type result = find_char(ch, index_of(from));
   return result == size() ? npos : result;
 }
 
@@ -951,7 +1102,7 @@ auto string_t::find_index(char ch, const const_iterator &from) const -> size_typ
 
 auto string_t::find_index(const string_t &other, const const_iterator &from) const -> size_type
 {
-  const size_type result = find_substring(other.data_, size_type(from.ptr - data_), other.size());
+  const size_type result = find_substring(other.data_, index_of(from), other.size());
   return result == size() ? npos : result;
 }
 
@@ -959,7 +1110,7 @@ auto string_t::find_index(const string_t &other, const const_iterator &from) con
 
 auto string_t::find_index(const char *str, const const_iterator &from) const -> size_type
 {
-  const size_type result = find_substring(str, size_type(from.ptr - data_), std::strlen(str));
+  const size_type result = find_substring(str, index_of(from), std::strlen(str));
   return result == size() ? npos : result;
 }
 
@@ -967,7 +1118,7 @@ auto string_t::find_index(const char *str, const const_iterator &from) const -> 
 
 auto string_t::find_index(const char *str, const const_iterator &from, size_type length) const -> size_type
 {
-  const size_type result = find_substring(str, size_type(from.ptr - data_), length);
+  const size_type result = find_substring(str, index_of(from), length);
   return result == size() ? npos : result;
 }
 

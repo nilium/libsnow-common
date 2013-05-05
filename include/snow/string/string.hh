@@ -198,29 +198,43 @@ struct string_t
 
   int compare(const string_t &other) const;
 
-  void append(char ch);
-  void append(const char *zstr);
-  void append(const char *zstr, size_type length);
-  void append(const string_t &str);
-  void append(const const_iterator &from, const const_iterator &to);
+  string_t &append(char ch);
+  string_t &append(const char *zstr);
+  string_t &append(const char *zstr, size_type length);
+  string_t &append(const string_t &str);
+  string_t &append(const const_iterator &from, const const_iterator &to);
 
-  void push_back(char ch);
-  void pop_back();
+  string_t &insert(const_iterator pos, char ch);
+  string_t &insert(const_iterator pos, const char *zstr);
+  string_t &insert(const_iterator pos, const char *zstr, size_type length);
+  string_t &insert(const_iterator pos, const string_t &str);
+  string_t &insert(iterator pos, char ch);
+  string_t &insert(iterator pos, const char *zstr);
+  string_t &insert(iterator pos, const char *zstr, size_type length);
+  string_t &insert(iterator pos, const string_t &str);
 
-  void erase(size_type from = 0, size_type count = npos);
-  void erase(const const_iterator &pos);
-  void erase(const const_iterator &from, const const_iterator &to);
+  string_t &insert(size_type pos, char ch);
+  string_t &insert(size_type pos, const char *zstr);
+  string_t &insert(size_type pos, const char *zstr, size_type length);
+  string_t &insert(size_type pos, const string_t &str);
+
+  string_t &push_back(char ch);
+  string_t &pop_back();
+
+  string_t &erase(size_type from = 0, size_type count = npos);
+  string_t &erase(const const_iterator &pos);
+  string_t &erase(const const_iterator &from, const const_iterator &to);
 
   // If shrinking the string, there is no guarantee that the capacity of the
   // string will change. If growing the array, the new characters will be
   // garbage data except for adding a null character at the end of the string.
-  void clear();
-  void resize(size_type);
+  string_t &clear();
+  string_t &resize(size_type);
   size_type size() const;
   bool empty() const;
 
-  void shrink_to_fit();
-  void reserve(size_type);
+  string_t &shrink_to_fit();
+  string_t &reserve(size_type);
   size_type capacity() const;
 
 
