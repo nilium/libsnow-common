@@ -1202,13 +1202,13 @@ static void gen_str_search_table(
 
 auto string_t::find_substring(const char *str, size_type from, size_type length) const -> size_type
 {
+  assert(str);
+
   if (length == 1) {
     return find_char(*str, from);
   }
 
   const size_type len = size();
-
-  assert(str);
   assert(from <= len);
 
   if (from >= len || from + length >= len) {
