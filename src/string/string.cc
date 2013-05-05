@@ -9,6 +9,14 @@
 namespace snow {
 
 
+static void gen_str_search_table(
+  const char *str,
+  string_t::size_type length,
+  ptrdiff_t jumps[]
+  );
+
+
+
 string_t::string_t() :
   rep_({{0x0, 0x0}})
 {
@@ -1174,7 +1182,11 @@ auto string_t::find_char(char ch, size_type from) const -> size_type
 
 
 
-static void gen_str_search_table(const char *str, string_t::size_type length, ptrdiff_t jumps[])
+static void gen_str_search_table(
+  const char *str,
+  string_t::size_type length,
+  ptrdiff_t jumps[]
+  )
 {
   ptrdiff_t str_index = 0;
   ptrdiff_t jmp_index = jumps[0] = -1;
