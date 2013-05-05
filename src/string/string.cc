@@ -769,6 +769,34 @@ DEF_REND_ITER(rend, reverse_iterator)
 
 
 
+#define DEF_OFFSET_ITER(NAME, RTYPE, args...)                                 \
+auto string_t:: NAME (size_type index) args -> RTYPE                          \
+{                                                                             \
+  assert(index >= 0);                                                         \
+  assert(index <= size());                                                    \
+  return RTYPE (data_ + index);                                               \
+}
+
+#define DEF_ROFFSET_ITER(NAME, RTYPE, args...)                                \
+auto string_t:: NAME (size_type index) args -> RTYPE                          \
+{                                                                             \
+  assert(index >= 0);                                                         \
+  assert(index <= size());                                                    \
+  return RTYPE (data_ + size() - (1 + index));                                \
+}
+
+DEF_OFFSET_ITER(offset, iterator)
+DEF_OFFSET_ITER(offset, const_iterator, const)
+DEF_OFFSET_ITER(coffset, const_iterator, const)
+DEF_ROFFSET_ITER(roffset, reverse_iterator)
+DEF_ROFFSET_ITER(roffset, const_reverse_iterator, const)
+DEF_ROFFSET_ITER(croffset, const_reverse_iterator, const)
+
+#undef DEF_OFFSET_ITER
+#undef DEF_ROFFSET_ITER
+
+
+
 auto string_t::find(char ch, size_type from) -> iterator
 {
   return iterator(data_ + find_char(ch, from));

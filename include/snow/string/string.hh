@@ -262,21 +262,24 @@ struct string_t
 
   const_iterator cbegin() const;
   const_iterator cend() const;
-
   iterator begin();
   iterator end();
-
   const_iterator begin() const;
   const_iterator end() const;
 
   const_reverse_iterator crbegin() const;
   const_reverse_iterator crend() const;
-
   reverse_iterator rbegin();
   reverse_iterator rend();
-
   const_reverse_iterator rbegin() const;
   const_reverse_iterator rend() const;
+
+  iterator offset(size_type index);
+  const_iterator offset(size_type index) const;
+  const_iterator coffset(size_type index) const;
+  reverse_iterator roffset(size_type index);
+  const_reverse_iterator roffset(size_type index) const;
+  const_reverse_iterator croffset(size_type index) const;
 
   /** The many varieties of find **/
   iterator find(char ch, size_type from = 0);
