@@ -158,7 +158,7 @@ ptrdiff_t operator - (const string_iter_t<lconst, ldiff> &lc, const string_iter_
 
 struct string_t
 {
-  using value_type = char;
+  using value_type = char; // May not change.
   using size_type = size_t;
   using iterator = string_iter_t<false, 1>;
   using const_iterator = string_iter_t<true, 1>;
