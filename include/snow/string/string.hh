@@ -169,6 +169,30 @@ struct string_t
   static const size_type npos = ~0;
 
 
+  /*
+  Warning about assign(..) and operator = (const char *):
+
+  If the data pointed to is the same data held by the string class, behavior is
+  undefined. At worst, this will result in nothing noticeably weird happening
+  until way later and at best, it will crash.
+
+  This is because both operator= and assign(..) will attempt to resize the
+  string's internal buffer, which may in turn allocate a new buffer, copy the
+  old one, and then free the old one. This means that any pointer to data in
+  the string may be invalid. Additionally, because assign() and operator=
+  both use memcpy rather than memmove, even if the pointer isn't invalidated,
+  the memory pointed to may be stomped in the process of copying it.
+
+  These same rules apply to any other function that both modifies the string
+  and takes a string (i.e., insert, for now). append should work provided you
+  pass the string object and not a pointer to the string's data.
+
+  So, don't do these things. They're bad. If you must, absolutely make sure to
+  reserve enough space to ensure the copy won't destroy something, but, in
+  general, just don't do it.
+  */
+
+
   string_t();
   string_t(const std::string &other);
   string_t(const const_iterator &from, const const_iterator &to);
