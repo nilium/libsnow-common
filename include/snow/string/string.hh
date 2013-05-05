@@ -4,10 +4,12 @@
 #define __SNOW_COMMON__STRING_HH__
 
 #include <snow/config.hh>
-#include <ostream>
-#include <iterator>
-#include <string>
+#include <cstddef>
 #include <initializer_list>
+#include <iterator>
+#include <ostream>
+#include <string>
+#include <type_traits>
 
 
 namespace snow {
