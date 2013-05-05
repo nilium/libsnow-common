@@ -346,6 +346,7 @@ private:
     size_type capacity_;
   };
 
+  // hack
   struct short_data_dummy_t
   {
     uint8_t length_;
