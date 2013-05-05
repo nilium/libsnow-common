@@ -171,7 +171,7 @@ end -- mkdir_p
 
 solution "snow"
 project "snow-common"
-configurations { "Release-Static", "Debug-Static", "Release-Shared", "Debug-Shared" }
+configurations { "Debug-Static", "Debug-Shared", "Release-Static", "Release-Shared" }
 targetdir "lib"
 
 -- Option defaults
