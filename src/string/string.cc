@@ -721,87 +721,51 @@ const char *string_t::data() const
 
 
 
-auto string_t::cbegin() const -> const_iterator
-{
-  return const_iterator(data_);
+#define DEF_BEGIN_ITER(NAME, RTYPE, args...)                                  \
+auto string_t:: NAME () args -> RTYPE                                         \
+{                                                                             \
+  return RTYPE (data_);                                                       \
 }
 
-
-
-auto string_t::cend() const -> const_iterator
-{
-  return const_iterator(data_ + size());
+#define DEF_END_ITER(NAME, RTYPE, args...)                                    \
+auto string_t:: NAME () args -> RTYPE                                         \
+{                                                                             \
+  return RTYPE (data_ + size());                                              \
 }
 
+DEF_BEGIN_ITER(cbegin, const_iterator, const)
+DEF_BEGIN_ITER(begin, const_iterator, const)
+DEF_BEGIN_ITER(begin, iterator)
+DEF_END_ITER(cend, const_iterator, const)
+DEF_END_ITER(end, const_iterator, const)
+DEF_END_ITER(end, iterator)
+
+#undef DEF_BEGIN_ITER
+#undef DEF_END_ITER
 
 
-auto string_t::begin() -> iterator
-{
-  return iterator(data_);
+
+#define DEF_RBEGIN_ITER(NAME, RTYPE, args...)                                 \
+auto string_t:: NAME () args -> RTYPE                                         \
+{                                                                             \
+  return RTYPE (data_ + size() - 1);                                          \
 }
 
-
-
-auto string_t::end() -> iterator
-{
-  return iterator(data_ + size());
+#define DEF_REND_ITER(NAME, RTYPE, args...)                                   \
+auto string_t:: NAME () args -> RTYPE                                         \
+{                                                                             \
+  return RTYPE (data_ - 1);                                                   \
 }
 
+DEF_RBEGIN_ITER(crbegin, const_reverse_iterator, const)
+DEF_RBEGIN_ITER(rbegin, const_reverse_iterator, const)
+DEF_RBEGIN_ITER(rbegin, reverse_iterator)
+DEF_REND_ITER(crend, const_reverse_iterator, const)
+DEF_REND_ITER(rend, const_reverse_iterator, const)
+DEF_REND_ITER(rend, reverse_iterator)
 
-
-auto string_t::begin() const -> const_iterator
-{
-  return const_iterator(data_);
-}
-
-
-
-auto string_t::end() const -> const_iterator
-{
-  return const_iterator(data_ + size());
-}
-
-
-
-auto string_t::crbegin() const -> const_reverse_iterator
-{
-  return const_reverse_iterator(data_ + size() - 1);
-}
-
-
-
-auto string_t::crend() const -> const_reverse_iterator
-{
-  return const_reverse_iterator(data_ - 1);
-}
-
-
-
-auto string_t::rbegin() -> reverse_iterator
-{
-  return reverse_iterator(data_ + size() - 1);
-}
-
-
-
-auto string_t::rend() -> reverse_iterator
-{
-  return reverse_iterator(data_ - 1);
-}
-
-
-
-auto string_t::rbegin() const -> const_reverse_iterator
-{
-  return const_reverse_iterator(data_ + size() - 1);
-}
-
-
-
-auto string_t::rend() const -> const_reverse_iterator
-{
-  return const_reverse_iterator(data_ - 1);
-}
+#undef DEF_RBEGIN_ITER
+#undef DEF_REND_ITER
 
 
 
