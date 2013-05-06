@@ -387,7 +387,9 @@ private:
     size_type capacity_;
   };
 
-  // hack
+  // Hack: can't determine the aligned offset of short_data_ until it's
+  // defined, and it'll crash the compiler if you try it, so use a dummy
+  // type/array and get the offset from it. (see: short_data_len_)
   struct short_data_dummy_t
   {
     uint8_t length_;

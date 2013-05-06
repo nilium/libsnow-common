@@ -75,8 +75,8 @@ bool pattern_match(const string &pattern, const string &other)
           s_throw(std::runtime_error, "Invalid pattern: contains '*?'");
 
         for (;o_cstr < o_end && *o_cstr != next; ++o_cstr) ;
-        // We know the next character matches or something went awry, so skip it
-        // for both strings.
+        // In this case, the next character is known to match or something went
+        // awry, so skip it for both strings.
         p_cstr += 2;
         o_cstr += 1;
       } break; // case '*'
@@ -88,7 +88,7 @@ bool pattern_match(const string &pattern, const string &other)
 
     default:
       if (*(p_cstr++) != *(o_cstr++) || (p_cstr >= p_end && o_cstr < o_end)) {
-        // If we reach the end of p_cstr too quickly or the strings stop
+        // If the loop reaches the end of p_cstr too quickly or the strings stop
         // matching, try to back up to the last match. Repeat this as many times
         // as needed.
 

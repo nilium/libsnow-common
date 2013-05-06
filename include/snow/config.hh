@@ -38,8 +38,8 @@
 /* Define YES/NO constants to map 1 and 0 respectively.
    These are an Apple-ism, and I like that they can contribute to code
    readability in some odd ways.  On the off chance that Cocoa.h is included
-   before config.h in a Mac OS build, we can just assume YES/NO are 1 and 0 or
-   at least mapped similarly.
+   before config.h in a Mac OS build, I just assume YES/NO are 1 and 0 or at
+   least mapped similarly.
 */
 #ifndef __cplusplus
 #if !defined(YES)
