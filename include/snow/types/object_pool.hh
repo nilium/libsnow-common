@@ -3,11 +3,13 @@
 #ifndef __SNOW_COMMON__OBJECT_POOL_HH__
 #define __SNOW_COMMON__OBJECT_POOL_HH__
 
+#include <snow/config.hh>
+#include <cstdint>
 #include <functional>
+#include <iterator>
 #include <mutex>
 #include <new>
 #include <type_traits>
-#include <unordered_set>
 #include <vector>
 
 
@@ -16,17 +18,160 @@ namespace snow {
 
 // Note: because this is backed by a vector, you _should not_ store pointers or
 // references to objects in the pool. Use the indices to access the objects when
-// you need them.
+// you need them. In addition, you can iterate over all allocated objects if
+// you need to, so there's that.
 template <typename T, typename IT = size_t, bool THREADSAFE = true>
 struct object_pool_t
 {
-  using store_t             = typename std::aligned_storage<sizeof(T)>::type;
+  struct store_t {
+    using data_t = typename std::aligned_storage<sizeof(T)>::type;
+
+    uint8_t     used = 0;
+    data_t      data;
+  };
+
   using object_t            = T;
   using index_t             = IT;
   using objects_t           = std::vector<store_t>;
-  using indices_t           = std::unordered_set<index_t>;
   using object_iter_t       = std::function<void(object_t &, const index_t &)>;
   using const_object_iter_t = std::function<void(const object_t &, const index_t &)>;
+
+
+  struct const_iterator : public std::iterator<object_t, std::input_iterator_tag>
+  {
+    const_iterator() = default;
+
+    const object_t *operator -> () const
+    {
+      return (object_t *)&iter_->data;
+    }
+
+    const object_t &operator * () const
+    {
+      return *(object_t *)&iter_->data;
+    }
+
+    const_iterator &operator ++ ()
+    {
+      do {
+        ++iter_;
+      } while (iter_ != end_ && !iter_->used);
+      return *this;
+    }
+
+    const_iterator operator ++ (int dummy)
+    {
+      const_iterator cur = *this;
+      ++*this;
+      return cur;
+    }
+
+    bool operator == (const const_iterator &other) const
+    {
+      return iter_ == other.iter_;
+    }
+
+    bool operator != (const const_iterator &other) const
+    {
+      return iter_ != other.iter_;
+    }
+
+  protected:
+    friend struct object_pool_t;
+    using base_iter = typename objects_t::iterator;
+
+    const_iterator(base_iter iter, base_iter end) :
+      iter_(iter),
+      end_(end)
+    {
+      /* nop */
+    }
+
+    base_iter iter_;
+    base_iter end_;
+  };
+
+
+
+  struct iterator : public const_iterator
+  {
+    iterator() = default;
+
+    object_t *operator -> ()
+    {
+      return (object_t *)&(const_iterator::iter_->data);
+    }
+
+    object_t &operator * ()
+    {
+      return *(object_t *)&(const_iterator::iter_->data);
+    }
+
+    iterator &operator ++ ()
+    {
+      const_iterator::operator++();
+      return *this;
+    }
+
+    iterator operator ++ (int)
+    {
+      iterator cur = *this;
+      const_iterator::operator++();
+      return cur;
+    }
+
+  protected:
+    friend struct object_pool_t;
+    using base_iter = typename const_iterator::base_iter;
+
+    iterator(base_iter iter, base_iter end) :
+      const_iterator(iter, end)
+    {
+      /* nop */
+    }
+  };
+
+
+
+  iterator begin()
+  {
+    return iterator(objects_.begin(), objects_.end());
+  }
+
+
+
+  const_iterator begin() const
+  {
+    return iterator(objects_.begin(), objects_.end());
+  }
+
+
+
+  const_iterator cbegin() const
+  {
+    return iterator(objects_.begin(), objects_.end());
+  }
+
+
+
+  iterator end()
+  {
+    return iterator(objects_.end(), objects_.end());
+  }
+
+
+
+  const_iterator end() const
+  {
+    return iterator(objects_.end(), objects_.end());
+  }
+
+
+
+  const_iterator cend() const
+  {
+    return iterator(objects_.end(), objects_.end());
+  }
 
 
 
@@ -62,20 +207,23 @@ struct object_pool_t
     of the pool's object type they match. Returns the object's index.
 ==============================================================================*/
   template <typename... ARGS>
-  index_t reserve(ARGS&&... args)
+  index_t allocate(ARGS&&... args)
   {
-    index_t index = 0;
+    index_t index;
     std::lock_guard<lock_t> lock(lock_);
-    if (unused_indices_.empty()) {
-      index = objects_.size();
-      objects_.emplace_back();
-    } else {
-      auto index_begin = unused_indices_.cbegin();
-      index = *index_begin;
-      unused_indices_.erase(index_begin);
+    index = next_unused_;
+    const size_t length = objects_.size();
+    for (; index < length; ++index) {
+      if (!objects_[index].used) {
+        goto construct_object_at_index;
+      }
     }
-    object_t *store = ptr_for_index(index);
-    new(store) object_t(std::forward<ARGS>(args)...);
+    next_unused_ = (index = index_t(length)) + 1;
+    objects_.emplace_back();
+construct_object_at_index:
+    store_t &store = objects_[index];
+    store.used = 1;
+    new(&store.data) object_t(std::forward<ARGS>(args)...);
     return index;
   }
 
@@ -87,12 +235,21 @@ struct object_pool_t
     Collects an object's index, calls its dtor, and prepares it to be reused
     later.
 ==============================================================================*/
-  void collect(const index_t index)
+  void destroy(const index_t index)
   {
     std::lock_guard<lock_t> lock(lock_);
     throw_unallocated(index);
-    destroy(index);
-    unused_indices_.insert(index);
+
+    store_t &store = objects_[index];
+    store.used = 0;
+
+    if (!std::is_pod<object_t>::value) {
+      ((object_t *)&store.data)->~object_t();
+    }
+
+    if (next_unused_ > index) {
+      next_unused_ = index;
+    }
   }
 
 
@@ -183,12 +340,12 @@ struct object_pool_t
   void each_object(object_iter_t &iter)
   {
     std::lock_guard<lock_t> lock(lock_);
-    const auto index_term = unused_indices_.cend();
     index_t index = 0;
-    const auto size = objects_.size();
+    const size_t size = objects_.size();
     for (; index < size; ++index) {
-      if (unused_indices_.find(index) != index_term) {
-        iter(*ptr_for_index(index), index);
+      store_t &store = objects_[index];
+      if (store.used) {
+        iter(*(object_t *)&store.data, index);
       }
     }
   }
@@ -204,12 +361,12 @@ struct object_pool_t
   void each_object_const(const const_object_iter_t &iter) const
   {
     std::lock_guard<lock_t> lock(lock_);
-    const auto index_term = unused_indices_.cend();
     index_t index = 0;
-    const auto size = objects_.size();
+    const size_t size = objects_.size();
     for (; index < size; ++index) {
-      if (unused_indices_.find(index) != index_term) {
-        iter(*ptr_for_index(index), index);
+      store_t &store = objects_[index];
+      if (store.used) {
+        iter(*(object_t *)&store.data, index);
       }
     }
   }
@@ -225,9 +382,11 @@ struct object_pool_t
   void clear()
   {
     std::lock_guard<lock_t> lock(lock_);
-    destroy_all();
+    if (!std::is_pod<object_t>::value) {
+      destroy_all_nolock();
+    }
     objects_.clear();
-    unused_indices_.clear();
+    next_unused_ = 0;
   }
 
 
@@ -240,7 +399,7 @@ private:
     Destroys an object at the given index. Performs basic bounds-checking, but
     does not check to see if the object has been allocated.
 ==============================================================================*/
-  void destroy(index_t index)
+  void destroy_nolock(index_t index)
   {
     ptr_for_index(index)->~object_t();
   }
@@ -248,19 +407,21 @@ private:
 
 
 /*==============================================================================
-  destroy_all
+  destroy_all_nolock
 
     Destroys all allocated objects in the pool.
 ==============================================================================*/
-  void destroy_all()
+  void destroy_all_nolock()
   {
     const auto length = objects_.size();
-    const auto index_term = unused_indices_.cend();
     for (int index = 0; index < length; ++index) {
-      if (unused_indices_.find(index) == index_term) {
-        destroy(index);
+      store_t &store = objects_[index];
+      if (store.used) {
+        store.used = 0;
+        ((object_t *)&store.data)->~object_t();
       }
     }
+    next_unused_ = 0;
   }
 
 
@@ -272,7 +433,7 @@ private:
 ==============================================================================*/
   void throw_unallocated(index_t index) const
   {
-    if (unused_indices_.find(index) != unused_indices_.cend()) {
+    if (!objects_.at(index).used) {
       s_throw(std::out_of_range, "Index is out of range");
     }
   }
@@ -288,7 +449,7 @@ private:
 ==============================================================================*/
   object_t *ptr_for_index(index_t index)
   {
-    return (object_t *)&objects_.at(index);
+    return (object_t *)&objects_.at(index).data;
   }
 
 
@@ -300,7 +461,7 @@ private:
 ==============================================================================*/
   const object_t *ptr_for_index(index_t index) const
   {
-    return (const object_t *)&objects_.at(index);
+    return (const object_t *)&objects_.at(index).data;
   }
 
 
@@ -321,7 +482,7 @@ private:
 
 
   objects_t         objects_;
-  indices_t         unused_indices_;
+  index_t           next_unused_ = ~0;
   mutable lock_t    lock_;
 
 }; // struct object_pool_t
