@@ -135,21 +135,36 @@ struct object_pool_t
 
   iterator begin()
   {
-    return iterator(objects_.begin(), objects_.end());
+    auto iter = objects_.begin();
+    auto iter_end = objects_.end();
+    while (!iter->used && iter != iter_end) {
+      ++iter;
+    }
+    return iterator(iter, iter_end);
   }
 
 
 
   const_iterator begin() const
   {
-    return iterator(objects_.begin(), objects_.end());
+    auto iter = objects_.begin();
+    auto iter_end = objects_.end();
+    while (!iter->used && iter != iter_end) {
+      ++iter;
+    }
+    return iterator(iter, iter_end);
   }
 
 
 
   const_iterator cbegin() const
   {
-    return iterator(objects_.begin(), objects_.end());
+    auto iter = objects_.begin();
+    auto iter_end = objects_.end();
+    while (!iter->used && iter != iter_end) {
+      ++iter;
+    }
+    return iterator(iter, iter_end);
   }
 
 
@@ -171,6 +186,20 @@ struct object_pool_t
   const_iterator cend() const
   {
     return iterator(objects_.end(), objects_.end());
+  }
+
+
+
+  object_pool_t()
+  {
+    /* nop */
+  }
+
+
+
+  object_pool_t(size_t reserved)
+  {
+    reserve(reserved);
   }
 
 
@@ -201,13 +230,29 @@ struct object_pool_t
 
 
 /*==============================================================================
-  reserve
+  allocate
 
-    Reserves an object in the pool. Arguments correspond to whatever constructor
-    of the pool's object type they match. Returns the object's index.
+    Reserves an object in the pool and constructs it. Arguments correspond to
+    whatever constructor of the pool's object type they match. Returns the
+    object's index.
 ==============================================================================*/
   template <typename... ARGS>
   index_t allocate(ARGS&&... args)
+  {
+    const index_t index = make_storage();
+    new(&objects_[index].data) object_t(std::forward<ARGS>(args)...);
+    return index;
+  }
+
+
+
+/*==============================================================================
+  make_storage
+
+    Reserves an object in the pool. Does not construct the object at all,
+    simply returns its index.
+==============================================================================*/
+  index_t make_storage()
   {
     index_t index;
     std::lock_guard<lock_t> lock(lock_);
@@ -221,16 +266,14 @@ struct object_pool_t
     next_unused_ = (index = index_t(length)) + 1;
     objects_.emplace_back();
 construct_object_at_index:
-    store_t &store = objects_[index];
-    store.used = 1;
-    new(&store.data) object_t(std::forward<ARGS>(args)...);
+    objects_[index].used = 1;
     return index;
   }
 
 
 
 /*==============================================================================
-  collect
+  destroy
 
     Collects an object's index, calls its dtor, and prepares it to be reused
     later.
@@ -387,6 +430,28 @@ construct_object_at_index:
     }
     objects_.clear();
     next_unused_ = 0;
+  }
+
+
+
+/*==============================================================================
+  size
+
+    Returns the total number of allocated objects in the pool.
+==============================================================================*/
+  size_t size() const
+  {
+    std::lock_guard<lock_t> lock(lock_);
+    size_t count = 0;
+    index_t index = 0;
+    const size_t size = objects_.size();
+    for (; index < size; ++index) {
+      store_t &store = objects_[index];
+      if (store.used) {
+        ++count;
+      }
+    }
+    return count;
   }
 
 
