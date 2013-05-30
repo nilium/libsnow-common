@@ -85,6 +85,20 @@ string_t::string_t(const string_t &other) :
 
 
 
+
+
+
+
+string_t::string_t(const std::string &other) :
+string_t()
+{
+  const size_type other_len = other.size();
+  resize(other_len);
+  std::memcpy(data_, other.data(), other_len);
+}
+
+
+
 string_t::string_t(std::initializer_list<char> init) :
   string_t()
 {
