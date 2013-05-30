@@ -14,6 +14,7 @@ namespace snow {
 
 // General degrees-to-radians constant
 #define S_DEG2RAD (0.01745329251)
+#define S_RAD2DEG (57.29577951308233)
 // Epsilon for testing for zero-ish
 #define S_EPSILON (1e-5)
 
