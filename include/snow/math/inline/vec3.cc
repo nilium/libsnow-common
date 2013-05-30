@@ -34,6 +34,12 @@ auto vec3_t<T>::make(value_type x, value_type y, value_type z) -> vec3_t
 }
 
 template <typename T>
+auto vec3_t<T>::make(value_type value) -> vec3_t
+{
+  return { value, value, value };
+}
+
+template <typename T>
 auto vec3_t<T>::normalize() -> vec3_t&
 {
   value_type one_over_mag = magnitude();

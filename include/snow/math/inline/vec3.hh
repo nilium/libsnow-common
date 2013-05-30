@@ -26,6 +26,7 @@ struct S_EXPORT alignas(T) vec3_t {
   static const vec3_t one;
 
   static vec3_t make(value_type x, value_type y, value_type z);
+  static vec3_t make(value_type value);
 
   vec3_t &      normalize();
   vec3_t        normalized() const;
