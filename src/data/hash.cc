@@ -35,10 +35,10 @@ uint32_t hash32(const char *str, const size_t length, uint32_t seed)
   };
   uint32_t hash = seed;
   constexpr uint32_t hbits = sizeof(hash) * 8;
-  size_t index = 0;
+  uint32_t index = 0;
   for (; index < length; ++index) {
     const uint32_t curchar = str[index];
-    hash = hash * 439U + curchar * 23U + (index + 257U);
+    hash = hash * 439 + curchar * 23 + (index + 257);
     const uint32_t shift =
       ((curchar & 0x9) | ((curchar & 0x10) >> 2) | ((curchar & 0x40) >> 5)) ^
       ((curchar & 0xA) >> 5) | ((curchar & 0x2) << 2) | ((curchar & 0x4) >> 1);
@@ -76,7 +76,7 @@ uint64_t hash64(const char *str, const size_t length, uint64_t seed)
   };
   uint64_t hash = seed;
   constexpr uint64_t hbits = sizeof(hash) * 8;
-  size_t index = 0;
+  uint64_t index = 0;
   for (; index < length; ++index) {
     const uint64_t curchar = str[index];
     hash = hash * 5741U + curchar * 23U + (index + 257U);
