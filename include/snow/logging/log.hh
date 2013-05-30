@@ -51,7 +51,7 @@
 
 using s_log_fn_t = void (*)(const char *msg, size_t length, void *ctx);
 // Log callback functions -- not thread safe
-void s_log_callback(const char *, size_t);
+void s_log_callback(const char *msg, size_t length);
 void s_set_log_callback(s_log_fn_t cb, void *ctx);
 
 
