@@ -132,16 +132,20 @@ auto mat4_t<T>::perspective(T fovY, T aspect, T near, T far) -> mat4_t
 template <typename T>
 auto mat4_t<T>::look_at(const vec3 &eye, const vec3& center, const vec3& up) -> mat4_t
 {
-  vec3 f = (center - eye).normalize();
-  vec3 up_norm = up.normalized();
-  vec3 s = f.cross_product(up_norm);
-  vec3 u = s.cross_product(f);
-  return mat4_t::make(
-    s.x, s.y, s.z, 0,
-    u.x, u.y, u.z, 0,
-    -f.x, -f.y, -f.z, 0,
-    0, 0, 0, 1
-  ).translate(-eye);
+  const vec3 inverse_eye = -eye;
+  const vec3 z_dir = (center - eye).normalize();
+  const vec3 x_dir = z_dir.cross_product(up.normalized());
+  const vec3 y_dir = x_dir.cross_product(z_dir);
+  return {
+    x_dir.x,    x_dir.y,    x_dir.z,    0,
+    y_dir.x,    y_dir.y,    y_dir.z,    0,
+    -(z_dir.x), -(z_dir.y), -(z_dir.z), 0,
+
+    x_dir.dot_product(inverse_eye),
+    y_dir.dot_product(inverse_eye),
+    (-z_dir).dot_product(inverse_eye),
+    1
+  };
 }
 
 template <typename T>
