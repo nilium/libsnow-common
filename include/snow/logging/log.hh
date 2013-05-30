@@ -93,7 +93,7 @@ void s_fatal_error_impl(const char *format, ARGS&&... args)
 #endif
 } /* log_fatal */
 
-#define s_throw(EXCEPTION, FORMAT, args...) s_fatal_error_impl<EXCEPTION>("Fatal Error [%s:%s:%d]:\n    " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
+#define s_throw(EXCEPTION, FORMAT, args...) s_fatal_error_impl<EXCEPTION>(#EXCEPTION " [%s:%s:%d]:\n    " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
 /*! \brief Macro around ::log_fatal_ to pass in additional file, line number,
   and callee information to the format string.  This is never a no-op.
 */
