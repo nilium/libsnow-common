@@ -64,7 +64,7 @@ string_t::string_t(string_t &&other) :
   data_(other.data_),
   rep_(other.rep_)
 {
-  if (data_ == other.rep_.short_.short_data_) {
+  if (other.is_short()) {
     data_ = rep_.short_.short_data_;
   }
 
@@ -102,11 +102,12 @@ string_t()
 string_t::string_t(std::initializer_list<char> init) :
   string_t()
 {
-  resize(init.size());
+  const size_type len = init.size();
+  resize(len);
   auto iter = init.begin();
   auto init_end = init.end();
   size_type index = 0;
-  for (; iter != init_end; ++iter, ++index) {
+  for (; iter != init_end && index < len; ++iter, ++index) {
     data_[index] = *iter;
   }
 }
@@ -133,8 +134,8 @@ string_t::string_t(char *zstr, size_type length, bool nofree) :
 
 string_t::~string_t()
 {
-  if (data_ != rep_.short_.short_data_ && rep_.long_.capacity_ > 0) {
-    delete [] data_;
+  if (can_free()) {
+    free(data_);
   }
 }
 
@@ -146,14 +147,14 @@ string_t &string_t::operator = (string_t &&other)
     return *this;
   }
 
-  if (data_ != rep_.short_.short_data_ && rep_.long_.capacity_ > 0) {
+  if (can_free()) {
     delete [] data_;
   }
 
   data_ = other.data_;
   rep_ = other.rep_;
 
-  if (data_ == other.rep_.short_.short_data_) {
+  if (other.is_short()) {
     data_ = rep_.short_.short_data_;
   }
 
@@ -168,8 +169,8 @@ string_t &string_t::operator = (string_t &&other)
 
 string_t &string_t::operator = (const std::string &other)
 {
-  resize(other.size());
-  const size_type len = size();
+  const size_type len = other.size();
+  resize(len);
   if (len) {
     std::memcpy(data_, other.data(), len);
   }
@@ -518,7 +519,7 @@ string_t &string_t::resize(size_type len)
     reserve(len + 1);
   }
   data_[len] = '\0';
-  if (data_ == rep_.short_.short_data_) {
+  if (is_short()) {
     rep_.short_.length_ = uint8_t(len);
   } else {
     rep_.long_.length_ = len;
@@ -530,7 +531,7 @@ string_t &string_t::resize(size_type len)
 
 auto string_t::size() const -> size_type
 {
-  return data_ == rep_.short_.short_data_ ? size_type(rep_.short_.length_) : rep_.long_.length_;
+  return is_short() ? size_type(rep_.short_.length_) : rep_.long_.length_;
 }
 
 
@@ -544,9 +545,9 @@ bool string_t::empty() const
 
 string_t &string_t::shrink_to_fit()
 {
-  if (data_ == rep_.short_.short_data_) {
+  if (is_short()) {
     return *this;
-  } else if (rep_.long_.capacity_ == 0) {
+  } else if (!can_free()) {
     return *this;
   }
 
@@ -603,44 +604,48 @@ string_t &string_t::reserve(size_type cap)
   };
 
   const size_type old_len = size();
-  const size_type is_short = (data_ == rep_.short_.short_data_);
+  const bool is_short_cache = (is_short());
 
-  if ((!is_short && cap <= rep_.long_.capacity_) || (is_short && cap <= short_data_len_)) {
+  if ((!is_short_cache && cap <= capacity()) || (cap <= short_data_len_)) {
     return *this;
   }
 
   size_type cap_align_diff;
-  cap_align_diff = (cap - rep_.long_.capacity_ * !is_short) / 16;
+  cap_align_diff = (cap - capacity() * !is_short_cache) / 16;
 
   if (cap_align_diff > 127) {
     cap_align_diff = 127;
   }
 
+  // Initial allocations get an alignment of 16 bytes.
   const size_type alignment =
-    (!is_short && rep_.long_.capacity_ != short_data_len_) ? fixed_alignments[cap_align_diff] : 16;
+    (!is_short_cache) ? fixed_alignments[cap_align_diff] : 16;
 
+  const size_type old_capacity = capacity();
   cap = (cap + alignment) & ~(alignment - 1);
-  const size_type cap_diff = cap - rep_.long_.capacity_ * !is_short;
-  char *newbuf = new char[cap];
 
-  // How the hell should you handle this, anyway?
-  assert(newbuf);
-
-  const size_type len = size();
-  if (len) {
-    std::memcpy(newbuf, data_, len);
-    std::memset(newbuf + len, 0, cap_diff);
+  if (can_free()) {
+    char *new_buffer = static_cast<char *>(realloc(data_, cap));
+    assert(new_buffer != NULL);
+    if (!new_buffer) {
+      return *this;
+    }
+    data_ = new_buffer;
   } else {
-    std::memset(newbuf, 0, cap_diff);
+    char *new_buffer = static_cast<char *>(malloc(cap));
+    // How the hell should you handle this, anyway?
+    assert(new_buffer != NULL);
+    if (!new_buffer) {
+      return *this;
+    }
+
+    std::memcpy(new_buffer, data_, old_capacity);
+
+    data_ = new_buffer;
+    rep_.long_.length_ = old_len;
+    rep_.long_.capacity_ = cap;
   }
 
-  if (!is_short && rep_.long_.capacity_ > 0) {
-    delete [] data_;
-  }
-
-  data_ = newbuf;
-  rep_.long_.length_ = old_len;
-  rep_.long_.capacity_ = cap;
   return *this;
 }
 
@@ -648,7 +653,7 @@ string_t &string_t::reserve(size_type cap)
 
 auto string_t::capacity() const -> size_type
 {
-  return data_ == rep_.short_.short_data_ ? short_data_len_ : rep_.long_.capacity_;
+  return is_short() ? short_data_len_ : rep_.long_.capacity_;
 }
 
 
@@ -1404,6 +1409,20 @@ auto string_t::find_substring(const char *str, size_type from, size_type length)
   }
 
   return data_length;
+}
+
+
+
+bool string_t::is_short() const
+{
+  return data_ == rep_.short_.short_data_;
+}
+
+
+
+bool string_t::can_free() const
+{
+  return !is_short() && capacity() > 0;
 }
 
 
