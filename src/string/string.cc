@@ -644,7 +644,7 @@ string_t &string_t::shrink_to_fit()
 
 string_t &string_t::reserve(size_type cap)
 {
-  static size_type fixed_alignments[128] = {
+  static const size_type fixed_alignments[128] = {
     /* 0 - 7: 16 bytes */
     16, 16, 16, 16, 16, 16, 16, 16,
     /* 8-15: 32 bytes */
