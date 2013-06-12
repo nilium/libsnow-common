@@ -1,3 +1,4 @@
+// buffer_stream.hh -- Noel Cower -- Public Domain
 #ifndef __SNOW__BUFFER_STREAM_HH__
 #define __SNOW__BUFFER_STREAM_HH__
 
