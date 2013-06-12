@@ -201,6 +201,10 @@ struct string_t
   string_t(string_t &&other);
   string_t(const string_t &other);
   string_t(std::initializer_list<char> init);
+  explicit string_t(double);
+  explicit string_t(int);
+  explicit string_t(unsigned);
+  explicit string_t(char);
   // Note: this constructor allows you to create a string with no null
   // terminating character, but only if nofree is true. If nofree is false,
   // these are equivalent to string_t(const char * [, size_type]);

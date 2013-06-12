@@ -132,6 +132,54 @@ string_t::string_t(char *zstr, size_type length, bool nofree) :
 
 
 
+string_t::string_t(double value) :
+  string_t()
+{
+  int formatted_length = snprintf(nullptr, 0, "%f", value);
+  if (formatted_length == 0) {
+    return;
+  }
+  resize(formatted_length);
+  snprintf(data(), formatted_length + 1, "%f", value);
+}
+
+
+
+string_t::string_t(int value) :
+  string_t()
+{
+  int formatted_length = snprintf(nullptr, 0, "%d", value);
+  if (formatted_length == 0) {
+    return;
+  }
+  resize(formatted_length);
+  snprintf(data(), formatted_length + 1, "%d", value);
+}
+
+
+
+string_t::string_t(unsigned value) :
+  string_t()
+{
+  int formatted_length = snprintf(nullptr, 0, "%u", value);
+  if (formatted_length == 0) {
+    return;
+  }
+  resize(formatted_length);
+  snprintf(data(), formatted_length + 1, "%u", value);
+}
+
+
+
+string_t::string_t(char value) :
+  string_t()
+{
+  resize(1);
+  data()[0] = value;
+}
+
+
+
 string_t::~string_t()
 {
   if (can_free()) {
