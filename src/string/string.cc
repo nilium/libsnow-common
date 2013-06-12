@@ -189,6 +189,25 @@ string_t::~string_t()
 
 
 
+string_t string_t::format(const char *format_string, ...)
+{
+  string_t result;
+  va_list arguments;
+  va_start(arguments, format_string);
+  int formatted_length = vsnprintf(nullptr, 0, format_string, arguments);
+  va_end(arguments);
+  if (formatted_length == 0) {
+    return result;
+  }
+  result.resize(formatted_length);
+  va_start(arguments, format_string);
+  vsnprintf(result.data(), formatted_length + 1, format_string, arguments);
+  va_end(arguments);
+  return result;
+}
+
+
+
 string_t &string_t::operator = (string_t &&other)
 {
   if (&other == this) {

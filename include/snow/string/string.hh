@@ -217,6 +217,8 @@ struct string_t
 
   ~string_t();
 
+  static string_t format(const char *format_string, ...);
+
   string_t &operator = (string_t &&other);
   string_t &operator = (const string_t &other);
   string_t &operator = (const std::string &other);
