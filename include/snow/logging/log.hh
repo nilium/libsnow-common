@@ -4,10 +4,10 @@
 #define __SNOW_COMMON__COMMON__LOG_HH__
 
 #include <snow/build-config.hh>
+#include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
-#include <string>
 #include <utility>
 #include <vector>
 
@@ -49,23 +49,17 @@
 #endif
 
 
+namespace snow {
+
+
 using s_log_fn_t = void (*)(const char *msg, size_t length, void *ctx);
 // Log callback functions -- not thread safe
 void s_log_callback(const char *msg, size_t length);
 void s_set_log_callback(s_log_fn_t cb, void *ctx);
 
-
-template <typename ...ARGS>
-void s_log_impl(const char *format, ARGS&&... args)
-{
-  int length = snprintf(NULL, 0, format, std::forward<ARGS>(args)...) + 1;
-  std::vector<char> strbuf;
-  strbuf.resize(length);
-  snprintf(strbuf.data(), length, format, std::forward<ARGS>(args)...);
-  std::string str_temp(strbuf.data(), length - 2); // exclude \n
-  std::clog << str_temp << std::endl;
-  s_log_callback(strbuf.data(), length - 1);
-}
+void s_log_lock();
+void s_log_unlock();
+void s_log_impl(const char *format, ...);
 
 
 #if !defined(s_fatal_error)
@@ -77,31 +71,60 @@ void s_log_impl(const char *format, ARGS&&... args)
  *  @param[in] format The format for the error message.
  *  @param[in] args   Inputs for the string formatting code.
  */
-template <typename EX_T, typename... ARGS>
-void s_fatal_error_impl(const char *format, ARGS&&... args)
+template <typename EX_T>
+void s_fatal_error_impl(const char *format, ...)
 {
-  int length = snprintf(NULL, 0, format, std::forward<ARGS>(args)...) + 1;
+  va_list arguments_null;
+  va_list arguments_real;
+
+  va_start(arguments_null, format);
+  va_copy(arguments_real, arguments_null);
+
+  int length = vsnprintf(NULL, 0, format, arguments_null);
+  va_end(arguments_null);
+
+  if (length == 0) {
+    return;
+  }
   std::vector<char> strbuf;
-  strbuf.resize(length);
-  snprintf(strbuf.data(), length, format, std::forward<ARGS>(args)...);
-  std::string str_temp(strbuf.data(), length - (strbuf[length - 1] == '\n' ? 2 : 1)); // exclude \n
-  std::clog << str_temp << std::endl;
+  strbuf.resize(length + 1);
+  vsnprintf(strbuf.data(), length + 1, format, arguments_real);
+  va_end(arguments_real);
+
+  s_log_lock();
+  std::cout << strbuf.data();
+  std::cout.flush();
+
+  if (length > 0 && strbuf[length - 1] == '\n') {
+    strbuf.pop_back();
+    strbuf[--length] = '\0';
+  }
+  s_log_unlock();
+
 #if USE_EXCEPTIONS
-  throw EX_T(str_temp);
+  if (length) {
+    throw EX_T(str_temp);
+  } else {
+    throw EX_T();
+  }
 #else
   abort();
 #endif
 } /* log_fatal */
 
-#define s_throw(EXCEPTION, FORMAT, args...) s_fatal_error_impl<EXCEPTION>(#EXCEPTION " [%s:%s:%d]:\n    " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
+
+} // namespace snow
+
+
+#define s_throw(EXCEPTION, FORMAT, args...) ::snow::s_fatal_error_impl<EXCEPTION>(#EXCEPTION " [%s:%s:%d]:\n    " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
 /*! \brief Macro around ::log_fatal_ to pass in additional file, line number,
   and callee information to the format string.  This is never a no-op.
 */
-#define s_fatal_error(FORMAT, args...) s_fatal_error_impl<std::runtime_error>("Fatal Error [%s:%s:%d]:\n    " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
+#define s_fatal_error(FORMAT, args...) ::snow::s_fatal_error_impl<std::runtime_error>("Fatal Error [%s:%s:%d]:\n    " FORMAT "\n", __FILE__, __FUNCTION__, __LINE__, ##args)
 #endif
 
 
-#define s_log(STR, args...) s_log_impl((STR), ##args)
+#define s_log(STR, args...) ::snow::s_log_impl((STR), ##args)
 
 
 /* if debugging or logging is forcibly enabled, then provide additional logging macros */
