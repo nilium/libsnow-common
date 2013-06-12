@@ -4,7 +4,7 @@
 #define __SNOW_COMMON__PLANE_TCC__
 
 template <typename T>
-auto plane_t<T>::make(const vec3_t &normal, float d) -> plane_t
+auto plane_t<T>::make(vec3_t normal, float d) -> plane_t
 {
   return { normal.normalized(), d };
 }
@@ -12,7 +12,7 @@ auto plane_t<T>::make(const vec3_t &normal, float d) -> plane_t
 
 
 template <typename T>
-auto plane_t<T>::for_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_t &v2) -> plane_t
+auto plane_t<T>::for_triangle(vec3_t v0, vec3_t v1, vec3_t v2) -> plane_t
 {
   vec3_t n = (v1 - v0).cross_product(v2 - v1).normalize();
   return {
@@ -69,7 +69,7 @@ auto plane_t<T>::for_points(const C &points) -> plane_t
 
 
 template <typename T>
-auto plane_t<T>::distance(const vec3_t &p) const -> value_type
+auto plane_t<T>::distance(vec3_t p) const -> value_type
 {
   return normal.dot_product(p) - d;
 }
@@ -77,7 +77,7 @@ auto plane_t<T>::distance(const vec3_t &p) const -> value_type
 
 
 template <typename T>
-auto plane_t<T>::nearest_to(const vec3_t &p) const -> vec3_t
+auto plane_t<T>::nearest_to(vec3_t p) const -> vec3_t
 {
   return p + normal * (d - p.dot_product(normal));
 }
@@ -85,7 +85,7 @@ auto plane_t<T>::nearest_to(const vec3_t &p) const -> vec3_t
 
 
 template <typename T>
-auto plane_t<T>::side(const vec3_t &p) const -> plane_side_t
+auto plane_t<T>::side(vec3_t p) const -> plane_side_t
 {
   const value_type dist = distance(p);
   if (is_zero(dist))
@@ -99,7 +99,7 @@ auto plane_t<T>::side(const vec3_t &p) const -> plane_side_t
 
 
 template <typename T>
-auto plane_t<T>::intersection(const line_t &line) const -> vec3_t
+auto plane_t<T>::intersection(line_t line) const -> vec3_t
 {
   value_type t = (d - line.origin.dot_product(normal)) / (line.dist.dot_product(normal));
   return line.origin + line.dist * t;
@@ -124,7 +124,7 @@ plane_t<T>::operator const value_type * () const
 
 
 template <typename T>
-bool operator == (const plane_t<T> &lhs, const plane_t<T> &rhs)
+bool operator == (plane_t<T> lhs, plane_t<T> rhs)
 {
   return are_equiv(lhs.d, rhs.d) && lhs.normal == rhs.normal;
 }
@@ -132,7 +132,7 @@ bool operator == (const plane_t<T> &lhs, const plane_t<T> &rhs)
 
 
 template <typename T>
-bool operator != (const plane_t<T> &lhs, const plane_t<T> &rhs)
+bool operator != (plane_t<T> lhs, plane_t<T> rhs)
 {
   return !(lhs == rhs);
 }

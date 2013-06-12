@@ -32,31 +32,31 @@ struct S_EXPORT alignas(T) mat4_t
                      T m01, T m11, T m21, T m31,
                      T m02, T m12, T m22, T m32,
                      T m03, T m13, T m23, T m33);
-  static mat4_t translation(const vec3 &off);
-  static mat4_t scaling(const vec3 &off);
-  static mat4_t rotation(T angle, const vec3 &axis);
+  static mat4_t translation(vec3 off);
+  static mat4_t scaling(vec3 off);
+  static mat4_t rotation(T angle, vec3 axis);
   static mat4_t frustum(T left, T right, T bottom, T top, T near, T far);
   static mat4_t orthographic(T left, T right, T top, T bottom, T near, T far);
   static mat4_t perspective(T fovY, T aspect, T near, T far);
-  static mat4_t look_at(const vec3 &eye, const vec3& center, const vec3& up);
-  static mat4_t from_quat(const quat &in);
+  static mat4_t look_at(vec3 eye, vec3 center, vec3 up);
+  static mat4_t from_quat(quat in);
 
 
-  mat4_t &      translate(const vec3 &translation);
-  mat4_t        translated(const vec3 &translation) const;
+  mat4_t &      translate(vec3 translation);
+  mat4_t        translated(vec3 translation) const;
 
   mat4_t &      transpose();
   mat4_t        transposed() const;
 
   vec4          rowvec4(int index) const;
   vec4          colvec4(int index) const;
-  mat4_t &      set_rowvec4(int index, const vec4 &row);
-  mat4_t &      set_colvec4(int index, const vec4 &col);
+  mat4_t &      set_rowvec4(int index, vec4 row);
+  mat4_t &      set_colvec4(int index, vec4 col);
 
   vec3          rowvec3(int index) const;
   vec3          colvec3(int index) const;
-  mat4_t &      set_rowvec3(int index, const vec3 &row);
-  mat4_t &      set_colvec3(int index, const vec3 &col);
+  mat4_t &      set_rowvec3(int index, vec3 row);
+  mat4_t &      set_colvec3(int index, vec3 col);
 
 
   mat4_t        negated() const;
@@ -76,8 +76,8 @@ struct S_EXPORT alignas(T) mat4_t
   mat4_t &      scale(T scalar);
   mat4_t        scaled(const mat4_t &other) const;
   mat4_t &      scale(const mat4_t &other);
-  mat4_t        scaled(const vec3 &vec) const;
-  mat4_t &      scale(const vec3 &vec);
+  mat4_t        scaled(vec3 vec) const;
+  mat4_t &      scale(vec3 vec);
 
   mat4_t        inverse_orthogonal() const;
   bool          inverse_affine(mat4_t &out) const;
@@ -89,15 +89,15 @@ struct S_EXPORT alignas(T) mat4_t
   mat4_t        product(const mat4_t &other) const;
   mat4_t &      multiply(const mat4_t &other);
 
-  vec4          multiply(const vec4 &vec) const;
-  vec3          multiply(const vec3 &vec) const;
-  vec2          multiply(const vec2 &vec) const;
-  vec4          rotate(const vec4 &vec) const;
-  vec4          inverse_rotate(const vec4 &vec) const;
-  vec3          rotate(const vec3 &vec) const;
-  vec3          inverse_rotate(const vec3 &vec) const;
-  vec2          rotate(const vec2 &vec) const;
-  vec2          inverse_rotate(const vec2 &vec) const;
+  vec4          multiply(vec4 vec) const;
+  vec3          multiply(vec3 vec) const;
+  vec2          multiply(vec2 vec) const;
+  vec4          rotate(vec4 vec) const;
+  vec4          inverse_rotate(vec4 vec) const;
+  vec3          rotate(vec3 vec) const;
+  vec3          inverse_rotate(vec3 vec) const;
+  vec2          rotate(vec2 vec) const;
+  vec2          inverse_rotate(vec2 vec) const;
 
   T &           operator [] (int index);
   T             operator [] (int index) const;
@@ -123,21 +123,21 @@ std::ostream &operator << (std::ostream &out, const mat4_t<T> &in);
 template <typename T, typename Q>
 mat4_t<T>     operator *  (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
 template <typename T, typename Q>
-vec4_t<T>     operator *  (const mat4_t<T> &rhs, const vec4_t<Q> &lhs);
+vec4_t<T>     operator *  (const mat4_t<T> &rhs, vec4_t<Q> lhs);
 template <typename T, typename Q>
-vec3_t<T>     operator *  (const mat4_t<T> &rhs, const vec3_t<Q> &lhs);
+vec3_t<T>     operator *  (const mat4_t<T> &rhs, vec3_t<Q> lhs);
 template <typename T, typename Q>
-vec2_t<T>     operator *  (const mat4_t<T> &rhs, const vec2_t<Q> &lhs);
+vec2_t<T>     operator *  (const mat4_t<T> &rhs, vec2_t<Q> lhs);
 template <typename T, typename Q>
-mat4_t<T>     operator *  (const mat4_t<T> &rhs, const Q &lhs);
+mat4_t<T>     operator *  (const mat4_t<T> &rhs, Q lhs);
 template <typename T, typename Q>
 mat4_t<T>     operator +  (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
 template <typename T, typename Q>
-mat4_t<T>     operator +  (const mat4_t<T> &rhs, const Q &lhs);
+mat4_t<T>     operator +  (const mat4_t<T> &rhs, Q lhs);
 template <typename T, typename Q>
 mat4_t<T>     operator -  (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
 template <typename T, typename Q>
-mat4_t<T>     operator -  (const mat4_t<T> &rhs, const Q &lhs);
+mat4_t<T>     operator -  (const mat4_t<T> &rhs, Q lhs);
 template <typename T, typename Q>
 bool          operator == (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
 template <typename T, typename Q>

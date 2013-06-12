@@ -24,7 +24,7 @@ struct S_EXPORT alignas(T) quat_t {
 
   static quat_t make(T x, T y, T z, T w);
   static quat_t make(vec3 xyz, T w);
-  static quat_t from_angle_axis(T angle, const vec3 &axis);
+  static quat_t from_angle_axis(T angle, vec3 axis);
   static quat_t from_mat4(const mat4_t<T> &mat);
   static quat_t from_mat3(const mat3_t<T> &mat);
 
@@ -37,32 +37,32 @@ struct S_EXPORT alignas(T) quat_t {
   quat_t        negated() const;
   quat_t &      negate();
 
-  quat_t        product(const quat_t &other) const;
-  quat_t &      multiply(const quat_t &other);
+  quat_t        product(quat_t other) const;
+  quat_t &      multiply(quat_t other);
 
   quat_t        normalized() const;
   quat_t &      normalize();
 
-  quat_t        difference(const quat_t &other) const;
-  quat_t &      subtract(const quat_t &other);
+  quat_t        difference(quat_t other) const;
+  quat_t &      subtract(quat_t other);
 
-  quat_t        sum(const quat_t &other) const;
-  quat_t &      add(const quat_t &other);
+  quat_t        sum(quat_t other) const;
+  quat_t &      add(quat_t other);
 
   quat_t        scaled(value_type scalar) const;
-  quat_t        scaled(const quat_t &other) const;
+  quat_t        scaled(quat_t other) const;
   quat_t &      scale(value_type scalar);
-  quat_t &      scale(const quat_t &other);
+  quat_t &      scale(quat_t other);
 
-  value_type    dot_product(const quat_t &other) const;
+  value_type    dot_product(quat_t other) const;
 
-  quat_t        slerp(const quat_t &to, value_type delta) const;
-  quat_t        lerp(const quat_t &to, value_type delta) const;
+  quat_t        slerp(quat_t to, value_type delta) const;
+  quat_t        lerp(quat_t to, value_type delta) const;
 
-  quat_t &      operator *= (const quat_t &other);
+  quat_t &      operator *= (quat_t other);
   quat_t &      operator *= (value_type scalar);
-  quat_t &      operator += (const quat_t &other);
-  quat_t &      operator -= (const quat_t &other);
+  quat_t &      operator += (quat_t other);
+  quat_t &      operator -= (quat_t other);
   quat_t        operator - () const;
   quat_t        operator ~ () const;
   value_type &  operator[] (int index);
@@ -77,25 +77,25 @@ struct S_EXPORT alignas(T) quat_t {
 };
 
 template <typename T>
-std::ostream& operator << (std::ostream &out, const quat_t<T> &in);
+std::ostream& operator << (std::ostream &out, quat_t<T> in);
 
 template <typename T, typename Q>
-quat_t<T>     operator *  (const quat_t<T> &lhs, const quat_t<Q> &rhs);
+quat_t<T>     operator *  (quat_t<T> lhs, quat_t<Q> rhs);
 template <typename T, typename Q>
-quat_t<T>     operator *  (const quat_t<T> &lhs, Q rhs);
+quat_t<T>     operator *  (quat_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-quat_t<T>     operator +  (const quat_t<T> &lhs, const quat_t<Q> &rhs);
+quat_t<T>     operator +  (quat_t<T> lhs, quat_t<Q> rhs);
 template <typename T, typename Q>
-quat_t<T>     operator -  (const quat_t<T> &lhs, const quat_t<Q> &rhs);
+quat_t<T>     operator -  (quat_t<T> lhs, quat_t<Q> rhs);
 
 template <typename T, typename Q>
-T             operator %  (const quat_t<T> &lhs, const quat_t<Q> &rhs);
+T             operator %  (quat_t<T> lhs, quat_t<Q> rhs);
 
 template <typename T, typename Q>
-bool          operator == (const quat_t<T> &lhs, const quat_t<Q> &rhs);
+bool          operator == (quat_t<T> lhs, quat_t<Q> rhs);
 template <typename T, typename Q>
-bool          operator != (const quat_t<T> &lhs, const quat_t<Q> &rhs);
+bool          operator != (quat_t<T> lhs, quat_t<Q> rhs);
 
 #include "quat.cc"
 

@@ -71,7 +71,7 @@ auto quat_t<T>::negate() -> quat_t&
 }
 
 template <typename T>
-auto quat_t<T>::product(const quat_t& other) const -> quat_t
+auto quat_t<T>::product(quat_t other) const -> quat_t
 {
   T wt, w1, w2;
   vec3 temp_xyz;
@@ -88,7 +88,7 @@ auto quat_t<T>::product(const quat_t& other) const -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::multiply(const quat_t& other) -> quat_t&
+auto quat_t<T>::multiply(quat_t other) -> quat_t&
 {
   T w1, w2;
   vec3 temp_xyz;
@@ -130,7 +130,7 @@ auto quat_t<T>::normalize() -> quat_t&
 }
 
 template <typename T>
-auto quat_t<T>::difference(const quat_t &other) const -> quat_t
+auto quat_t<T>::difference(quat_t other) const -> quat_t
 {
   return {
     xyz - other.xyz,
@@ -139,7 +139,7 @@ auto quat_t<T>::difference(const quat_t &other) const -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::subtract(const quat_t &other) -> quat_t&
+auto quat_t<T>::subtract(quat_t other) -> quat_t&
 {
   xyz -= other.xyz;
   w -= other.w;
@@ -147,7 +147,7 @@ auto quat_t<T>::subtract(const quat_t &other) -> quat_t&
 }
 
 template <typename T>
-auto quat_t<T>::sum(const quat_t &other) const -> quat_t
+auto quat_t<T>::sum(quat_t other) const -> quat_t
 {
   return {
     xyz + other.xyz,
@@ -156,7 +156,7 @@ auto quat_t<T>::sum(const quat_t &other) const -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::add(const quat_t &other) -> quat_t&
+auto quat_t<T>::add(quat_t other) -> quat_t&
 {
   xyz += other.xyz;
   w += other.w;
@@ -173,7 +173,7 @@ auto quat_t<T>::scaled(T scalar) const -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::scaled(const quat_t &other) const -> quat_t
+auto quat_t<T>::scaled(quat_t other) const -> quat_t
 {
   return {
     xyz * other.xyz,
@@ -190,7 +190,7 @@ auto quat_t<T>::scale(T scalar) -> quat_t&
 }
 
 template <typename T>
-auto quat_t<T>::scale(const quat_t &other) -> quat_t&
+auto quat_t<T>::scale(quat_t other) -> quat_t&
 {
   xyz *= other.xyz;
   w *= other.w;
@@ -198,13 +198,13 @@ auto quat_t<T>::scale(const quat_t &other) -> quat_t&
 }
 
 template <typename T>
-auto quat_t<T>::dot_product(const quat_t &other) const -> T
+auto quat_t<T>::dot_product(quat_t other) const -> T
 {
   return xyz.dot_product(other.xyz) + w * other.w;
 }
 
 template <typename T>
-auto quat_t<T>::from_angle_axis(T angle, const vec3 &axis) -> quat_t
+auto quat_t<T>::from_angle_axis(T angle, vec3 axis) -> quat_t
 {
   vec3 axis_n = axis.normalized();
   T s;
@@ -336,7 +336,7 @@ auto quat_t<T>::from_mat3(const mat3_t<T> &mat) -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::slerp(const quat_t &to, T delta) const -> quat_t
+auto quat_t<T>::slerp(quat_t to, T delta) const -> quat_t
 {
   T dot, scale0, scale1, angle, inv_sin;
   quat_t dquat = to;
@@ -367,7 +367,7 @@ auto quat_t<T>::slerp(const quat_t &to, T delta) const -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::lerp(const quat_t &to, T delta) const -> quat_t
+auto quat_t<T>::lerp(quat_t to, T delta) const -> quat_t
 {
   if (delta < 0 || is_zero(delta)) {
     return *this;
@@ -382,7 +382,7 @@ auto quat_t<T>::lerp(const quat_t &to, T delta) const -> quat_t
 }
 
 template <typename T>
-auto quat_t<T>::operator *= (const quat_t &other) -> quat_t&
+auto quat_t<T>::operator *= (quat_t other) -> quat_t&
 {
   return multiply(other);
 }
@@ -394,13 +394,13 @@ auto quat_t<T>::operator *= (T scalar) -> quat_t&
 }
 
 template <typename T>
-auto quat_t<T>::operator += (const quat_t &other) -> quat_t&
+auto quat_t<T>::operator += (quat_t other) -> quat_t&
 {
   return add(other);
 }
 
 template <typename T>
-auto quat_t<T>::operator -= (const quat_t &other) -> quat_t&
+auto quat_t<T>::operator -= (quat_t other) -> quat_t&
 {
   return subtract(other);
 }
@@ -472,43 +472,43 @@ quat_t<T>::operator quat_t<Q> () const
 }
 
 template <typename T>
-auto operator << (std::ostream &out, const quat_t<T> &in) -> std::ostream&
+auto operator << (std::ostream &out, quat_t<T> in) -> std::ostream&
 {
   return out << "{x:" << in.xyz.x << ", y:" << in.xyz.y << ", z:" << in.xyz.z << ", w:" << in.w << "}";
 }
 
 template <typename T, typename Q>
-quat_t<T> operator * (const quat_t<T> &lhs, const quat_t<Q> &rhs)
+quat_t<T> operator * (quat_t<T> lhs, quat_t<Q> rhs)
 {
   return lhs.product(rhs);
 }
 
 template <typename T, typename Q>
-quat_t<T> operator * (const quat_t<T> &lhs, Q rhs)
+quat_t<T> operator * (quat_t<T> lhs, Q rhs)
 {
   return lhs.scaled(rhs);
 }
 
 template <typename T, typename Q>
-quat_t<T> operator + (const quat_t<T> &lhs, const quat_t<Q> &rhs)
+quat_t<T> operator + (quat_t<T> lhs, quat_t<Q> rhs)
 {
   return lhs.sum(rhs);
 }
 
 template <typename T, typename Q>
-quat_t<T> operator - (const quat_t<T> &lhs, const quat_t<Q> &rhs)
+quat_t<T> operator - (quat_t<T> lhs, quat_t<Q> rhs)
 {
   return lhs.difference(rhs);
 }
 
 template <typename T, typename Q>
-T operator % (const quat_t<T> &lhs, const quat_t<Q> &rhs)
+T operator % (quat_t<T> lhs, quat_t<Q> rhs)
 {
   return lhs.dot_product(rhs);
 }
 
 template <typename T, typename Q>
-bool operator == (const quat_t<T> &lhs, const quat_t<Q> &rhs)
+bool operator == (quat_t<T> lhs, quat_t<Q> rhs)
 {
   return
     is_zero(lhs.xyz.x - rhs.xyz.x) &&
@@ -518,7 +518,7 @@ bool operator == (const quat_t<T> &lhs, const quat_t<Q> &rhs)
 }
 
 template <typename T, typename Q>
-bool operator != (const quat_t<T> &lhs, const quat_t<Q> &rhs)
+bool operator != (quat_t<T> lhs, quat_t<Q> rhs)
 {
   return !(lhs == rhs);
 }

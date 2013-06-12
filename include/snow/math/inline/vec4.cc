@@ -81,7 +81,7 @@ auto vec4_t<T>::length() const -> value_type
 }
 
 template <typename T>
-auto vec4_t<T>::difference(const vec4_t &other) const -> vec4_t
+auto vec4_t<T>::difference(vec4_t other) const -> vec4_t
 {
   return {
     x - other.x,
@@ -92,7 +92,7 @@ auto vec4_t<T>::difference(const vec4_t &other) const -> vec4_t
 }
 
 template <typename T>
-auto vec4_t<T>::subtract(const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::subtract(vec4_t other) -> vec4_t&
 {
   x -= other.x;
   y -= other.y;
@@ -102,7 +102,7 @@ auto vec4_t<T>::subtract(const vec4_t &other) -> vec4_t&
 }
 
 template <typename T>
-auto vec4_t<T>::sum(const vec4_t &other) const -> vec4_t
+auto vec4_t<T>::sum(vec4_t other) const -> vec4_t
 {
   return {
     x + other.x,
@@ -113,7 +113,7 @@ auto vec4_t<T>::sum(const vec4_t &other) const -> vec4_t
 }
 
 template <typename T>
-auto vec4_t<T>::add(const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::add(vec4_t other) -> vec4_t&
 {
   x += other.x;
   y += other.y;
@@ -134,7 +134,7 @@ auto vec4_t<T>::scaled(value_type scalar) const -> vec4_t
 }
 
 template <typename T>
-auto vec4_t<T>::scaled(const vec4_t &other) const -> vec4_t
+auto vec4_t<T>::scaled(vec4_t other) const -> vec4_t
 {
   return {
     x * other.x,
@@ -155,7 +155,7 @@ auto vec4_t<T>::scale(value_type scalar) -> vec4_t&
 }
 
 template <typename T>
-auto vec4_t<T>::scale(const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::scale(vec4_t other) -> vec4_t&
 {
   x *= other.x;
   y *= other.y;
@@ -212,7 +212,7 @@ auto vec4_t<T>::invert() -> vec4_t&
 }
 
 template <typename T>
-auto vec4_t<T>::dot_product(const vec4_t &other) const -> value_type
+auto vec4_t<T>::dot_product(vec4_t other) const -> value_type
 {
   return x * other.x + y * other.y + z * other.z + w * other.w;
 }
@@ -237,13 +237,13 @@ auto vec4_t<T>::rotated_elems() const -> vec4_t
 }
 
 template <typename T>
-auto vec4_t<T>::operator += (const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::operator += (vec4_t other) -> vec4_t&
 {
   return add(other);
 }
 
 template <typename T>
-auto vec4_t<T>::operator -= (const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::operator -= (vec4_t other) -> vec4_t&
 {
   return subtract(other);
 }
@@ -255,7 +255,7 @@ auto vec4_t<T>::operator *= (value_type scalar) -> vec4_t&
 }
 
 template <typename T>
-auto vec4_t<T>::operator *= (const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::operator *= (vec4_t other) -> vec4_t&
 {
   return scale(other);
 }
@@ -267,7 +267,7 @@ auto vec4_t<T>::operator /= (value_type scalar) -> vec4_t&
 }
 
 template <typename T>
-auto vec4_t<T>::operator /= (const vec4_t &other) -> vec4_t&
+auto vec4_t<T>::operator /= (vec4_t other) -> vec4_t&
 {
   return scale(other.inverse());
 }
@@ -350,55 +350,55 @@ vec4_t<T>::operator vec4_t<Q> () const
 }
 
 template <typename T>
-std::ostream &operator << (std::ostream &out, const vec4_t<T> &in)
+std::ostream &operator << (std::ostream &out, vec4_t<T> in)
 {
   return out << "{x:" << in.x << ", y:" << in.y << ", z:" << in.z << ", w:" << in.w << "}";
 }
 
 template <typename T, typename Q>
-vec4_t<T> operator - (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+vec4_t<T> operator - (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return lhs.difference(rhs);
 }
 
 template <typename T, typename Q>
-vec4_t<T> operator + (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+vec4_t<T> operator + (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return lhs.sum(rhs);
 }
 
 template <typename T, typename Q>
-vec4_t<T> operator * (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+vec4_t<T> operator * (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return lhs.scaled(rhs);
 }
 
 template <typename T, typename Q>
-vec4_t<T> operator * (const vec4_t<T> &lhs, Q rhs)
+vec4_t<T> operator * (vec4_t<T> lhs, Q rhs)
 {
   return lhs.scaled(static_cast<T>(rhs));
 }
 
 template <typename T, typename Q>
-vec4_t<T> operator / (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+vec4_t<T> operator / (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return lhs.scaled(rhs.inverse());
 }
 
 template <typename T, typename Q>
-vec4_t<T> operator / (const vec4_t<T> &lhs, Q rhs)
+vec4_t<T> operator / (vec4_t<T> lhs, Q rhs)
 {
   return lhs.scaled(T(1) / static_cast<T>(rhs));
 }
 
 template <typename T, typename Q>
-T operator % (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+T operator % (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return lhs.dot_product(rhs);
 }
 
 template <typename T, typename Q>
-bool operator == (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+bool operator == (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return
     is_zero(lhs.x - rhs.x) &&
@@ -408,7 +408,7 @@ bool operator == (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
 }
 
 template <typename T, typename Q>
-bool operator != (const vec4_t<T> &lhs, const vec4_t<Q> &rhs)
+bool operator != (vec4_t<T> lhs, vec4_t<Q> rhs)
 {
   return !(lhs == rhs);
 }

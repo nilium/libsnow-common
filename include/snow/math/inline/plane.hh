@@ -20,27 +20,27 @@ struct S_EXPORT alignas(T) plane_t
   vec3_t normal;
   value_type d;
 
-  static plane_t   make(const vec3_t &normal, float d);
+  static plane_t   make(vec3_t normal, float d);
   // A plane specifically for three points forming a triangle. Uses CCW winding order.
-  static plane_t   for_triangle(const vec3_t &v0, const vec3_t &v1, const vec3_t &v2);
+  static plane_t   for_triangle(vec3_t v0, vec3_t v1, vec3_t v2);
   // A plane for four or more points. Uses CCW winding order.
   template <typename C> // where C provides cbegin/cend and a forward const_iterator
   static plane_t   for_points(const C &points);
 
-  value_type       distance(const vec3_t &p) const;
-  vec3_t           nearest_to(const vec3_t &p) const;
-  plane_side_t     side(const vec3_t &p) const;
-  vec3_t           intersection(const line_t &line) const;
+  value_type       distance(vec3_t p) const;
+  vec3_t           nearest_to(vec3_t p) const;
+  plane_side_t     side(vec3_t p) const;
+  vec3_t           intersection(line_t line) const;
 
   operator value_type * ();
   operator const value_type * () const;
 };
 
 template <typename T>
-bool operator != (const plane_t<T> &lhs, const plane_t<T> &rhs);
+bool operator != (plane_t<T> lhs, plane_t<T> rhs);
 
 template <typename T>
-bool operator == (const plane_t<T> &lhs, const plane_t<T> &rhs);
+bool operator == (plane_t<T> lhs, plane_t<T> rhs);
 
 #include "plane.cc"
 

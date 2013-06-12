@@ -33,16 +33,16 @@ struct S_EXPORT alignas(T) vec4_t {
   value_type    magnitude() const;
   value_type    length() const;
 
-  vec4_t        difference(const vec4_t &other) const;
-  vec4_t &      subtract(const vec4_t &other);
+  vec4_t        difference(vec4_t other) const;
+  vec4_t &      subtract(vec4_t other);
 
-  vec4_t        sum(const vec4_t &other) const;
-  vec4_t &      add(const vec4_t &other);
+  vec4_t        sum(vec4_t other) const;
+  vec4_t &      add(vec4_t other);
 
   vec4_t        scaled(value_type scalar) const;
-  vec4_t        scaled(const vec4_t &other) const;
+  vec4_t        scaled(vec4_t other) const;
   vec4_t &      scale(value_type scalar);
-  vec4_t &      scale(const vec4_t &other);
+  vec4_t &      scale(vec4_t other);
 
   vec4_t        negated() const;
   vec4_t &      negate();
@@ -50,19 +50,19 @@ struct S_EXPORT alignas(T) vec4_t {
   vec4_t        inverse() const;
   vec4_t &      invert();
 
-  value_type    dot_product(const vec4_t &other) const;
+  value_type    dot_product(vec4_t other) const;
 
   vec4_t &      rotate_elems();
   vec4_t        rotated_elems() const;
 
-  vec4_t &      operator += (const vec4_t &other);
-  vec4_t &      operator -= (const vec4_t &other);
+  vec4_t &      operator += (vec4_t other);
+  vec4_t &      operator -= (vec4_t other);
 
   vec4_t &      operator *= (value_type scalar);
-  vec4_t &      operator *= (const vec4_t &other);
+  vec4_t &      operator *= (vec4_t other);
 
   vec4_t &      operator /= (value_type scalar);
-  vec4_t &      operator /= (const vec4_t &other);
+  vec4_t &      operator /= (vec4_t other);
 
   vec4_t        operator - () const;
   vec4_t        operator ~ () const;
@@ -82,30 +82,30 @@ struct S_EXPORT alignas(T) vec4_t {
 };
 
 template <typename T>
-std::ostream &operator << (std::ostream &out, const vec4_t<T> &in);
+std::ostream &operator << (std::ostream &out, vec4_t<T> in);
 
 template <typename T, typename Q>
-vec4_t<T> operator - (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+vec4_t<T> operator - (vec4_t<T> lhs, vec4_t<Q> rhs);
 template <typename T, typename Q>
-vec4_t<T> operator + (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+vec4_t<T> operator + (vec4_t<T> lhs, vec4_t<Q> rhs);
 
 template <typename T, typename Q>
-vec4_t<T> operator * (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+vec4_t<T> operator * (vec4_t<T> lhs, vec4_t<Q> rhs);
 template <typename T, typename Q>
-vec4_t<T> operator * (const vec4_t<T> &lhs, Q rhs);
+vec4_t<T> operator * (vec4_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-vec4_t<T> operator / (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+vec4_t<T> operator / (vec4_t<T> lhs, vec4_t<Q> rhs);
 template <typename T, typename Q>
-vec4_t<T> operator / (const vec4_t<T> &lhs, Q rhs);
+vec4_t<T> operator / (vec4_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-T operator % (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+T operator % (vec4_t<T> lhs, vec4_t<Q> rhs);
 
 template <typename T, typename Q>
-bool operator == (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+bool operator == (vec4_t<T> lhs, vec4_t<Q> rhs);
 template <typename T, typename Q>
-bool operator != (const vec4_t<T> &lhs, const vec4_t<Q> &rhs);
+bool operator != (vec4_t<T> lhs, vec4_t<Q> rhs);
 
 #include "vec4.cc"
 

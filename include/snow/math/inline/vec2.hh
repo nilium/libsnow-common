@@ -29,30 +29,30 @@ struct S_EXPORT alignas(T) vec2_t {
   vec2_t        normalized() const;
   value_type    magnitude() const;
   value_type    length() const;
-  vec2_t        difference(const vec2_t &other) const;
-  vec2_t &      subtract(const vec2_t &other);
-  vec2_t        sum(const vec2_t &other) const;
-  vec2_t &      add(const vec2_t &other);
+  vec2_t        difference(vec2_t other) const;
+  vec2_t &      subtract(vec2_t other);
+  vec2_t        sum(vec2_t other) const;
+  vec2_t &      add(vec2_t other);
   vec2_t        scaled(value_type scalar) const;
-  vec2_t        scaled(const vec2_t &other) const;
+  vec2_t        scaled(vec2_t other) const;
   vec2_t &      scale(value_type scalar);
-  vec2_t &      scale(const vec2_t &other);
+  vec2_t &      scale(vec2_t other);
   vec2_t        negated() const;
   vec2_t &      negate();
   vec2_t        inverse() const;
   vec2_t &      invert();
-  value_type    dot_product(const vec2_t &other) const;
+  value_type    dot_product(vec2_t other) const;
   vec2_t &      rotate_elems();
   vec2_t        rotated_elems() const;
 
-  vec2_t &      operator += (const vec2_t &other);
-  vec2_t &      operator -= (const vec2_t &other);
+  vec2_t &      operator += (vec2_t other);
+  vec2_t &      operator -= (vec2_t other);
 
   vec2_t &      operator *= (value_type scalar);
-  vec2_t &      operator *= (const vec2_t &other);
+  vec2_t &      operator *= (vec2_t other);
 
   vec2_t &      operator /= (value_type scalar);
-  vec2_t &      operator /= (const vec2_t &other);
+  vec2_t &      operator /= (vec2_t other);
 
   vec2_t        operator - () const;
   vec2_t        operator ~ () const;
@@ -72,30 +72,30 @@ struct S_EXPORT alignas(T) vec2_t {
 };
 
 template <typename T>
-std::ostream &operator << (std::ostream &out, const vec2_t<T> &in);
+std::ostream &operator << (std::ostream &out, vec2_t<T> in);
 
 template <typename T, typename Q>
-vec2_t<T> operator - (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+vec2_t<T> operator - (vec2_t<T> lhs, vec2_t<Q> rhs);
 template <typename T, typename Q>
-vec2_t<T> operator + (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+vec2_t<T> operator + (vec2_t<T> lhs, vec2_t<Q> rhs);
 
 template <typename T, typename Q>
-vec2_t<T> operator * (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+vec2_t<T> operator * (vec2_t<T> lhs, vec2_t<Q> rhs);
 template <typename T, typename Q>
-vec2_t<T> operator * (const vec2_t<T> &lhs, Q rhs);
+vec2_t<T> operator * (vec2_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-vec2_t<T> operator / (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+vec2_t<T> operator / (vec2_t<T> lhs, vec2_t<Q> rhs);
 template <typename T, typename Q>
-vec2_t<T> operator / (const vec2_t<T> &lhs, Q rhs);
+vec2_t<T> operator / (vec2_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-T operator % (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+T operator % (vec2_t<T> lhs, vec2_t<Q> rhs);
 
 template <typename T, typename Q>
-bool operator == (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+bool operator == (vec2_t<T> lhs, vec2_t<Q> rhs);
 template <typename T, typename Q>
-bool operator != (const vec2_t<T> &lhs, const vec2_t<Q> &rhs);
+bool operator != (vec2_t<T> lhs, vec2_t<Q> rhs);
 
 #include "vec2.cc"
 

@@ -32,31 +32,31 @@ struct S_EXPORT alignas(T) vec3_t {
   vec3_t        normalized() const;
   value_type    magnitude() const;
   value_type    length() const;
-  vec3_t        difference(const vec3_t &other) const;
-  vec3_t &      subtract(const vec3_t &other);
-  vec3_t        sum(const vec3_t &other) const;
-  vec3_t &      add(const vec3_t &other);
+  vec3_t        difference(vec3_t other) const;
+  vec3_t &      subtract(vec3_t other);
+  vec3_t        sum(vec3_t other) const;
+  vec3_t &      add(vec3_t other);
   vec3_t        scaled(value_type scalar) const;
-  vec3_t        scaled(const vec3_t &other) const;
+  vec3_t        scaled(vec3_t other) const;
   vec3_t &      scale(value_type scalar);
-  vec3_t &      scale(const vec3_t &other);
+  vec3_t &      scale(vec3_t other);
   vec3_t        negated() const;
   vec3_t &      negate();
   vec3_t        inverse() const;
   vec3_t &      invert();
-  vec3_t        cross_product(const vec3_t &other) const;
-  value_type    dot_product(const vec3_t &other) const;
+  vec3_t        cross_product(vec3_t other) const;
+  value_type    dot_product(vec3_t other) const;
   vec3_t &      rotate_elems();
   vec3_t        rotated_elems() const;
 
-  vec3_t &      operator += (const vec3_t &other);
-  vec3_t &      operator -= (const vec3_t &other);
+  vec3_t &      operator += (vec3_t other);
+  vec3_t &      operator -= (vec3_t other);
 
   vec3_t &      operator *= (value_type scalar);
-  vec3_t &      operator *= (const vec3_t &other);
+  vec3_t &      operator *= (vec3_t other);
 
   vec3_t &      operator /= (value_type scalar);
-  vec3_t &      operator /= (const vec3_t &other);
+  vec3_t &      operator /= (vec3_t other);
 
   vec3_t        operator - () const;
   vec3_t        operator ~ () const;
@@ -76,30 +76,30 @@ struct S_EXPORT alignas(T) vec3_t {
 };
 
 template <typename T>
-std::ostream &operator << (std::ostream &out, const vec3_t<T> &in);
+std::ostream &operator << (std::ostream &out, vec3_t<T> in);
 
 template <typename T, typename Q>
-vec3_t<T> operator - (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+vec3_t<T> operator - (vec3_t<T> lhs, vec3_t<Q> rhs);
 template <typename T, typename Q>
-vec3_t<T> operator + (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+vec3_t<T> operator + (vec3_t<T> lhs, vec3_t<Q> rhs);
 
 template <typename T, typename Q>
-vec3_t<T> operator * (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+vec3_t<T> operator * (vec3_t<T> lhs, vec3_t<Q> rhs);
 template <typename T, typename Q>
-vec3_t<T> operator * (const vec3_t<T> &lhs, Q rhs);
+vec3_t<T> operator * (vec3_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-vec3_t<T> operator / (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+vec3_t<T> operator / (vec3_t<T> lhs, vec3_t<Q> rhs);
 template <typename T, typename Q>
-vec3_t<T> operator / (const vec3_t<T> &lhs, Q rhs);
+vec3_t<T> operator / (vec3_t<T> lhs, Q rhs);
 
 template <typename T, typename Q>
-T operator % (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+T operator % (vec3_t<T> lhs, vec3_t<Q> rhs);
 
 template <typename T, typename Q>
-bool operator == (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+bool operator == (vec3_t<T> lhs, vec3_t<Q> rhs);
 template <typename T, typename Q>
-bool operator != (const vec3_t<T> &lhs, const vec3_t<Q> &rhs);
+bool operator != (vec3_t<T> lhs, vec3_t<Q> rhs);
 
 #include "vec3.cc"
 

@@ -30,13 +30,13 @@ auto mat3_t<T>::make(T rx, T ry, T rz,
 }
 
 template <typename T>
-auto mat3_t<T>::make(const vec3 &x, const vec3 &y, const vec3 &z) -> mat3_t
+auto mat3_t<T>::make(vec3 x, vec3 y, vec3 z) -> mat3_t
 {
   return {x, y, z};
 }
 
 template <typename T>
-auto mat3_t<T>::scaling(const vec3 &off) -> mat3_t
+auto mat3_t<T>::scaling(vec3 off) -> mat3_t
 {
   return {
     {off.x, 0, 0},
@@ -46,7 +46,7 @@ auto mat3_t<T>::scaling(const vec3 &off) -> mat3_t
 }
 
 template <typename T>
-auto mat3_t<T>::rotation(T angle, const vec3 &axis) -> mat3_t
+auto mat3_t<T>::rotation(T angle, vec3 axis) -> mat3_t
 {
   angle *= S_DEG2RAD;
   const T c  = static_cast<T>(std::cos(angle));
@@ -67,7 +67,7 @@ auto mat3_t<T>::rotation(T angle, const vec3 &axis) -> mat3_t
 }
 
 template <typename T>
-auto mat3_t<T>::from_quat(const quat &in) -> mat3_t
+auto mat3_t<T>::from_quat(quat in) -> mat3_t
 {
   T tx, ty, tz, xx, xy, xz, yy, yz, zz, wx, wy, wz;
 
@@ -129,7 +129,7 @@ auto mat3_t<T>::colvec3(int index) const -> vec3
 }
 
 template <typename T>
-auto mat3_t<T>::set_colvec3(int index, const vec3 &col) -> mat3_t &
+auto mat3_t<T>::set_colvec3(int index, vec3 col) -> mat3_t &
 {
   switch (index) {
     case 0: r.x = col.x; r.y = col.y; r.z = col.z; break;
@@ -283,7 +283,7 @@ auto mat3_t<T>::scale(const mat3_t &other) -> mat3_t &
 }
 
 template <typename T>
-auto mat3_t<T>::scaled(const vec3 &vec) const -> mat3_t
+auto mat3_t<T>::scaled(vec3 vec) const -> mat3_t
 {
   return {
     r.scaled(vec.x),
@@ -293,7 +293,7 @@ auto mat3_t<T>::scaled(const vec3 &vec) const -> mat3_t
 }
 
 template <typename T>
-auto mat3_t<T>::scale(const vec3 &vec) -> mat3_t &
+auto mat3_t<T>::scale(vec3 vec) -> mat3_t &
 {
   r.scale(vec.x);
   s.scale(vec.y);
@@ -396,7 +396,7 @@ auto mat3_t<T>::multiply(const mat3_t &other) -> mat3_t &
 }
 
 template <typename T>
-auto mat3_t<T>::rotate(const vec3 &vec) const -> vec3
+auto mat3_t<T>::rotate(vec3 vec) const -> vec3
 {
   return {
     vec.dot_product(colvec3(0)),
@@ -406,7 +406,7 @@ auto mat3_t<T>::rotate(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
-auto mat3_t<T>::inverse_rotate(const vec3 &vec) const -> vec3
+auto mat3_t<T>::inverse_rotate(vec3 vec) const -> vec3
 {
   return {
     vec.dot_product(r),
@@ -416,7 +416,7 @@ auto mat3_t<T>::inverse_rotate(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
-auto mat3_t<T>::rotate(const vec2 &vec) const -> vec2
+auto mat3_t<T>::rotate(vec2 vec) const -> vec2
 {
   return {
     vec.dot_product(colvec3(0)),
@@ -425,7 +425,7 @@ auto mat3_t<T>::rotate(const vec2 &vec) const -> vec2
 }
 
 template <typename T>
-auto mat3_t<T>::inverse_rotate(const vec2 &vec) const -> vec2
+auto mat3_t<T>::inverse_rotate(vec2 vec) const -> vec2
 {
   return {
     vec.dot_product(r),
@@ -537,19 +537,19 @@ mat3_t<T> operator * (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 }
 
 template <typename T, typename Q>
-vec3_t<T> operator * (const mat3_t<T> &rhs, const vec3_t<Q> &lhs)
+vec3_t<T> operator * (const mat3_t<T> &rhs, vec3_t<Q> lhs)
 {
   return rhs.rotate(lhs);
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator * (const mat3_t<T> &rhs, const vec2_t<Q> &lhs)
+vec2_t<T> operator * (const mat3_t<T> &rhs, vec2_t<Q> lhs)
 {
   return rhs.rotate(lhs);
 }
 
 template <typename T, typename Q>
-mat3_t<T> operator * (const mat3_t<T> &rhs, const Q &lhs)
+mat3_t<T> operator * (const mat3_t<T> &rhs, Q lhs)
 {
   return rhs.scaled(lhs);
 }
@@ -561,7 +561,7 @@ mat3_t<T> operator + (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 }
 
 template <typename T, typename Q>
-mat3_t<T> operator + (const mat3_t<T> &rhs, const Q &lhs)
+mat3_t<T> operator + (const mat3_t<T> &rhs, Q lhs)
 {
   return rhs.sum(lhs);
 }
@@ -573,7 +573,7 @@ mat3_t<T> operator - (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 }
 
 template <typename T, typename Q>
-mat3_t<T> operator - (const mat3_t<T> &rhs, const Q &lhs)
+mat3_t<T> operator - (const mat3_t<T> &rhs, Q lhs)
 {
   return rhs.difference(lhs);
 }

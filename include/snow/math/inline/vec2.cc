@@ -71,7 +71,7 @@ auto vec2_t<T>::length() const -> value_type
 }
 
 template <typename T>
-auto vec2_t<T>::difference(const vec2_t &other) const -> vec2_t
+auto vec2_t<T>::difference(vec2_t other) const -> vec2_t
 {
   return {
     x - other.x,
@@ -80,7 +80,7 @@ auto vec2_t<T>::difference(const vec2_t &other) const -> vec2_t
 }
 
 template <typename T>
-auto vec2_t<T>::subtract(const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::subtract(vec2_t other) -> vec2_t&
 {
   x -= other.x;
   y -= other.y;
@@ -88,7 +88,7 @@ auto vec2_t<T>::subtract(const vec2_t &other) -> vec2_t&
 }
 
 template <typename T>
-auto vec2_t<T>::sum(const vec2_t &other) const -> vec2_t
+auto vec2_t<T>::sum(vec2_t other) const -> vec2_t
 {
   return {
     x + other.x,
@@ -97,7 +97,7 @@ auto vec2_t<T>::sum(const vec2_t &other) const -> vec2_t
 }
 
 template <typename T>
-auto vec2_t<T>::add(const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::add(vec2_t other) -> vec2_t&
 {
   x += other.x;
   y += other.y;
@@ -114,7 +114,7 @@ auto vec2_t<T>::scaled(value_type scalar) const -> vec2_t
 }
 
 template <typename T>
-auto vec2_t<T>::scaled(const vec2_t &other) const -> vec2_t
+auto vec2_t<T>::scaled(vec2_t other) const -> vec2_t
 {
   return {
     x * other.x,
@@ -131,7 +131,7 @@ auto vec2_t<T>::scale(value_type scalar) -> vec2_t&
 }
 
 template <typename T>
-auto vec2_t<T>::scale(const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::scale(vec2_t other) -> vec2_t&
 {
   x *= other.x;
   y *= other.y;
@@ -176,7 +176,7 @@ auto vec2_t<T>::invert() -> vec2_t&
 }
 
 template <typename T>
-auto vec2_t<T>::dot_product(const vec2_t &other) const -> value_type
+auto vec2_t<T>::dot_product(vec2_t other) const -> value_type
 {
   return x * other.x + y * other.y;
 }
@@ -197,13 +197,13 @@ auto vec2_t<T>::rotated_elems() const -> vec2_t
 }
 
 template <typename T>
-auto vec2_t<T>::operator += (const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::operator += (vec2_t other) -> vec2_t&
 {
   return add(other);
 }
 
 template <typename T>
-auto vec2_t<T>::operator -= (const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::operator -= (vec2_t other) -> vec2_t&
 {
   return subtract(other);
 }
@@ -215,7 +215,7 @@ auto vec2_t<T>::operator *= (value_type scalar) -> vec2_t&
 }
 
 template <typename T>
-auto vec2_t<T>::operator *= (const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::operator *= (vec2_t other) -> vec2_t&
 {
   return scale(other);
 }
@@ -227,7 +227,7 @@ auto vec2_t<T>::operator /= (value_type scalar) -> vec2_t&
 }
 
 template <typename T>
-auto vec2_t<T>::operator /= (const vec2_t &other) -> vec2_t&
+auto vec2_t<T>::operator /= (vec2_t other) -> vec2_t&
 {
   return scale(other.inverse());
 }
@@ -310,55 +310,55 @@ vec2_t<T>::operator vec4_t<Q> () const
 }
 
 template <typename T>
-std::ostream &operator << (std::ostream &out, const vec2_t<T> &in)
+std::ostream &operator << (std::ostream &out, vec2_t<T> in)
 {
   return out << "{x:" << in.x << ", y:" << in.y << "}";
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator - (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+vec2_t<T> operator - (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.difference(rhs);
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator + (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+vec2_t<T> operator + (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.sum(rhs);
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator * (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+vec2_t<T> operator * (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.scaled(rhs);
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator * (const vec2_t<T> &lhs, Q rhs)
+vec2_t<T> operator * (vec2_t<T> lhs, Q rhs)
 {
   return lhs.scaled(static_cast<T>(rhs));
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator / (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+vec2_t<T> operator / (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.scaled(rhs.inverse());
 }
 
 template <typename T, typename Q>
-vec2_t<T> operator / (const vec2_t<T> &lhs, Q rhs)
+vec2_t<T> operator / (vec2_t<T> lhs, Q rhs)
 {
   return lhs.scaled(T(1) / static_cast<T>(rhs));
 }
 
 template <typename T, typename Q>
-T operator % (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+T operator % (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.dot_product(rhs);
 }
 
 template <typename T, typename Q>
-bool operator == (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+bool operator == (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return
     is_zero(lhs.x - rhs.x) &&
@@ -366,7 +366,7 @@ bool operator == (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
 }
 
 template <typename T, typename Q>
-bool operator != (const vec2_t<T> &lhs, const vec2_t<Q> &rhs)
+bool operator != (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return !(lhs == rhs);
 }

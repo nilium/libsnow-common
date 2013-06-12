@@ -10,7 +10,7 @@ auto line_t<T>::end() const -> vec3
 }
 
 template <typename T>
-auto line_t<T>::translated(const vec3 &d) const -> line_t
+auto line_t<T>::translated(vec3 d) const -> line_t
 {
   return {
     origin + d, dist
@@ -18,7 +18,7 @@ auto line_t<T>::translated(const vec3 &d) const -> line_t
 }
 
 template <typename T>
-auto line_t<T>::translate(const vec3 &d) -> line_t&
+auto line_t<T>::translate(vec3 d) -> line_t&
 {
   origin += d;
   return *this;

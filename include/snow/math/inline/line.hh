@@ -21,8 +21,8 @@ struct S_EXPORT line_t
   vec3 dist;
 
   auto end() const -> vec3;
-  auto translated(const vec3 &d) const -> line_t;
-  auto translate(const vec3 &d) -> line_t&;
+  auto translated(vec3 d) const -> line_t;
+  auto translate(vec3 d) -> line_t&;
   auto scaled(value_type d) const -> line_t;
   auto scale(value_type d) -> line_t&;
   auto nearest_to(const vec3& p) const -> vec3;

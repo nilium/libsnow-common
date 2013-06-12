@@ -34,7 +34,7 @@ auto mat4_t<T>::make(T m00, T m10, T m20, T m30,
 }
 
 template <typename T>
-auto mat4_t<T>::translation(const vec3 &off) -> mat4_t
+auto mat4_t<T>::translation(vec3 off) -> mat4_t
 {
   return {
     1, 0, 0, 0,
@@ -45,7 +45,7 @@ auto mat4_t<T>::translation(const vec3 &off) -> mat4_t
 }
 
 template <typename T>
-auto mat4_t<T>::scaling(const vec3 &off) -> mat4_t
+auto mat4_t<T>::scaling(vec3 off) -> mat4_t
 {
   return {
     off.x, 0, 0, 0,
@@ -56,7 +56,7 @@ auto mat4_t<T>::scaling(const vec3 &off) -> mat4_t
 }
 
 template <typename T>
-auto mat4_t<T>::rotation(T angle, const vec3 &axis) -> mat4_t
+auto mat4_t<T>::rotation(T angle, vec3 axis) -> mat4_t
 {
   angle *= S_DEG2RAD;
   const T c  = static_cast<T>(std::cos(angle));
@@ -130,7 +130,7 @@ auto mat4_t<T>::perspective(T fovY, T aspect, T near, T far) -> mat4_t
 }
 
 template <typename T>
-auto mat4_t<T>::look_at(const vec3 &eye, const vec3& center, const vec3& up) -> mat4_t
+auto mat4_t<T>::look_at(vec3 eye, vec3 center, vec3 up) -> mat4_t
 {
   const vec3 inverse_eye = -eye;
   const vec3 z_dir = (center - eye).normalize();
@@ -149,7 +149,7 @@ auto mat4_t<T>::look_at(const vec3 &eye, const vec3& center, const vec3& up) -> 
 }
 
 template <typename T>
-auto mat4_t<T>::from_quat(const quat &in) -> mat4_t
+auto mat4_t<T>::from_quat(quat in) -> mat4_t
 {
   T tx, ty, tz, xx, xy, xz, yy, yz, zz, wx, wy, wz;
 
@@ -179,7 +179,7 @@ auto mat4_t<T>::from_quat(const quat &in) -> mat4_t
 }
 
 template <typename T>
-auto mat4_t<T>::translated(const vec3 &translation) const -> mat4_t
+auto mat4_t<T>::translated(vec3 translation) const -> mat4_t
 {
   mat4_t r = *this;
   return r.translate(translation);
@@ -236,7 +236,7 @@ auto mat4_t<T>::colvec4(int index) const -> vec4
 }
 
 template <typename T>
-auto mat4_t<T>::set_rowvec4(int index, const vec4 &row) -> mat4_t &
+auto mat4_t<T>::set_rowvec4(int index, vec4 row) -> mat4_t &
 {
   switch (index) {
     case 0: m00 = row.x; m10 = row.y; m20 = row.z; m30 = row.w; break;
@@ -249,7 +249,7 @@ auto mat4_t<T>::set_rowvec4(int index, const vec4 &row) -> mat4_t &
 }
 
 template <typename T>
-auto mat4_t<T>::set_colvec4(int index, const vec4 &col) -> mat4_t &
+auto mat4_t<T>::set_colvec4(int index, vec4 col) -> mat4_t &
 {
   switch (index) {
     case 0: m00 = col.x; m01 = col.y; m02 = col.z; m03 = col.w; break;
@@ -286,7 +286,7 @@ auto mat4_t<T>::colvec3(int index) const -> vec3
 }
 
 template <typename T>
-auto mat4_t<T>::set_rowvec3(int index, const vec3 &row) -> mat4_t &
+auto mat4_t<T>::set_rowvec3(int index, vec3 row) -> mat4_t &
 {
   switch (index) {
     case 0: m00 = row.x; m10 = row.y; m20 = row.z; break;
@@ -299,7 +299,7 @@ auto mat4_t<T>::set_rowvec3(int index, const vec3 &row) -> mat4_t &
 }
 
 template <typename T>
-auto mat4_t<T>::set_colvec3(int index, const vec3 &col) -> mat4_t &
+auto mat4_t<T>::set_colvec3(int index, vec3 col) -> mat4_t &
 {
   switch (index) {
     case 0: m00 = col.x; m01 = col.y; m02 = col.z; break;
@@ -620,7 +620,7 @@ auto mat4_t<T>::scale(const mat4_t &other) -> mat4_t &
 }
 
 template <typename T>
-auto mat4_t<T>::scaled(const vec3 &vec) const -> mat4_t
+auto mat4_t<T>::scaled(vec3 vec) const -> mat4_t
 {
   return {
     m00 * vec.x,
@@ -643,7 +643,7 @@ auto mat4_t<T>::scaled(const vec3 &vec) const -> mat4_t
 }
 
 template <typename T>
-auto mat4_t<T>::scale(const vec3 &vec) -> mat4_t &
+auto mat4_t<T>::scale(vec3 vec) -> mat4_t &
 {
   m00 *= vec.x;
   m10 *= vec.x;
@@ -738,7 +738,7 @@ auto mat4_t<T>::multiply(const mat4_t &other) -> mat4_t &
 }
 
 template <typename T>
-auto mat4_t<T>::multiply(const vec4 &vec) const -> vec4
+auto mat4_t<T>::multiply(vec4 vec) const -> vec4
 {
   return {
     vec.dot_product(colvec4(0)),
@@ -749,7 +749,7 @@ auto mat4_t<T>::multiply(const vec4 &vec) const -> vec4
 }
 
 template <typename T>
-auto mat4_t<T>::multiply(const vec3 &vec) const -> vec3
+auto mat4_t<T>::multiply(vec3 vec) const -> vec3
 {
   return {
     vec.dot_product(colvec3(0)) + m03,
@@ -759,7 +759,7 @@ auto mat4_t<T>::multiply(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
-auto mat4_t<T>::multiply(const vec2 &vec) const -> vec2
+auto mat4_t<T>::multiply(vec2 vec) const -> vec2
 {
   return {
     vec.dot_product(colvec3(0)) + m03,
@@ -768,7 +768,7 @@ auto mat4_t<T>::multiply(const vec2 &vec) const -> vec2
 }
 
 template <typename T>
-auto mat4_t<T>::rotate(const vec4 &vec) const -> vec4
+auto mat4_t<T>::rotate(vec4 vec) const -> vec4
 {
   return {
     vec.dot_product(colvec4(0)),
@@ -778,7 +778,7 @@ auto mat4_t<T>::rotate(const vec4 &vec) const -> vec4
 }
 
 template <typename T>
-auto mat4_t<T>::inverse_rotate(const vec4 &vec) const -> vec4
+auto mat4_t<T>::inverse_rotate(vec4 vec) const -> vec4
 {
   return {
     vec.dot_product(rowvec4(0)),
@@ -788,7 +788,7 @@ auto mat4_t<T>::inverse_rotate(const vec4 &vec) const -> vec4
 }
 
 template <typename T>
-auto mat4_t<T>::rotate(const vec3 &vec) const -> vec3
+auto mat4_t<T>::rotate(vec3 vec) const -> vec3
 {
   return {
     vec.dot_product(colvec3(0)),
@@ -798,7 +798,7 @@ auto mat4_t<T>::rotate(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
-auto mat4_t<T>::inverse_rotate(const vec3 &vec) const -> vec3
+auto mat4_t<T>::inverse_rotate(vec3 vec) const -> vec3
 {
   return {
     vec.dot_product(rowvec3(0)),
@@ -808,7 +808,7 @@ auto mat4_t<T>::inverse_rotate(const vec3 &vec) const -> vec3
 }
 
 template <typename T>
-auto mat4_t<T>::rotate(const vec2 &vec) const -> vec2
+auto mat4_t<T>::rotate(vec2 vec) const -> vec2
 {
   return {
     vec.dot_product(colvec3(0)),
@@ -817,7 +817,7 @@ auto mat4_t<T>::rotate(const vec2 &vec) const -> vec2
 }
 
 template <typename T>
-auto mat4_t<T>::inverse_rotate(const vec2 &vec) const -> vec2
+auto mat4_t<T>::inverse_rotate(vec2 vec) const -> vec2
 {
   return {
     vec.dot_product(rowvec3(0)),
@@ -826,7 +826,7 @@ auto mat4_t<T>::inverse_rotate(const vec2 &vec) const -> vec2
 }
 
 template <typename T>
-auto mat4_t<T>::translate(const vec3 &translation) -> mat4_t &
+auto mat4_t<T>::translate(vec3 translation) -> mat4_t &
 {
   m03 += translation.dot_product(colvec3(0));
   m13 += translation.dot_product(colvec3(1));
@@ -1006,27 +1006,27 @@ mat4_t<T> operator * (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
 
 
 template <typename T, typename Q>
-vec4_t<T> operator * (const mat4_t<T> &rhs, const vec4_t<Q> &lhs)
+vec4_t<T> operator * (const mat4_t<T> &rhs, vec4_t<Q> lhs)
 {
   return rhs.multiply(lhs);
 }
 
 
 template <typename T, typename Q>
-vec3_t<T> operator * (const mat4_t<T> &rhs, const vec3_t<Q> &lhs)
+vec3_t<T> operator * (const mat4_t<T> &rhs, vec3_t<Q> lhs)
 {
   return rhs.multiply(lhs);
 }
 
 
 template <typename T, typename Q>
-vec2_t<T> operator * (const mat4_t<T> &rhs, const vec2_t<Q> &lhs)
+vec2_t<T> operator * (const mat4_t<T> &rhs, vec2_t<Q> lhs)
 {
   return rhs.multiply(lhs);
 }
 
 template <typename T, typename Q>
-mat4_t<T> operator * (const mat4_t<T> &rhs, const Q &lhs)
+mat4_t<T> operator * (const mat4_t<T> &rhs, Q lhs)
 {
   return rhs.scaled(lhs);
 }
@@ -1038,7 +1038,7 @@ mat4_t<T> operator + (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
 }
 
 template <typename T, typename Q>
-mat4_t<T> operator + (const mat4_t<T> &rhs, const Q &lhs)
+mat4_t<T> operator + (const mat4_t<T> &rhs, Q lhs)
 {
   return rhs.sum(lhs);
 }
@@ -1050,7 +1050,7 @@ mat4_t<T> operator - (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
 }
 
 template <typename T, typename Q>
-mat4_t<T> operator - (const mat4_t<T> &rhs, const Q &lhs)
+mat4_t<T> operator - (const mat4_t<T> &rhs, Q lhs)
 {
   return rhs.difference(lhs);
 }
