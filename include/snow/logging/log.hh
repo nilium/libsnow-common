@@ -103,9 +103,9 @@ void s_fatal_error_impl(const char *format, ...)
 
 #if USE_EXCEPTIONS
   if (length) {
-    throw EX_T(str_temp);
+    throw EX_T(strbuf.data());
   } else {
-    throw EX_T();
+    throw EX_T("Fatal error");
   }
 #else
   abort();
