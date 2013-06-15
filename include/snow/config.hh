@@ -116,6 +116,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <cfloat>
+#include <cassert>
 
 #pragma GCC diagnostic pop
 
