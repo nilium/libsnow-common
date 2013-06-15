@@ -123,9 +123,24 @@
 // Define string type
 #include <snow/string/string.hh>
 
+
+/** The Snow namespace. */
 namespace snow
 {
-  using string = struct string_t;
+
+
+/**
+  String class for Snow projects.
+
+  May optionally be replaced with another string class, though this might
+  break some things due to string_t differing from the std::basic_string
+  interface. Worst case scenario: you might have to change which functions
+  are called in some files.
+*/
+using string = struct string_t;
+
+
 }
+
 
 #endif /* end __SNOW_COMMON__CONFIG_HH__ include guard */
