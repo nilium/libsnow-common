@@ -79,6 +79,8 @@ struct S_EXPORT alignas(T) vec4_t {
                 operator vec3_t<Q> () const;
   template <typename Q>
                 operator vec4_t<Q> () const;
+
+  #include "vec4_swizzles.hh"
 };
 
 template <typename T>
