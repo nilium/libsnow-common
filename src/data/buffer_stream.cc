@@ -15,7 +15,7 @@ buffer_stream_t::buffer_stream_t(void *data, size_t length) :
 
 
 
-ptrdiff_t buffer_stream_t::seek(ptrdiff_t offset)
+ptrdiff_t buffer_stream_t::seek(ptrdiff_t offset) const
 {
   char *next_offset = base_ + offset;
   if (next_offset < base_ || (next_offset > end_)) {
@@ -42,7 +42,7 @@ size_t buffer_stream_t::write(const void *buffer, size_t length)
 
 
 template <>
-size_t buffer_stream_t::write(const string_t &string)
+size_t buffer_stream_t::write(const string &string)
 {
   const size_t rem = remainder();
   if (rem <= 1) {
@@ -59,7 +59,7 @@ size_t buffer_stream_t::write(const string_t &string)
 
 
 
-size_t buffer_stream_t::read(void *buffer, size_t length)
+size_t buffer_stream_t::read(void *buffer, size_t length) const
 {
   assert(length > 0);
   length = std::min(length, remainder());
@@ -73,7 +73,7 @@ size_t buffer_stream_t::read(void *buffer, size_t length)
 
 
 template <>
-size_t buffer_stream_t::read(string_t &result)
+size_t buffer_stream_t::read(string &result) const
 {
   char *lenptr = offset_;
   for (; lenptr < end_ && *lenptr; ++lenptr) ;

@@ -12,8 +12,12 @@ namespace snow {
 /**
   A class to read raw data from a block of memory. Includes methods to read
   null-terminated strings as well.
+
+  Read, seek, and so on are considered const operations as they don't modify the
+  underlying buffer, allowing you to easily pass around a const reference to the
+  buffer for reading, but not writing.
 */
-struct buffer_stream_t
+struct S_EXPORT buffer_stream_t
 {
   /**
     Constant to indicate the bounds for a stream should be unchecked. Pass as
@@ -39,7 +43,7 @@ struct buffer_stream_t
     @param result Where to store the result of the read.
   */
   template <typename T>
-  size_t read(T &result)
+  S_HIDDEN size_t read(T &result) const
   {
     const T *T_ptr = (const T *)offset_;
     seek(tell() + sizeof(T));
@@ -49,7 +53,7 @@ struct buffer_stream_t
 
   /**
     Writes an object of type T to the stream. Recommended that specializations
-    be written for non-POD/standard layout data (see string_t specialization).
+    be written for non-POD/standard layout data (see string specialization).
 
     Default implementation simply does a memmove to copy the object to the
     buffer.
@@ -59,7 +63,7 @@ struct buffer_stream_t
     number of bytes needed to fully write the object.
   */
   template <typename T>
-  size_t write(const T& data)
+  S_HIDDEN size_t write(const T& data)
   {
     return write(&data, sizeof(data));
   }
@@ -115,7 +119,7 @@ struct buffer_stream_t
     within 0 and size().
     @return The buffer offset after seeking.
   */
-  ptrdiff_t seek(ptrdiff_t offset);
+  ptrdiff_t seek(ptrdiff_t offset) const;
 
   /**
     Writes length bytes from the provided data to the buffer stream.
@@ -133,7 +137,7 @@ struct buffer_stream_t
     @return The number of bytes actually copied to the data buffer. May be less
     than or equal to the requested number of bytes.
   */
-  size_t read(void *data, size_t length);
+  size_t read(void *data, size_t length) const;
 
   /**
     Skips a given number of bytes in the buffer stream.
@@ -141,7 +145,7 @@ struct buffer_stream_t
     @return The number of bytes actually skipped. May be less than or equal to
     length.
   */
-  inline size_t skip(size_t length)
+  inline size_t skip(size_t length) const
   {
     return read(nullptr, length);
   }
@@ -162,9 +166,12 @@ struct buffer_stream_t
   inline const char *end() const { return end_; }
 
 private:
-  char *base_;      // Base pointer. The start of the buffer.
-  char *end_;       // End pointer -- may point to invalid memory in unchecked buffers.
-  char *offset_;    // Current offset in the stream. Should be between base_ and end_.
+  // Base pointer. The start of the buffer.
+  char *base_;
+  // End pointer -- may point to invalid memory in unchecked buffers.
+  char *end_;
+  // Current offset in the stream. Should be between base_ and end_.
+  mutable char *offset_;
 };
 
 
@@ -183,7 +190,7 @@ private:
   written contains a null character.
 */
 template <>
-size_t buffer_stream_t::write(const string_t &string);
+S_EXPORT size_t buffer_stream_t::write(const string &string);
 
 /**
   Reads a string from the buffer stream to the result string.
@@ -194,7 +201,7 @@ size_t buffer_stream_t::write(const string_t &string);
   character, the remainder of the stream is stored in the result string.
 */
 template <>
-size_t buffer_stream_t::read(string_t &result);
+S_EXPORT size_t buffer_stream_t::read(string &result) const;
 
 
 } // namespace snow
