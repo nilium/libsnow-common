@@ -3,11 +3,20 @@
 #ifndef __SNOW_COMMON__QUAT_THH__
 #define __SNOW_COMMON__QUAT_THH__
 
-/*==============================================================================
 
-  Quaternion
+namespace snow {
 
-==============================================================================*/
+
+/** @cond IGNORE */
+template <typename T> struct vec3_t;
+template <typename T> struct mat4_t;
+template <typename T> struct mat3_t;
+/** @endcond */
+
+
+/** @addtogroup Math3D */
+///@{
+
 
 template <typename T = float>
 struct S_EXPORT alignas(T) quat_t {
@@ -96,6 +105,16 @@ template <typename T, typename Q>
 bool          operator == (quat_t<T> lhs, quat_t<Q> rhs);
 template <typename T, typename Q>
 bool          operator != (quat_t<T> lhs, quat_t<Q> rhs);
+
+
+using quatf_t = quat_t<float>;
+using quatd_t = quat_t<double>;
+
+
+///@}
+
+
+} // namespace snow
 
 #include "quat.cc"
 

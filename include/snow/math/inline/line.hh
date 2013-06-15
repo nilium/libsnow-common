@@ -3,30 +3,49 @@
 #ifndef __SNOW_COMMON__LINE_THH__
 #define __SNOW_COMMON__LINE_THH__
 
-/*==============================================================================
 
-  Line (ported over from Mark Sibly's Blitz3D maths routines)
-  Not required to be a POD type, though it may end up being one due to
-  restrictions placed on other types.
+namespace snow {
 
-==============================================================================*/
 
+/** @cond IGNORE */
+template <typename T> struct vec3_t;
+/** @endcond */
+
+
+/** Basic 3D line type. */
 template <typename T>
-struct S_EXPORT line_t
+struct S_EXPORT alignas(T) line_t
 {
-  typedef T value_type;
-  typedef vec3_t<T> vec3;
+  /** @brief The line's component type. */
+  using value_type = T;
+  /** @brief The line's vec3_t type. */
+  using vec3       = vec3_t<T>;
 
+  /** @brief The line's origin. */
   vec3 origin;
+  /** @brief The line's direction and distance. */
   vec3 dist;
 
+  /** @brief Returns a vector for the end of the line. */
   auto end() const -> vec3;
+  /** @brief Returns a copy of the line translated by a vector. */
   auto translated(vec3 d) const -> line_t;
+  /** @brief Translates the line by a vector. */
   auto translate(vec3 d) -> line_t&;
+  /** @brief Returns a copy of the line with its end scaled by a scalar. */
   auto scaled(value_type d) const -> line_t;
+  /** @brief Scales the line's end point by a scalar. */
   auto scale(value_type d) -> line_t&;
+  /** @brief Returns a vector along the line nearest to the given vector. */
   auto nearest_to(const vec3& p) const -> vec3;
 };
+
+
+using linef_t = line_t<float>;
+using lined_t = line_t<double>;
+
+
+} // namespace snow
 
 #include "line.cc"
 

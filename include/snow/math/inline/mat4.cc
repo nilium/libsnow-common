@@ -3,6 +3,10 @@
 #ifndef __SNOW_COMMON__MAT4_TCC__
 #define __SNOW_COMMON__MAT4_TCC__
 
+
+namespace snow {
+
+
 template <typename T>
 const mat4_t<T> mat4_t<T>::identity = {
   1, 0, 0, 0,
@@ -11,6 +15,7 @@ const mat4_t<T> mat4_t<T>::identity = {
   0, 0, 0, 1
 };
 
+
 template <typename T>
 const mat4_t<T> mat4_t<T>::zero = {
   0, 0, 0, 0,
@@ -18,6 +23,8 @@ const mat4_t<T> mat4_t<T>::zero = {
   0, 0, 0, 0,
   0, 0, 0, 0
 };
+
+
 
 template <typename T>
 auto mat4_t<T>::make(T m00, T m10, T m20, T m30,
@@ -33,6 +40,8 @@ auto mat4_t<T>::make(T m00, T m10, T m20, T m30,
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::translation(vec3 off) -> mat4_t
 {
@@ -44,6 +53,8 @@ auto mat4_t<T>::translation(vec3 off) -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::scaling(vec3 off) -> mat4_t
 {
@@ -54,6 +65,8 @@ auto mat4_t<T>::scaling(vec3 off) -> mat4_t
     0, 0, 0, 1
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::rotation(T angle, vec3 axis) -> mat4_t
@@ -77,6 +90,8 @@ auto mat4_t<T>::rotation(T angle, vec3 axis) -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::frustum(T left, T right, T bottom, T top, T near, T far) -> mat4_t
 {
@@ -92,6 +107,8 @@ auto mat4_t<T>::frustum(T left, T right, T bottom, T top, T near, T far) -> mat4
     0, 0, -((neardouble * far) / zdelta), 0
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::orthographic(T left, T right,
@@ -109,6 +126,8 @@ auto mat4_t<T>::orthographic(T left, T right,
     -((right + left) / xdelta), -((top + bottom) / ydelta), -((far + near) / zdelta), 1
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::perspective(T fovY, T aspect, T near, T far) -> mat4_t
@@ -129,6 +148,8 @@ auto mat4_t<T>::perspective(T fovY, T aspect, T near, T far) -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::look_at(vec3 eye, vec3 center, vec3 up) -> mat4_t
 {
@@ -147,6 +168,8 @@ auto mat4_t<T>::look_at(vec3 eye, vec3 center, vec3 up) -> mat4_t
     1
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::from_quat(quat in) -> mat4_t
@@ -178,12 +201,16 @@ auto mat4_t<T>::from_quat(quat in) -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::translated(vec3 translation) const -> mat4_t
 {
   mat4_t r = *this;
   return r.translate(translation);
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::transpose() -> mat4_t &
@@ -200,6 +227,8 @@ auto mat4_t<T>::transpose() -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::transposed() const -> mat4_t
 {
@@ -210,6 +239,8 @@ auto mat4_t<T>::transposed() const -> mat4_t
     m30, m31, m32, m33
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::rowvec4(int index) const -> vec4
@@ -223,6 +254,8 @@ auto mat4_t<T>::rowvec4(int index) const -> vec4
   }
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::colvec4(int index) const -> vec4
 {
@@ -234,6 +267,8 @@ auto mat4_t<T>::colvec4(int index) const -> vec4
     default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::set_rowvec4(int index, vec4 row) -> mat4_t &
@@ -248,6 +283,8 @@ auto mat4_t<T>::set_rowvec4(int index, vec4 row) -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::set_colvec4(int index, vec4 col) -> mat4_t &
 {
@@ -261,6 +298,8 @@ auto mat4_t<T>::set_colvec4(int index, vec4 col) -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::rowvec3(int index) const -> vec3
 {
@@ -273,6 +312,8 @@ auto mat4_t<T>::rowvec3(int index) const -> vec3
   }
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::colvec3(int index) const -> vec3
 {
@@ -284,6 +325,8 @@ auto mat4_t<T>::colvec3(int index) const -> vec3
     default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::set_rowvec3(int index, vec3 row) -> mat4_t &
@@ -298,6 +341,8 @@ auto mat4_t<T>::set_rowvec3(int index, vec3 row) -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::set_colvec3(int index, vec3 col) -> mat4_t &
 {
@@ -310,6 +355,8 @@ auto mat4_t<T>::set_colvec3(int index, vec3 col) -> mat4_t &
   }
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::inverse_orthogonal() const -> mat4_t
@@ -327,6 +374,8 @@ auto mat4_t<T>::inverse_orthogonal() const -> mat4_t
   return temp;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::negated() const -> mat4_t
 {
@@ -338,6 +387,8 @@ auto mat4_t<T>::negated() const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::negate() -> mat4_t &
 {
@@ -347,6 +398,8 @@ auto mat4_t<T>::negate() -> mat4_t &
   m03 = -m03; m13 = -m13; m23 = -m23; m33 = -m33;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::sum(const mat4_t &other) const -> mat4_t
@@ -371,6 +424,8 @@ auto mat4_t<T>::sum(const mat4_t &other) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::sum(T scalar) const -> mat4_t
 {
@@ -394,6 +449,8 @@ auto mat4_t<T>::sum(T scalar) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::add(const mat4_t &other) -> mat4_t &
 {
@@ -415,6 +472,8 @@ auto mat4_t<T>::add(const mat4_t &other) -> mat4_t &
   m33 += other.m33;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::add(T scalar) -> mat4_t &
@@ -462,6 +521,8 @@ auto mat4_t<T>::difference(const mat4_t &other) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::difference(T scalar) const -> mat4_t
 {
@@ -485,6 +546,8 @@ auto mat4_t<T>::difference(T scalar) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::subtract(const mat4_t &other) -> mat4_t &
 {
@@ -507,6 +570,8 @@ auto mat4_t<T>::subtract(const mat4_t &other) -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::subtract(T scalar) -> mat4_t &
 {
@@ -528,6 +593,8 @@ auto mat4_t<T>::subtract(T scalar) -> mat4_t &
   m33 -= scalar;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::scaled(T scalar) const -> mat4_t
@@ -552,6 +619,8 @@ auto mat4_t<T>::scaled(T scalar) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::scale(T scalar) -> mat4_t &
 {
@@ -573,6 +642,8 @@ auto mat4_t<T>::scale(T scalar) -> mat4_t &
   m33 *= scalar;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::scaled(const mat4_t &other) const -> mat4_t
@@ -597,6 +668,8 @@ auto mat4_t<T>::scaled(const mat4_t &other) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::scale(const mat4_t &other) -> mat4_t &
 {
@@ -618,6 +691,8 @@ auto mat4_t<T>::scale(const mat4_t &other) -> mat4_t &
   m33 *= other.m33;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::scaled(vec3 vec) const -> mat4_t
@@ -642,6 +717,8 @@ auto mat4_t<T>::scaled(vec3 vec) const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::scale(vec3 vec) -> mat4_t &
 {
@@ -657,6 +734,8 @@ auto mat4_t<T>::scale(vec3 vec) -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::cofactor(int r0, int r1, int r2, int c0, int c1, int c2) const -> T
 {
@@ -671,6 +750,8 @@ auto mat4_t<T>::cofactor(int r0, int r1, int r2, int c0, int c1, int c2) const -
   #undef S_CF_ADDR_
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::determinant() const -> T
 {
@@ -679,6 +760,8 @@ auto mat4_t<T>::determinant() const -> T
           (m02 * cofactor(1, 2, 3, 0, 1, 3)) -
           (m03 * cofactor(1, 2, 3, 0, 1, 2)));
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::inverse_general(mat4_t &out) const -> bool
@@ -691,6 +774,8 @@ auto mat4_t<T>::inverse_general(mat4_t &out) const -> bool
   out = adjoint().scale(T(1) / det);
   return true;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::product(const mat4_t &other) const -> mat4_t
@@ -715,6 +800,8 @@ auto mat4_t<T>::product(const mat4_t &other) const -> mat4_t
   return temp;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::multiply(const mat4_t &other) -> mat4_t &
 {
@@ -737,6 +824,8 @@ auto mat4_t<T>::multiply(const mat4_t &other) -> mat4_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::multiply(vec4 vec) const -> vec4
 {
@@ -748,6 +837,8 @@ auto mat4_t<T>::multiply(vec4 vec) const -> vec4
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::multiply(vec3 vec) const -> vec3
 {
@@ -758,6 +849,8 @@ auto mat4_t<T>::multiply(vec3 vec) const -> vec3
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::multiply(vec2 vec) const -> vec2
 {
@@ -766,6 +859,8 @@ auto mat4_t<T>::multiply(vec2 vec) const -> vec2
     vec.dot_product(colvec3(1)) + m13
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::rotate(vec4 vec) const -> vec4
@@ -777,6 +872,8 @@ auto mat4_t<T>::rotate(vec4 vec) const -> vec4
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::inverse_rotate(vec4 vec) const -> vec4
 {
@@ -786,6 +883,8 @@ auto mat4_t<T>::inverse_rotate(vec4 vec) const -> vec4
     vec.dot_product(rowvec4(2))
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::rotate(vec3 vec) const -> vec3
@@ -797,6 +896,8 @@ auto mat4_t<T>::rotate(vec3 vec) const -> vec3
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::inverse_rotate(vec3 vec) const -> vec3
 {
@@ -807,6 +908,8 @@ auto mat4_t<T>::inverse_rotate(vec3 vec) const -> vec3
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::rotate(vec2 vec) const -> vec2
 {
@@ -815,6 +918,8 @@ auto mat4_t<T>::rotate(vec2 vec) const -> vec2
     vec.dot_product(colvec3(1))
   };
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::inverse_rotate(vec2 vec) const -> vec2
@@ -825,6 +930,8 @@ auto mat4_t<T>::inverse_rotate(vec2 vec) const -> vec2
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::translate(vec3 translation) -> mat4_t &
 {
@@ -834,6 +941,8 @@ auto mat4_t<T>::translate(vec3 translation) -> mat4_t &
   m33 += translation.dot_product(colvec3(3));
   return *this;
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::inverse_affine(mat4_t & out) const -> bool
@@ -876,6 +985,8 @@ auto mat4_t<T>::inverse_affine(mat4_t & out) const -> bool
   return true;
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::adjoint() const -> mat4_t
 {
@@ -902,6 +1013,8 @@ auto mat4_t<T>::adjoint() const -> mat4_t
   };
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::operator[] (int index) -> T&
 {
@@ -910,6 +1023,8 @@ auto mat4_t<T>::operator[] (int index) -> T&
     s_throw(std::out_of_range, "attempt to access out of range element");
   return (&m00)[index];
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::operator[] (int index) const -> T
@@ -920,6 +1035,8 @@ auto mat4_t<T>::operator[] (int index) const -> T
   return (&m00)[index];
 }
 
+
+
 template <typename T>
 mat4_t<T>::operator T* ()
 {
@@ -927,12 +1044,16 @@ mat4_t<T>::operator T* ()
   return &m00;
 }
 
+
+
 template <typename T>
 mat4_t<T>::operator const T* () const
 {
   static_assert(std::is_pod<mat4_t>::value, "mat4 must be POD to cast to T pointer");
   return &m00;
 }
+
+
 
 template <typename T>
 mat4_t<T>::operator mat3_t<T> () const
@@ -944,11 +1065,15 @@ mat4_t<T>::operator mat3_t<T> () const
   };
 }
 
+
+
 template <typename T>
 mat4_t<T>::operator quat_t<T> () const
 {
   return quat_t<T>::from_mat4(*this);
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::operator *= (const mat4_t &other) -> mat4_t &
@@ -956,11 +1081,15 @@ auto mat4_t<T>::operator *= (const mat4_t &other) -> mat4_t &
   return multiply(other);
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::operator *= (T scalar) -> mat4_t &
 {
   return scale(scalar);
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::operator += (const mat4_t &other) -> mat4_t &
@@ -968,11 +1097,15 @@ auto mat4_t<T>::operator += (const mat4_t &other) -> mat4_t &
   return add(other);
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::operator += (T scalar) -> mat4_t &
 {
   return add(scalar);
 }
+
+
 
 template <typename T>
 auto mat4_t<T>::operator -= (const mat4_t &other) -> mat4_t &
@@ -980,11 +1113,15 @@ auto mat4_t<T>::operator -= (const mat4_t &other) -> mat4_t &
   return subtract(other);
 }
 
+
+
 template <typename T>
 auto mat4_t<T>::operator -= (T scalar) -> mat4_t &
 {
   return subtract(scalar);
 }
+
+
 
 template <typename T>
 std::ostream &operator << (std::ostream &out, const mat4_t<T> &in)
@@ -997,6 +1134,8 @@ std::ostream &operator << (std::ostream &out, const mat4_t<T> &in)
   }
   return out << "}";
 }
+
+
 
 template <typename T, typename Q>
 mat4_t<T> operator * (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
@@ -1025,11 +1164,15 @@ vec2_t<T> operator * (const mat4_t<T> &rhs, vec2_t<Q> lhs)
   return rhs.multiply(lhs);
 }
 
+
+
 template <typename T, typename Q>
 mat4_t<T> operator * (const mat4_t<T> &rhs, Q lhs)
 {
   return rhs.scaled(lhs);
 }
+
+
 
 template <typename T, typename Q>
 mat4_t<T> operator + (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
@@ -1037,11 +1180,15 @@ mat4_t<T> operator + (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
   return rhs.sum(lhs);
 }
 
+
+
 template <typename T, typename Q>
 mat4_t<T> operator + (const mat4_t<T> &rhs, Q lhs)
 {
   return rhs.sum(lhs);
 }
+
+
 
 template <typename T, typename Q>
 mat4_t<T> operator - (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
@@ -1049,11 +1196,15 @@ mat4_t<T> operator - (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
   return rhs.difference(lhs);
 }
 
+
+
 template <typename T, typename Q>
 mat4_t<T> operator - (const mat4_t<T> &rhs, Q lhs)
 {
   return rhs.difference(lhs);
 }
+
+
 
 template <typename T, typename Q>
 bool operator == (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
@@ -1081,11 +1232,16 @@ bool operator == (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
   is_zero(lhs.m33 - rhs.m33);
 }
 
+
+
 template <typename T, typename Q>
 bool operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
 {
   return !(rhs == lhs);
 }
+
+
+} // namespace snow
 
 
 #endif /* end __SNOW_COMMON__MAT4_TCC__ include guard */

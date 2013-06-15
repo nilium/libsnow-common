@@ -3,11 +3,22 @@
 #ifndef __SNOW_COMMON__MAT4_THH__
 #define __SNOW_COMMON__MAT4_THH__
 
-/*==============================================================================
 
-  4x4 Square Matrix
+namespace snow {
 
-==============================================================================*/
+
+/** @cond IGNORE */
+template <typename t> struct vec2_t;
+template <typename t> struct vec3_t;
+template <typename t> struct vec4_t;
+template <typename t> struct quat_t;
+template <typename t> struct mat3_t;
+/** @endcond */
+
+
+/** @addtogroup Math3D */
+///@{
+
 
 template <typename T = float>
 struct S_EXPORT alignas(T) mat4_t
@@ -142,6 +153,16 @@ template <typename T, typename Q>
 bool          operator == (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
 template <typename T, typename Q>
 bool          operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs);
+
+
+typedef mat4_t<float> mat4f_t;
+typedef mat4_t<double> mat4d_t;
+
+
+///@}
+
+
+} // namespace snow
 
 #include "mat4.cc"
 

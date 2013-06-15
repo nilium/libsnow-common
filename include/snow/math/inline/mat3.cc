@@ -3,6 +3,10 @@
 #ifndef __SNOW_COMMON__MAT3_TCC__
 #define __SNOW_COMMON__MAT3_TCC__
 
+
+namespace snow {
+
+
 template <typename T>
 const mat3_t<T> mat3_t<T>::identity = {
   {1, 0, 0},
@@ -10,12 +14,15 @@ const mat3_t<T> mat3_t<T>::identity = {
   {0, 0, 1}
 };
 
+
 template <typename T>
 const mat3_t<T> mat3_t<T>::zero = {
   {0, 0, 0},
   {0, 0, 0},
   {0, 0, 0}
 };
+
+
 
 template <typename T>
 auto mat3_t<T>::make(T rx, T ry, T rz,
@@ -29,11 +36,15 @@ auto mat3_t<T>::make(T rx, T ry, T rz,
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::make(vec3 x, vec3 y, vec3 z) -> mat3_t
 {
   return {x, y, z};
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::scaling(vec3 off) -> mat3_t
@@ -44,6 +55,8 @@ auto mat3_t<T>::scaling(vec3 off) -> mat3_t
     {0, 0, off.z}
   };
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::rotation(T angle, vec3 axis) -> mat3_t
@@ -65,6 +78,8 @@ auto mat3_t<T>::rotation(T angle, vec3 axis) -> mat3_t
     {xz + ys,  yz - xs,  ((axis.z * axis.z) * ic) + c},
   };
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::from_quat(quat in) -> mat3_t
@@ -95,6 +110,8 @@ auto mat3_t<T>::from_quat(quat in) -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::transpose() -> mat3_t &
 {
@@ -107,6 +124,8 @@ auto mat3_t<T>::transpose() -> mat3_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::transposed() const -> mat3_t
 {
@@ -116,6 +135,8 @@ auto mat3_t<T>::transposed() const -> mat3_t
     {r.z, s.z, t.z}
   };
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::colvec3(int index) const -> vec3
@@ -127,6 +148,8 @@ auto mat3_t<T>::colvec3(int index) const -> vec3
     default: s_throw(std::out_of_range, "attempt to access out of range column");
   }
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::set_colvec3(int index, vec3 col) -> mat3_t &
@@ -140,11 +163,15 @@ auto mat3_t<T>::set_colvec3(int index, vec3 col) -> mat3_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::negated() const -> mat3_t
 {
   return { -r, -s, -t };
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::negate() -> mat3_t &
@@ -154,6 +181,8 @@ auto mat3_t<T>::negate() -> mat3_t &
   t = -t;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::sum(const mat3_t &other) const -> mat3_t
@@ -165,6 +194,8 @@ auto mat3_t<T>::sum(const mat3_t &other) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::sum(T scalar) const -> mat3_t
 {
@@ -175,6 +206,8 @@ auto mat3_t<T>::sum(T scalar) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::add(const mat3_t &other) -> mat3_t &
 {
@@ -183,6 +216,8 @@ auto mat3_t<T>::add(const mat3_t &other) -> mat3_t &
   t += other.t;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::add(T scalar) -> mat3_t &
@@ -210,6 +245,8 @@ auto mat3_t<T>::difference(const mat3_t &other) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::difference(T scalar) const -> mat3_t
 {
@@ -220,6 +257,8 @@ auto mat3_t<T>::difference(T scalar) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::subtract(const mat3_t &other) -> mat3_t &
 {
@@ -228,6 +267,8 @@ auto mat3_t<T>::subtract(const mat3_t &other) -> mat3_t &
   t -= other.t;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::subtract(T scalar) -> mat3_t &
@@ -244,6 +285,8 @@ auto mat3_t<T>::subtract(T scalar) -> mat3_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::scaled(T scalar) const -> mat3_t
 {
@@ -254,6 +297,8 @@ auto mat3_t<T>::scaled(T scalar) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::scale(T scalar) -> mat3_t &
 {
@@ -262,6 +307,8 @@ auto mat3_t<T>::scale(T scalar) -> mat3_t &
   t.scale(scalar);
   return *this;
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::scaled(const mat3_t &other) const -> mat3_t
@@ -273,6 +320,8 @@ auto mat3_t<T>::scaled(const mat3_t &other) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::scale(const mat3_t &other) -> mat3_t &
 {
@@ -281,6 +330,8 @@ auto mat3_t<T>::scale(const mat3_t &other) -> mat3_t &
   t *= other.t;
   return *this;
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::scaled(vec3 vec) const -> mat3_t
@@ -292,6 +343,8 @@ auto mat3_t<T>::scaled(vec3 vec) const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::scale(vec3 vec) -> mat3_t &
 {
@@ -301,11 +354,15 @@ auto mat3_t<T>::scale(vec3 vec) -> mat3_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::inverse() const -> mat3_t
 {
   return cofactor().transpose().invert();
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::invert() -> mat3_t &
@@ -316,11 +373,15 @@ auto mat3_t<T>::invert() -> mat3_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::adjoint() const -> mat3_t
 {
   return cofactor().transpose();
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::cofactor() const -> mat3_t
@@ -340,6 +401,8 @@ auto mat3_t<T>::cofactor() const -> mat3_t
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::determinant() const -> T
 {
@@ -347,6 +410,8 @@ auto mat3_t<T>::determinant() const -> T
          r.y * (s.z * t.x - s.x * t.z) +
          r.z * (s.x * t.y - s.y * t.x);
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::orthogonal() const -> mat3_t
@@ -356,6 +421,8 @@ auto mat3_t<T>::orthogonal() const -> mat3_t
   return temp;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::orthogonalize() -> mat3_t &
 {
@@ -363,6 +430,8 @@ auto mat3_t<T>::orthogonalize() -> mat3_t &
   s = t.cross_product(r);
   return *this;
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::product(const mat3_t &other) const -> mat3_t
@@ -380,6 +449,8 @@ auto mat3_t<T>::product(const mat3_t &other) const -> mat3_t
   return temp;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::multiply(const mat3_t &other) -> mat3_t &
 {
@@ -395,6 +466,8 @@ auto mat3_t<T>::multiply(const mat3_t &other) -> mat3_t &
   return *this;
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::rotate(vec3 vec) const -> vec3
 {
@@ -404,6 +477,8 @@ auto mat3_t<T>::rotate(vec3 vec) const -> vec3
     vec.dot_product(colvec3(2))
   };
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::inverse_rotate(vec3 vec) const -> vec3
@@ -415,6 +490,8 @@ auto mat3_t<T>::inverse_rotate(vec3 vec) const -> vec3
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::rotate(vec2 vec) const -> vec2
 {
@@ -423,6 +500,8 @@ auto mat3_t<T>::rotate(vec2 vec) const -> vec2
     vec.dot_product(colvec3(1))
   };
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::inverse_rotate(vec2 vec) const -> vec2
@@ -433,6 +512,8 @@ auto mat3_t<T>::inverse_rotate(vec2 vec) const -> vec2
   };
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::operator[] (int index) -> T&
 {
@@ -441,6 +522,8 @@ auto mat3_t<T>::operator[] (int index) -> T&
     s_throw(std::out_of_range, "attempt to access out of range element");
   return (&r.x)[index];
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::operator[] (int index) const -> T
@@ -451,6 +534,8 @@ auto mat3_t<T>::operator[] (int index) const -> T
   return (&r.x)[index];
 }
 
+
+
 template <typename T>
 mat3_t<T>::operator T* ()
 {
@@ -458,12 +543,16 @@ mat3_t<T>::operator T* ()
   return &r.x;
 }
 
+
+
 template <typename T>
 mat3_t<T>::operator const T* () const
 {
   static_assert(std::is_pod<mat3_t>::value, "mat4 must be POD to cast to T pointer");
   return &r.x;
 }
+
+
 
 template <typename T>
 mat3_t<T>::operator mat4_t<T> () const
@@ -476,11 +565,15 @@ mat3_t<T>::operator mat4_t<T> () const
   };
 }
 
+
+
 template <typename T>
 mat3_t<T>::operator quat_t<T> () const
 {
   return quat_t<T>::from_mat3(*this);
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::operator *= (const mat3_t &other) -> mat3_t &
@@ -488,11 +581,15 @@ auto mat3_t<T>::operator *= (const mat3_t &other) -> mat3_t &
   return multiply(other);
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::operator *= (T scalar) -> mat3_t &
 {
   return scale(scalar);
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::operator += (const mat3_t &other) -> mat3_t &
@@ -500,11 +597,15 @@ auto mat3_t<T>::operator += (const mat3_t &other) -> mat3_t &
   return add(other);
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::operator += (T scalar) -> mat3_t &
 {
   return add(scalar);
 }
+
+
 
 template <typename T>
 auto mat3_t<T>::operator -= (const mat3_t &other) -> mat3_t &
@@ -512,11 +613,15 @@ auto mat3_t<T>::operator -= (const mat3_t &other) -> mat3_t &
   return subtract(other);
 }
 
+
+
 template <typename T>
 auto mat3_t<T>::operator -= (T scalar) -> mat3_t &
 {
   return subtract(scalar);
 }
+
+
 
 template <typename T>
 std::ostream &operator << (std::ostream &out, const mat3_t<T> &in)
@@ -530,11 +635,15 @@ std::ostream &operator << (std::ostream &out, const mat3_t<T> &in)
   return out << "}";
 }
 
+
+
 template <typename T, typename Q>
 mat3_t<T> operator * (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 {
   return rhs.product(lhs);
 }
+
+
 
 template <typename T, typename Q>
 vec3_t<T> operator * (const mat3_t<T> &rhs, vec3_t<Q> lhs)
@@ -542,11 +651,15 @@ vec3_t<T> operator * (const mat3_t<T> &rhs, vec3_t<Q> lhs)
   return rhs.rotate(lhs);
 }
 
+
+
 template <typename T, typename Q>
 vec2_t<T> operator * (const mat3_t<T> &rhs, vec2_t<Q> lhs)
 {
   return rhs.rotate(lhs);
 }
+
+
 
 template <typename T, typename Q>
 mat3_t<T> operator * (const mat3_t<T> &rhs, Q lhs)
@@ -554,11 +667,15 @@ mat3_t<T> operator * (const mat3_t<T> &rhs, Q lhs)
   return rhs.scaled(lhs);
 }
 
+
+
 template <typename T, typename Q>
 mat3_t<T> operator + (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 {
   return rhs.sum(lhs);
 }
+
+
 
 template <typename T, typename Q>
 mat3_t<T> operator + (const mat3_t<T> &rhs, Q lhs)
@@ -566,11 +683,15 @@ mat3_t<T> operator + (const mat3_t<T> &rhs, Q lhs)
   return rhs.sum(lhs);
 }
 
+
+
 template <typename T, typename Q>
 mat3_t<T> operator - (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 {
   return rhs.difference(lhs);
 }
+
+
 
 template <typename T, typename Q>
 mat3_t<T> operator - (const mat3_t<T> &rhs, Q lhs)
@@ -578,17 +699,24 @@ mat3_t<T> operator - (const mat3_t<T> &rhs, Q lhs)
   return rhs.difference(lhs);
 }
 
+
+
 template <typename T, typename Q>
 bool operator == (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 {
   return lhs.r == rhs.r && lhs.s == rhs.s && lhs.t == rhs.t;
 }
 
+
+
 template <typename T, typename Q>
 bool operator != (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 {
   return !(rhs == lhs);
 }
+
+
+} // namespace snow
 
 
 #endif /* end __SNOW_COMMON__MAT3_TCC__ include guard */

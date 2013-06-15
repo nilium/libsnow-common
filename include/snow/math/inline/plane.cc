@@ -3,6 +3,10 @@
 #ifndef __SNOW_COMMON__PLANE_TCC__
 #define __SNOW_COMMON__PLANE_TCC__
 
+
+namespace snow {
+
+
 template <typename T>
 auto plane_t<T>::make(vec3_t normal, float d) -> plane_t
 {
@@ -136,5 +140,8 @@ bool operator != (plane_t<T> lhs, plane_t<T> rhs)
 {
   return !(lhs == rhs);
 }
+
+
+} // namespace snow
 
 #endif /* end __SNOW_COMMON__PLANE_TCC__ include guard */

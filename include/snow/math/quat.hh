@@ -155,23 +155,7 @@ quat_t<value_type>
 }
 */
 
-namespace snow {
-
-
-template <typename T> struct vec3_t;
-template <typename T> struct mat4_t;
-template <typename T> struct mat3_t;
-
-
 #include "inline/quat.hh"
-
-
-using quatf_t = quat_t<float>;
-using quatd_t = quat_t<double>;
-
-
-} // namespace snow
-
 
 #include "vec3.hh"
 #include "mat4.hh"

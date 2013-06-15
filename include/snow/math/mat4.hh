@@ -197,21 +197,7 @@ mat4_t<value_type>
 }
 */
 
-namespace snow
-{
-
-template <typename t> struct vec2_t;
-template <typename t> struct vec3_t;
-template <typename t> struct vec4_t;
-template <typename t> struct quat_t;
-template <typename t> struct mat3_t;
-
 #include "inline/mat4.hh"
-
-typedef mat4_t<float> mat4f_t;
-typedef mat4_t<double> mat4d_t;
-
-}
 
 #include "vec2.hh"
 #include "vec3.hh"

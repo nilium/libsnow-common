@@ -3,14 +3,20 @@
 #ifndef __SNOW_COMMON__MAT3_THH__
 #define __SNOW_COMMON__MAT3_THH__
 
-/*==============================================================================
 
-  3x3 Square Matrix
+namespace snow {
 
-==============================================================================*/
+
+/** @cond IGNORE */
+template <typename t> struct vec2_t;
+template <typename t> struct vec3_t;
+template <typename t> struct quat_t;
+template <typename t> struct mat4_t;
+/** @endcond */
+
 
 template <typename T = float>
-struct S_EXPORT alignas(4) mat3_t
+struct S_EXPORT alignas(T) mat3_t
 {
 
   typedef T value_type;
@@ -125,6 +131,13 @@ template <typename T, typename Q>
 bool          operator == (const mat3_t<T> &rhs, const mat3_t<Q> &lhs);
 template <typename T, typename Q>
 bool          operator != (const mat3_t<T> &rhs, const mat3_t<Q> &lhs);
+
+
+typedef mat3_t<float> mat3f_t;
+typedef mat3_t<double> mat3d_t;
+
+
+} // namespace snow
 
 #include "mat3.cc"
 

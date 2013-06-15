@@ -3,29 +3,42 @@
 #ifndef __SNOW_COMMON__VEC2_TCC__
 #define __SNOW_COMMON__VEC2_TCC__
 
+
+namespace snow {
+
+
 template <typename T>
 const vec2_t<T> vec2_t<T>::pos_X = { 1, 0 };
+
 
 template <typename T>
 const vec2_t<T> vec2_t<T>::pos_Y = { 0, 1 };
 
+
 template <typename T>
 const vec2_t<T> vec2_t<T>::neg_X = { -1, 0 };
+
 
 template <typename T>
 const vec2_t<T> vec2_t<T>::neg_Y = { 0, -1 };
 
+
 template <typename T>
 const vec2_t<T> vec2_t<T>::zero = { 0, 0 };
 
+
 template <typename T>
 const vec2_t<T> vec2_t<T>::one = { 1, 1 };
+
+
 
 template <typename T>
 auto vec2_t<T>::make(value_type x, value_type y) -> vec2_t
 {
   return { x, y };
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::normalize() -> vec2_t&
@@ -41,6 +54,8 @@ auto vec2_t<T>::normalize() -> vec2_t&
   return *this;
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::normalized() const -> vec2_t
 {
@@ -55,6 +70,8 @@ auto vec2_t<T>::normalized() const -> vec2_t
   };
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::magnitude() const -> value_type
 {
@@ -64,11 +81,15 @@ auto vec2_t<T>::magnitude() const -> value_type
          : 0;
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::length() const -> value_type
 {
   return x * x + y * y;
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::difference(vec2_t other) const -> vec2_t
@@ -79,6 +100,8 @@ auto vec2_t<T>::difference(vec2_t other) const -> vec2_t
   };
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::subtract(vec2_t other) -> vec2_t&
 {
@@ -86,6 +109,8 @@ auto vec2_t<T>::subtract(vec2_t other) -> vec2_t&
   y -= other.y;
   return *this;
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::sum(vec2_t other) const -> vec2_t
@@ -96,6 +121,8 @@ auto vec2_t<T>::sum(vec2_t other) const -> vec2_t
   };
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::add(vec2_t other) -> vec2_t&
 {
@@ -103,6 +130,8 @@ auto vec2_t<T>::add(vec2_t other) -> vec2_t&
   y += other.y;
   return *this;
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::scaled(value_type scalar) const -> vec2_t
@@ -113,6 +142,8 @@ auto vec2_t<T>::scaled(value_type scalar) const -> vec2_t
   };
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::scaled(vec2_t other) const -> vec2_t
 {
@@ -122,6 +153,8 @@ auto vec2_t<T>::scaled(vec2_t other) const -> vec2_t
   };
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::scale(value_type scalar) -> vec2_t&
 {
@@ -129,6 +162,8 @@ auto vec2_t<T>::scale(value_type scalar) -> vec2_t&
   y *= scalar;
   return *this;
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::scale(vec2_t other) -> vec2_t&
@@ -138,6 +173,8 @@ auto vec2_t<T>::scale(vec2_t other) -> vec2_t&
   return *this;
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::negated() const -> vec2_t
 {
@@ -145,6 +182,8 @@ auto vec2_t<T>::negated() const -> vec2_t
     -x, -y
   };
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::negate() -> vec2_t&
@@ -154,6 +193,8 @@ auto vec2_t<T>::negate() -> vec2_t&
   return *this;
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::inverse() const -> vec2_t
 {
@@ -162,6 +203,8 @@ auto vec2_t<T>::inverse() const -> vec2_t
     (y != 0 ? value_type(1) / y : y)
   };
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::invert() -> vec2_t&
@@ -175,11 +218,15 @@ auto vec2_t<T>::invert() -> vec2_t&
   return *this;
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::dot_product(vec2_t other) const -> value_type
 {
   return x * other.x + y * other.y;
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::rotate_elems() -> vec2_t &
@@ -187,6 +234,8 @@ auto vec2_t<T>::rotate_elems() -> vec2_t &
   std::swap(x, y);
   return *this;
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::rotated_elems() const -> vec2_t
@@ -196,11 +245,15 @@ auto vec2_t<T>::rotated_elems() const -> vec2_t
   };
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::operator += (vec2_t other) -> vec2_t&
 {
   return add(other);
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::operator -= (vec2_t other) -> vec2_t&
@@ -208,11 +261,15 @@ auto vec2_t<T>::operator -= (vec2_t other) -> vec2_t&
   return subtract(other);
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::operator *= (value_type scalar) -> vec2_t&
 {
   return scale(scalar);
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::operator *= (vec2_t other) -> vec2_t&
@@ -220,11 +277,15 @@ auto vec2_t<T>::operator *= (vec2_t other) -> vec2_t&
   return scale(other);
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::operator /= (value_type scalar) -> vec2_t&
 {
   return scale(value_type(1) / scalar);
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::operator /= (vec2_t other) -> vec2_t&
@@ -232,17 +293,23 @@ auto vec2_t<T>::operator /= (vec2_t other) -> vec2_t&
   return scale(other.inverse());
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::operator - () const -> vec2_t
 {
   return negated();
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::operator ~ () const -> vec2_t
 {
   return inverse();
 }
+
+
 
 template <typename T>
 auto vec2_t<T>::operator[] (int index) -> value_type&
@@ -253,6 +320,8 @@ auto vec2_t<T>::operator[] (int index) -> value_type&
   return (&x)[index];
 }
 
+
+
 template <typename T>
 auto vec2_t<T>::operator[] (int index) const -> value_type
 {
@@ -262,6 +331,8 @@ auto vec2_t<T>::operator[] (int index) const -> value_type
   return (&x)[index];
 }
 
+
+
 template <typename T>
 vec2_t<T>::operator value_type* ()
 {
@@ -269,12 +340,16 @@ vec2_t<T>::operator value_type* ()
   return &x;
 }
 
+
+
 template <typename T>
 vec2_t<T>::operator const value_type* () const
 {
   static_assert(std::is_pod<vec2_t>::value, "vec2 must be POD to cast to value_type pointer");
   return &x;
 }
+
+
 
 template <typename T>
 template <typename Q>
@@ -286,6 +361,8 @@ vec2_t<T>::operator vec2_t<Q> () const
   };
 }
 
+
+
 template <typename T>
 template <typename Q>
 vec2_t<T>::operator vec3_t<Q> () const
@@ -296,6 +373,8 @@ vec2_t<T>::operator vec3_t<Q> () const
     Q(0)
   };
 }
+
+
 
 template <typename T>
 template <typename Q>
@@ -309,11 +388,15 @@ vec2_t<T>::operator vec4_t<Q> () const
   };
 }
 
+
+
 template <typename T>
 std::ostream &operator << (std::ostream &out, vec2_t<T> in)
 {
   return out << "{x:" << in.x << ", y:" << in.y << "}";
 }
+
+
 
 template <typename T, typename Q>
 vec2_t<T> operator - (vec2_t<T> lhs, vec2_t<Q> rhs)
@@ -321,11 +404,15 @@ vec2_t<T> operator - (vec2_t<T> lhs, vec2_t<Q> rhs)
   return lhs.difference(rhs);
 }
 
+
+
 template <typename T, typename Q>
 vec2_t<T> operator + (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.sum(rhs);
 }
+
+
 
 template <typename T, typename Q>
 vec2_t<T> operator * (vec2_t<T> lhs, vec2_t<Q> rhs)
@@ -333,11 +420,15 @@ vec2_t<T> operator * (vec2_t<T> lhs, vec2_t<Q> rhs)
   return lhs.scaled(rhs);
 }
 
+
+
 template <typename T, typename Q>
 vec2_t<T> operator * (vec2_t<T> lhs, Q rhs)
 {
   return lhs.scaled(static_cast<T>(rhs));
 }
+
+
 
 template <typename T, typename Q>
 vec2_t<T> operator / (vec2_t<T> lhs, vec2_t<Q> rhs)
@@ -345,17 +436,23 @@ vec2_t<T> operator / (vec2_t<T> lhs, vec2_t<Q> rhs)
   return lhs.scaled(rhs.inverse());
 }
 
+
+
 template <typename T, typename Q>
 vec2_t<T> operator / (vec2_t<T> lhs, Q rhs)
 {
   return lhs.scaled(T(1) / static_cast<T>(rhs));
 }
 
+
+
 template <typename T, typename Q>
 T operator % (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return lhs.dot_product(rhs);
 }
+
+
 
 template <typename T, typename Q>
 bool operator == (vec2_t<T> lhs, vec2_t<Q> rhs)
@@ -365,10 +462,16 @@ bool operator == (vec2_t<T> lhs, vec2_t<Q> rhs)
     is_zero(lhs.y - rhs.y);
 }
 
+
+
 template <typename T, typename Q>
 bool operator != (vec2_t<T> lhs, vec2_t<Q> rhs)
 {
   return !(lhs == rhs);
 }
+
+
+} // namespace snow
+
 
 #endif /* end __SNOW_COMMON__VEC2_TCC__ include guard */

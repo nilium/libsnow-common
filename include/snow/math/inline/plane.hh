@@ -3,6 +3,20 @@
 #ifndef __SNOW_COMMON__PLANE_THH__
 #define __SNOW_COMMON__PLANE_THH__
 
+
+namespace snow {
+
+
+/** @cond IGNORE */
+template <typename T> struct vec3_t;
+template <typename T> struct line_t;
+/** @endcond */
+
+
+/** @addtogroup Math3D */
+///@{
+
+
 enum plane_side_t : int
 {
   PLANE_BACK=-1,
@@ -41,6 +55,16 @@ bool operator != (plane_t<T> lhs, plane_t<T> rhs);
 
 template <typename T>
 bool operator == (plane_t<T> lhs, plane_t<T> rhs);
+
+
+using planef_t = plane_t<float>;
+using planed_t = plane_t<double>;
+
+
+///@}
+
+
+} // namespace snow
 
 #include "plane.cc"
 
