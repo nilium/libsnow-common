@@ -197,6 +197,11 @@ newoption {
 }
 
 newoption {
+  trigger = "universal",
+  description = "Builds for x86_64 and i386 if enabled. Otherwise builds for native architecture. [OS X only]"
+}
+
+newoption {
   trigger = "no-exceptions",
   description = "Disables exceptions in snow-common -- replaces throws with exit(1)"
 }
@@ -338,6 +343,10 @@ configuration "no-exceptions"
 flags { "NoExceptions" }
 
 -- OS X specific options
+configuration { "macosx", "universal" }
+buildoptions { "-arch x86_64", "-arch i386" }
+linkoptions { "-arch x86_64", "-arch i386" }
+
 configuration "macosx"
 buildoptions { "-stdlib=libc++" }
 links { "c++" }
