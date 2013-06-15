@@ -16,3 +16,4 @@ Makefile
 .DS_Store
 snow-common.pc
 include/snow/build-config.hh
+docs/
