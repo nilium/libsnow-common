@@ -805,7 +805,10 @@ auto mat4_t<T>::product(const mat4_t &other) const -> mat4_t
 template <typename T>
 auto mat4_t<T>::multiply(const mat4_t &other) -> mat4_t &
 {
+
   T *m = &m00;
+
+  transpose();
   const vec4 rowvecs[4] = {
     other.rowvec4(0),
     other.rowvec4(1),
@@ -814,14 +817,15 @@ auto mat4_t<T>::multiply(const mat4_t &other) -> mat4_t &
   };
 
   for (int cindex = 0; cindex < 4; ++cindex) {
-    const vec4 column = colvec4(cindex);
-    m[cindex     ] = column.dot_product(rowvecs[0]);
-    m[cindex + 4 ] = column.dot_product(rowvecs[1]);
-    m[cindex + 8 ] = column.dot_product(rowvecs[2]);
-    m[cindex + 12] = column.dot_product(rowvecs[3]);
+    const int elem = cindex * 4;
+    const vec4 column = rowvec4(cindex);
+    m[elem]     = column.dot_product(rowvecs[0]);
+    m[elem + 1] = column.dot_product(rowvecs[1]);
+    m[elem + 2] = column.dot_product(rowvecs[2]);
+    m[elem + 3] = column.dot_product(rowvecs[3]);
   }
 
-  return *this;
+  return transpose();
 }
 
 
