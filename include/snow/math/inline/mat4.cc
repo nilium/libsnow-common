@@ -132,18 +132,15 @@ auto mat4_t<T>::orthographic(T left, T right,
 template <typename T>
 auto mat4_t<T>::perspective(T fovY, T aspect, T near, T far) -> mat4_t
 {
-  const float r = static_cast<T>(std::tan(fovY * 0.5 * S_DEG2RAD));
+  const float r = T(1.0) / static_cast<T>(std::tan(fovY * 0.5 * S_DEG2RAD));
   const float left = -r * aspect;
-  const float right = r * aspect;
-  const float bottom = -r;
-  const float top = r;
   const float twoNear = 2 * near;
   const float zdelta = T(1) / (near - far);
 
   return {
-    twoNear * (right - left), 0, 0, 0,
-    0, twoNear / (top - bottom), 0, 0,
-    0, 0, (far + near) * zdelta, -1,
+    r / aspect, 0, 0, 0,
+    0, r, 0, 0,
+    0, 0, (far + near) * zdelta, T(-1.0),
     0, 0, (twoNear * far) * zdelta, 0
   };
 }
