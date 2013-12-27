@@ -529,7 +529,9 @@ struct none_t final {
 };
 
 
+
 constexpr none_t none = none_t();
+
 
 
 inline std::ostream &operator << (std::ostream &out, const none_t &non)
