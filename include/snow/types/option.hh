@@ -687,18 +687,6 @@ public:
 
 
 
-  template <typename U, typename F>
-  auto map(F &f) const -> option_t<decltype(F(get()))>
-  {
-    if (is_defined()) {
-      return some(f(nullptr));
-    } else {
-      return option_t<U>();
-    }
-  }
-
-
-
   template <typename F>
   auto map(F &f) const -> option_t<decltype(f(nullptr))>;
 
