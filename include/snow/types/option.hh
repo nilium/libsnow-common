@@ -120,6 +120,11 @@ public:
       copying or moving an existing defined (or undefined) option). Passes any
       arguments received to one of the optional value type's constructors,
       assuming such a constructor exists.
+
+      The reason for make vs. just providing a forwarding ctor is that the
+      forwarding ctor could be option_t's ctor, in which case multiple
+      definitions of an option_t ctor are created. So, this keeps things
+      sort of normal.
   ============================================================================*/
   template <typename... ARGS>
   static option_t make(ARGS&&... args);
