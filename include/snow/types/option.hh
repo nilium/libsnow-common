@@ -519,6 +519,11 @@ struct none_t final {
   constexpr none_t() {}
   constexpr bool is_defined() const { return false; }
   constexpr bool is_empty() const { return true; }
+
+  template <typename T>
+  operator option_t<T> () const {
+    return option_t<T>();
+  }
 };
 
 
