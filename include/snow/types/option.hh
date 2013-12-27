@@ -516,6 +516,8 @@ std::ostream &operator << (std::ostream &out, const option_t<T> &opt)
 
 ==============================================================================*/
 struct none_t final {
+  struct value_type final {};
+
   constexpr none_t() {}
   constexpr bool is_defined() const { return false; }
   constexpr bool is_empty() const { return true; }
@@ -533,6 +535,12 @@ constexpr none_t none = none_t();
 inline std::ostream &operator << (std::ostream &out, const none_t &non)
 {
   return out << "none";
+}
+
+
+
+inline std::ostream &operator << (std::ostream &out, const none_t::value_type &) {
+  return out << "()";
 }
 
 
