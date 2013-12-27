@@ -3,13 +3,10 @@
 #ifndef __SNOW_COMMON__MATH3D_HH__
 #define __SNOW_COMMON__MATH3D_HH__
 
-/*==============================================================================
-                                   REFERENCE
-================================================================================
+/** @addtogroup Math3D 3D Math Types
+@brief A basic collection of templatized POD 3D maths structs for C++.
 
-This is a basic collection of templatized POD 3D maths structs for C++.
-
-They're not optimized for SSE or any other special cases. Essentially, they are
+They're not optimized for SSE nor any other special cases. Essentially, they are
 generic and therefore likely to work just about anywhere a C++11 compiler will
 work. So, more or less everywhere. In many instances, you'd likely be better
 served by using something like GLM, though with this code, you can effectively
@@ -19,18 +16,11 @@ them to OpenGL or something. So, there are some small benefits.
 It may also help to have POD types for serialization, though in reality this
 shouldn't be your concern with 3D maths types.
 
---------------------------------------------------------------------------------
-
-Included 3D maths types:
-  - vec3_t<T>          3-component vector
-  - vec4_t<T>          4-component vector
-  - quat_t<T>          quaternion
-  - line_t<T>          more or less a ray
-  - mat4_t<T>          4x4 square matrix
-
-All types must have a value_type of float or double. Long double may also work
-but is completely untested and may break anything that depends on the data types
-in the structures being packed.
+@note
+All types should have a value_type of float or double in order to be useful,
+with the exception of vectors which are pretty handy regardless of their type.
+Long double may also work but is completely untested and may break anything that
+depends on the data types in the structures being packed.
 */
 
 #include <snow/config.hh>
