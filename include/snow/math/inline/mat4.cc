@@ -81,6 +81,28 @@ auto mat4_t<T>::rotation(T angle, vec3 axis) -> mat4_t
   const T xs = s * axis.x;
   const T ys = s * axis.y;
   const T zs = s * axis.z;
+  const T xx = axis.x * axis.x;
+  const T yy = axis.y * axis.y;
+  const T zz = axis.z * axis.z;
+
+  return {
+    xx + c * (T(1) - xx),
+    xy * ic - zs,
+    axis.z * axis.x * ic + ys,
+    T(0),
+
+    xy * ic + zs,
+    yy + c * (T(1) - yy),
+    yz * ic - xs,
+    T(0),
+
+    xz * ic - ys,
+    yz * ic + xs,
+    zz + c * (T(1) - zz),
+    T(0),
+
+    T(0), T(0), T(0), T(1)
+  };
 
   return {
     ((axis.x * axis.x) * ic) + c,  xy + zs,  xz - ys,  0,
@@ -171,31 +193,40 @@ auto mat4_t<T>::look_at(vec3 eye, vec3 center, vec3 up) -> mat4_t
 template <typename T>
 auto mat4_t<T>::from_quat(quat in) -> mat4_t
 {
-  T tx, ty, tz, xx, xy, xz, yy, yz, zz, wx, wy, wz;
+  const T xx = in.xyz.x * in.xyz.x;
+  const T xy = in.xyz.x * in.xyz.y;
+  const T xz = in.xyz.x * in.xyz.z;
 
-  tx = 2.0 * in.xyz.x;
-  ty = 2.0 * in.xyz.y;
-  tz = 2.0 * in.xyz.z;
+  const T yy = in.xyz.y * in.xyz.y;
+  const T yz = in.xyz.z * in.xyz.z;
 
-  xx = tx * in.xyz.x;
-  xy = tx * in.xyz.y;
-  xz = tx * in.xyz.z;
+  const T zz = in.xyz.z * in.xyz.z;
 
-  yy = ty * in.xyz.y;
-  yz = tz * in.xyz.y;
-
-  zz = tz * in.w;
-
-  wx = tx * in.w;
-  wy = ty * in.w;
-  wz = tz * in.w;
+  const T wx = in.xyz.x * in.w;
+  const T wy = in.xyz.y * in.w;
+  const T wz = in.xyz.z * in.w;
 
   return {
-    T(1) - (yy + zz), xy - wz, xz + wy, 0,
-    xy + wz, T(1) - (xx + zz), yz - wx, 0,
-    xz - wy, yz + wx, T(1) - (xx + yy), 0,
-    0, 0, 0, 1
-  };
+    T(1) - T(2) * (yy + zz),
+    T(2) * (xy - wz),
+    T(2) * (xz + wy),
+    T(0),
+
+    T(2) * (xy + wz),
+    T(1) - T(2) * (xx + zz),
+    T(2) * (yz - wx),
+    T(0),
+
+    T(2) * (xz - wy),
+    T(2) * (yz + wx),
+    T(1) - T(2) * (xx + yy),
+    T(0),
+
+    T(0),
+    T(0),
+    T(0),
+    T(1)
+  }
 }
 
 

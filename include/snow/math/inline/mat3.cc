@@ -71,11 +71,26 @@ auto mat3_t<T>::rotation(T angle, vec3 axis) -> mat3_t
   const T xs = s * axis.x;
   const T ys = s * axis.y;
   const T zs = s * axis.z;
+  const T xx = axis.x * axis.x;
+  const T yy = axis.y * axis.y;
+  const T zz = axis.z * axis.z;
 
   return {
-    {((axis.x * axis.x) * ic) + c,  xy + zs,  xz - ys},
-    {xy - zs,  ((axis.y * axis.y) * ic) + c,  yz + xs},
-    {xz + ys,  yz - xs,  ((axis.z * axis.z) * ic) + c},
+    {
+      xx + c * (T(1) - xx),
+      xy * ic - zs,
+      axis.z * axis.x * ic + ys
+    },
+    {
+      xy * ic + zs,
+      yy + c * (T(1) - yy),
+      yz * ic - xs
+    },
+    {
+      xz * ic - ys,
+      yz * ic + xs,
+      zz + c * (T(1) - zz)
+    }
   };
 }
 
@@ -84,29 +99,37 @@ auto mat3_t<T>::rotation(T angle, vec3 axis) -> mat3_t
 template <typename T>
 auto mat3_t<T>::from_quat(quat in) -> mat3_t
 {
-  T tx, ty, tz, xx, xy, xz, yy, yz, zz, wx, wy, wz;
+  s_float_t xx, xy, xz, yy, yz, zz, wx, wy, wz;
 
-  tx = 2.0 * in.xyz.x;
-  ty = 2.0 * in.xyz.y;
-  tz = 2.0 * in.xyz.z;
+  const T xx = in.xyz.x * in.xyz.x;
+  const T xy = in.xyz.x * in.xyz.y;
+  const T xz = in.xyz.x * in.xyz.z;
 
-  xx = tx * in.xyz.x;
-  xy = tx * in.xyz.y;
-  xz = tx * in.xyz.z;
+  const T yy = in.xyz.y * in.xyz.y;
+  const T yz = in.xyz.z * in.xyz.z;
 
-  yy = ty * in.xyz.y;
-  yz = tz * in.xyz.y;
+  const T zz = in.xyz.z * in.xyz.z;
 
-  zz = tz * in.w;
-
-  wx = tx * in.w;
-  wy = ty * in.w;
-  wz = tz * in.w;
+  const T wx = in.xyz.x * in.w;
+  const T wy = in.xyz.y * in.w;
+  const T wz = in.xyz.z * in.w;
 
   return {
-    {T(1) - (yy + zz), xy - wz, xz + wy},
-    {xy + wz, T(1) - (xx + zz), yz - wx},
-    {xz - wy, yz + wx, T(1) - (xx + yy)},
+    {
+      out[0] = T(1) - T(2) * (yy + zz),
+      out[1] = T(2) * (xy - wz),
+      out[2] = T(2) * (xz + wy)
+    },
+    {
+      out[3] = T(2) * (xy + wz),
+      out[4] = T(1) - T(2) * (xx + zz),
+      out[5] = T(2) * (yz - wx)
+    },
+    {
+      out[6] = T(2) * (xz - wy),
+      out[7] = T(2) * (yz + wx),
+      out[8] = T(1) - T(2) * (xx + yy)
+    }
   };
 }
 
