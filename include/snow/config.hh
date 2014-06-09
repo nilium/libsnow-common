@@ -103,11 +103,29 @@
 #endif
 
 #ifndef S_EXPORT
-#define S_EXPORT __attribute__((visibility("default")))
+# if S_PLATFORM_WINDOWS && !defined(__GNUC__)
+#   ifdef S_BUILD_SHARED_LIB
+#     define S_EXPORT __declspec(dllexport)
+#   else
+#     define S_EXPORT __declspec(dllimport)
+#   endif
+# elif S_PLATFORM_WINDOWS
+#   ifdef S_BUILD_SHARED_LIB
+#     define S_EXPORT __attribute__((dllexport))
+#   else
+#     define S_EXPORT __attribute__((dllimport))
+#   endif
+# else
+#   define S_EXPORT __attribute__((visibility("default")))
+# endif
 #endif
 
 #ifndef S_HIDDEN
-#define S_HIDDEN __attribute__((visibility("hidden")))
+# if S_PLATFORM_WINDOWS && !defined(__GNUC__)
+#   define S_HIDDEN
+# else
+#   define S_HIDDEN __attribute__((visibility("hidden")))
+# endif
 #endif
 
 #include <stdexcept>
