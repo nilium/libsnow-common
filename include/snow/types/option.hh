@@ -56,11 +56,25 @@ class option_t;
 
 
 template <typename T>
-option_t<T> some(const T &val);
+struct optional_bits
+{
+  using value_type = typename std::decay<T>::type;
+  using type = option_t<value_type>;
+};
+
 
 template <typename T>
-option_t<T> some(T &&val);
+using optional = typename optional_bits<T>::type;
 
+
+template <typename T>
+optional<T> some(T const &val);
+
+template <typename T>
+optional<T> some(T &&val);
+
+template <typename T, typename... ARGS>
+optional<T> make_optional(ARGS&&... args);
 
 
 /*==============================================================================
@@ -72,7 +86,13 @@ option_t<T> some(T &&val);
 template <typename T>
 class option_t final
 {
+public:
+  // Occasionally useful if you need the value type of an option, but this is
+  // mainly here so flat_map can infer the value type of its returned option_t.
+  using bits = optional_bits<T>;
+  using value_type = typename bits::value_type;
 
+private:
   // Bit of a hack to keep the private emplace-like constructor. By passing a
   // ctor_bit_t as the constructor's first argument, this basically ensures it
   // knows which ctor to use.
@@ -88,30 +108,26 @@ class option_t final
   store_t _data;
   bool _defined;
 
-  T *typed()
+  value_type *typed()
   {
-    return (T *)&_data;
+    return reinterpret_cast<value_type *>(&_data);
   }
 
-  const T *typed() const
+  value_type const *typed() const
   {
-    return (const T *)&_data;
+    return reinterpret_cast<value_type const *>(&_data);
   }
 
   void dispose();
 
-  friend option_t<T> some<T>(const T &);
-  friend option_t<T> some<T>(T &&);
+  friend option_t<value_type> some<value_type>(value_type const &);
+  friend option_t<value_type> some<value_type>(value_type &&);
   friend class option_t<std::nullptr_t>;
 
   template <typename... ARGS>
   option_t(ctor_bit_t, ARGS&&... args);
 
 public:
-  // Occasionally useful if you need the value type of an option, but this is
-  // mainly here so flat_map can infer the value type of its returned option_t.
-  using value_type = T;
-
 
   /*============================================================================
     make(args...)
@@ -132,22 +148,22 @@ public:
   option_t() noexcept;
   ~option_t();
 
-  option_t(const none_t &) noexcept; // same as default ctor
-  option_t(const option_t &copied);
+  option_t(none_t const &) noexcept; // same as default ctor
+  option_t(option_t const &copied);
   option_t(option_t &&moved);
 
-  option_t &operator = (const none_t &);
-  option_t &operator = (const option_t &);
+  option_t &operator = (none_t const &);
+  option_t &operator = (option_t const &);
   option_t &operator = (option_t &&);
 
-  option_t &assign(const none_t &);
-  option_t &assign(const option_t &);
+  option_t &assign(none_t const &);
+  option_t &assign(option_t const &);
   option_t &assign(option_t &&);
 
   bool is_defined() const noexcept { return _defined; }
   bool is_empty() const noexcept { return !is_defined(); }
 
-  T &get()
+  value_type &get()
   {
     if (is_empty()) {
       s_throw(std::runtime_error, "Attempt to access empty option");
@@ -155,7 +171,7 @@ public:
     return *typed();
   }
 
-  const T &get() const
+  value_type const &get() const
   {
     if (is_empty()) {
       s_throw(std::runtime_error, "Attempt to access empty option");
@@ -163,10 +179,13 @@ public:
     return *typed();
   }
 
-  T &operator * () { return *typed(); }
-  const T &operator * () const { return *typed(); }
+  value_type &operator * () { return *typed(); }
+  value_type const &operator * () const { return *typed(); }
 
-  T *operator -> () const { return typed(); }
+  value_type *operator -> () const { return typed(); }
+
+  operator bool () const { return is_defined(); }
+  bool operator ! () const { return is_empty(); }
 
   static auto empty() noexcept -> option_t;
 
@@ -227,9 +246,9 @@ public:
       function always has a defined value, use map.
   ============================================================================*/
   template <typename F>
-  auto map(F &f) const -> option_t<decltype(f(get()))>;
+  auto map(F &f) const -> optional<decltype(f(get()))>;
   template <typename F>
-  auto map(F &&f) const -> option_t<decltype(f(get()))>;
+  auto map(F &&f) const -> optional<decltype(f(get()))>;
 
 
   /*============================================================================
@@ -241,9 +260,9 @@ public:
   ============================================================================*/
   // map T -> option_t<U>
   template <typename F>
-  auto flat_map(F &f) const -> option_t<typename decltype(f(get()))::value_type>;
+  auto flat_map(F &f) const -> optional<typename decltype(f(get()))::value_type>;
   template <typename F>
-  auto flat_map(F &&f) const -> option_t<typename decltype(f(get()))::value_type>;
+  auto flat_map(F &&f) const -> optional<typename decltype(f(get()))::value_type>;
 };
 
 
@@ -292,7 +311,7 @@ option_t<T>::option_t() noexcept
 
 
 template <typename T>
-option_t<T>::option_t(const none_t &n) noexcept
+option_t<T>::option_t(none_t const &n) noexcept
 : _defined(false)
 {
   /* nop */
@@ -307,7 +326,7 @@ option_t<T>::~option_t()
 
 
 template <typename T>
-option_t<T>::option_t(const option_t &copied)
+option_t<T>::option_t(option_t const &copied)
 : _defined(false)
 {
   assign(copied);
@@ -323,7 +342,7 @@ option_t<T>::option_t(option_t &&moved)
 
 
 template <typename T>
-auto option_t<T>::operator = (const none_t &n) -> option_t &
+auto option_t<T>::operator = (none_t const &n) -> option_t &
 {
   dispose();
   return *this;
@@ -331,7 +350,7 @@ auto option_t<T>::operator = (const none_t &n) -> option_t &
 
 
 template <typename T>
-auto option_t<T>::operator = (const option_t &copied) -> option_t &
+auto option_t<T>::operator = (option_t const &copied) -> option_t &
 {
   assign(copied);
   return *this;
@@ -347,7 +366,7 @@ auto option_t<T>::operator = (option_t &&moved) -> option_t &
 
 
 template <typename T>
-auto option_t<T>::assign(const none_t &n) -> option_t &
+auto option_t<T>::assign(none_t const &n) -> option_t &
 {
   dispose();
   return *this;
@@ -355,7 +374,7 @@ auto option_t<T>::assign(const none_t &n) -> option_t &
 
 
 template <typename T>
-auto option_t<T>::assign(const option_t &other) -> option_t &
+auto option_t<T>::assign(option_t const &other) -> option_t &
 {
   dispose();
 
@@ -386,26 +405,26 @@ auto option_t<T>::assign(option_t &&other) -> option_t &
 
 template <typename T>
 template <typename F>
-auto option_t<T>::map(F &f) const -> option_t<decltype(f(get()))>
+auto option_t<T>::map(F &f) const -> optional<decltype(f(get()))>
 {
   using U = decltype(f(get()));
   if (is_defined()) {
     return some<U>(f(get()));
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
 
 template <typename T>
 template <typename F>
-auto option_t<T>::map(F &&f) const -> option_t<decltype(f(get()))>
+auto option_t<T>::map(F &&f) const -> optional<decltype(f(get()))>
 {
   using U = decltype(f(get()));
   if (is_defined()) {
     return some<U>(f(get()));
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
@@ -413,13 +432,13 @@ auto option_t<T>::map(F &&f) const -> option_t<decltype(f(get()))>
 
 template <typename T>
 template <typename F>
-auto option_t<T>::flat_map(F &f) const -> option_t<typename decltype(f(get()))::value_type>
+auto option_t<T>::flat_map(F &f) const -> optional<typename decltype(f(get()))::value_type>
 {
   using U = typename decltype(f(get()))::value_type;
   if (is_defined()) {
     return f(get());
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
@@ -427,20 +446,20 @@ auto option_t<T>::flat_map(F &f) const -> option_t<typename decltype(f(get()))::
 
 template <typename T>
 template <typename F>
-auto option_t<T>::flat_map(F &&f) const -> option_t<typename decltype(f(get()))::value_type>
+auto option_t<T>::flat_map(F &&f) const -> optional<typename decltype(f(get()))::value_type>
 {
   using U = typename decltype(f(get()))::value_type;
   if (is_defined()) {
     return f(get());
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
 
 
 template<typename T, typename U>
-bool operator == (const option_t<T> &lhs, const option_t<U> &rhs)
+bool operator == (option_t<T> const &lhs, option_t<U> const &rhs)
 {
   return (lhs.is_defined() && rhs.is_defined()) && (lhs.get() == rhs.get());
 }
@@ -448,7 +467,7 @@ bool operator == (const option_t<T> &lhs, const option_t<U> &rhs)
 
 
 template<typename T, typename U>
-bool operator != (const option_t<T> &lhs, const option_t<U> &rhs)
+bool operator != (option_t<T> const &lhs, option_t<U> const &rhs)
 {
   return !(lhs == rhs);
 }
@@ -456,7 +475,7 @@ bool operator != (const option_t<T> &lhs, const option_t<U> &rhs)
 
 
 template<typename T>
-bool operator == (const option_t<T> &lhs, const none_t &rhs) noexcept
+bool operator == (option_t<T> const &lhs, none_t const &rhs) noexcept
 {
   return lhs.is_empty();
 }
@@ -464,7 +483,7 @@ bool operator == (const option_t<T> &lhs, const none_t &rhs) noexcept
 
 
 template<typename T>
-bool operator == (const none_t &lhs, const option_t<T> &rhs) noexcept
+bool operator == (none_t const &lhs, option_t<T> const &rhs) noexcept
 {
   return rhs.is_empty();
 }
@@ -472,7 +491,7 @@ bool operator == (const none_t &lhs, const option_t<T> &rhs) noexcept
 
 
 template<typename T>
-bool operator != (const option_t<T> &lhs, const none_t &rhs) noexcept
+bool operator != (option_t<T> const &lhs, none_t const &rhs) noexcept
 {
   return lhs.is_defined();
 }
@@ -480,21 +499,21 @@ bool operator != (const option_t<T> &lhs, const none_t &rhs) noexcept
 
 
 template<typename T>
-bool operator != (const none_t &lhs, const option_t<T> &rhs) noexcept
+bool operator != (none_t const &lhs, option_t<T> const &rhs) noexcept
 {
   return rhs.is_defined();
 }
 
 
 
-constexpr bool operator == (const none_t &lhs, const none_t &rhs) noexcept
+constexpr bool operator == (none_t const &lhs, none_t const &rhs) noexcept
 {
   return true;
 }
 
 
 
-constexpr bool operator != (const none_t &lhs, const none_t &rhs) noexcept
+constexpr bool operator != (none_t const &lhs, none_t const &rhs) noexcept
 {
   return false;
 }
@@ -502,7 +521,7 @@ constexpr bool operator != (const none_t &lhs, const none_t &rhs) noexcept
 
 
 template<typename T>
-std::ostream &operator << (std::ostream &out, const option_t<T> &opt)
+std::ostream &operator << (std::ostream &out, option_t<T> const &opt)
 {
   if (opt.is_defined()) {
     return out << "some(" << opt.get() << ')';
@@ -527,6 +546,9 @@ struct none_t final {
   constexpr bool is_defined() const { return false; }
   constexpr bool is_empty() const { return true; }
 
+  operator bool () const { return false; }
+  bool operator ! () const { return true; }
+
   template <typename T>
   operator option_t<T> () const {
     return option_t<T>();
@@ -539,14 +561,14 @@ constexpr none_t none = none_t();
 
 
 
-inline std::ostream &operator << (std::ostream &out, const none_t &non)
+inline std::ostream &operator << (std::ostream &out, none_t const &non)
 {
   return out << "none";
 }
 
 
 
-inline std::ostream &operator << (std::ostream &out, const none_t::value_type &) {
+inline std::ostream &operator << (std::ostream &out, none_t::value_type const &) {
   return out << "()";
 }
 
@@ -584,7 +606,7 @@ public:
 
   option_t() noexcept {}
 
-  option_t(const option_t &opt) noexcept
+  option_t(option_t const &opt) noexcept
   : _defined(opt._defined) { /* nop */ }
 
 
@@ -597,7 +619,7 @@ public:
 
 
 
-  option_t &operator = (const option_t &opt) noexcept
+  option_t &operator = (option_t const &opt) noexcept
   {
     return assign(opt);
   }
@@ -611,14 +633,14 @@ public:
 
 
 
-  option_t &operator = (const none_t &non) noexcept
+  option_t &operator = (none_t const &non) noexcept
   {
     return assign(non);
   }
 
 
 
-  option_t &assign(const none_t &non) noexcept
+  option_t &assign(none_t const &non) noexcept
   {
     _defined = false;
     return *this;
@@ -626,7 +648,7 @@ public:
 
 
 
-  option_t &assign(const option_t &opt) noexcept
+  option_t &assign(option_t const &opt) noexcept
   {
     _defined = opt._defined;
     return *this;
@@ -661,12 +683,12 @@ public:
 
 
 
-  template <typename T>
-  operator option_t<T> () const {
+  template <typename U>
+  operator option_t<U> () const {
     if (is_defined()) {
-      return option_t<T>(option_t<T>::CTOR, nullptr);
+      return option_t<U>(option_t<U>::CTOR, U { **this });
     } else {
-      return option_t<T>();
+      return option_t<U>();
     }
   }
 
@@ -693,22 +715,22 @@ public:
 
 
   template <typename F>
-  auto map(F &f) const -> option_t<decltype(f(nullptr))>;
+  auto map(F &f) const -> optional<decltype(f(nullptr))>;
 
   template <typename F>
-  auto map(F &&f) const -> option_t<decltype(f(nullptr))>;
+  auto map(F &&f) const -> optional<decltype(f(nullptr))>;
 
   template <typename F>
-  auto flat_map(F &f) const -> option_t<typename decltype(f(nullptr))::value_type>;
+  auto flat_map(F &f) const -> optional<typename decltype(f(nullptr))::value_type>;
 
   template <typename F>
-  auto flat_map(F &&f) const -> option_t<typename decltype(f(nullptr))::value_type>;
+  auto flat_map(F &&f) const -> optional<typename decltype(f(nullptr))::value_type>;
 };
 
 
 
 template <typename F>
-auto option_t<std::nullptr_t>::map(F &f) const -> option_t<decltype(f(nullptr))>
+auto option_t<std::nullptr_t>::map(F &f) const -> optional<decltype(f(nullptr))>
 {
   using U = decltype(f(nullptr));
   if (is_defined()) {
@@ -721,62 +743,68 @@ auto option_t<std::nullptr_t>::map(F &f) const -> option_t<decltype(f(nullptr))>
 
 
 template <typename F>
-auto option_t<std::nullptr_t>::map(F &&f) const -> option_t<decltype(f(nullptr))>
+auto option_t<std::nullptr_t>::map(F &&f) const -> optional<decltype(f(nullptr))>
 {
   using U = decltype(f(nullptr));
   if (is_defined()) {
     return some<U>(f(nullptr));
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
 
 
 template <typename F>
-auto option_t<std::nullptr_t>::flat_map(F &f) const -> option_t<typename decltype(f(nullptr))::value_type>
+auto option_t<std::nullptr_t>::flat_map(F &f) const -> optional<typename decltype(f(nullptr))::value_type>
 {
   using U = typename decltype(f(nullptr))::value_type;
   if (is_defined()) {
     return f(nullptr);
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
 
 
 template <typename F>
-auto option_t<std::nullptr_t>::flat_map(F &&f) const -> option_t<typename decltype(f(nullptr))::value_type>
+auto option_t<std::nullptr_t>::flat_map(F &&f) const -> optional<typename decltype(f(nullptr))::value_type>
 {
   using U = typename decltype(f(nullptr))::value_type;
   if (is_defined()) {
     return f(nullptr);
   } else {
-    return option_t<U>();
+    return optional<U>();
   }
 }
 
 
 
 /*==============================================================================
-  some(const T&) and some(T&&)
+  some(T const&) and some(T&&)
 
     Creates a new option_t<T> and returns it, either copying or moving the value
     provided.
 ==============================================================================*/
 template <typename T>
-option_t<T> some(const T &val)
+optional<T> some(T const &val)
 {
-  return option_t<T>(option_t<T>::CTOR, val);
+  return make_optional<T>(std::forward<T const &>(val));
 }
 
 
 
 template <typename T>
-option_t<T> some(T &&val)
+optional<T> some(T &&val)
 {
-  return option_t<T>(option_t<T>::CTOR, std::forward<T>(val));
+  return make_optional<T>(std::forward<T &&>(val));
+}
+
+
+template <typename T, typename... ARGS>
+optional<T> make_optional(ARGS&&... args) {
+  return optional<T>::make(std::forward<ARGS>(args)...);
 }
 
 
