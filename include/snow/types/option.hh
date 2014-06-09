@@ -105,8 +105,8 @@ private:
 
   using store_t = typename std::aligned_storage<SIZE, ALIGNMENT>::type;
 
-  store_t _data;
   bool _defined;
+  store_t _data;
 
   value_type *typed()
   {
