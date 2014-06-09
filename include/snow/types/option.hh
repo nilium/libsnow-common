@@ -99,8 +99,8 @@ private:
   enum ctor_bit_t { CTOR };
 
   enum store_bit_t {
-    SIZE = sizeof(T),
-    ALIGNMENT = std::alignment_of<T>::value
+    SIZE = sizeof(value_type),
+    ALIGNMENT = std::alignment_of<value_type>::value
   };
 
   using store_t = typename std::aligned_storage<SIZE, ALIGNMENT>::type;
