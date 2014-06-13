@@ -212,11 +212,6 @@ newoption {
 }
 
 newoption {
-  trigger = "exclude-lua",
-  description = "Exclude Lua headers from installation"
-}
-
-newoption {
   trigger = "prefix",
   description = "Installation prefix",
   value = "Default: /usr/local"
@@ -308,7 +303,7 @@ flags { "Symbols" }
 g_build_config_opts = {
   USE_EXCEPTIONS = not _OPTIONS["no-exceptions"],
   HAS_SHA256 = not _OPTIONS["exclude-openssl"],
-  HAS_LBIND = not _OPTIONS["exclude-lua"]
+  HAS_LBIND = false
 }
 
 g_pkgconfig_opts = {
@@ -317,12 +312,6 @@ g_pkgconfig_opts = {
   PRIVATE_PKGS = "",
   PRIVATE_LIBS = ""
 }
-
--- Lua options
-if _OPTIONS["exclude-lua"] then
-  -- TODO: handle dirsep difference
-  g_exclude_suffixes["exclude-lua"] = "include/snow/lbind.hh"
-end
 
 -- OpenSSL options
 if _OPTIONS["exclude-openssl"] then

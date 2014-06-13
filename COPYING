@@ -12,16 +12,3 @@ IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE  SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-
-
-
------------------------------- EXCEPTIONS ------------------------------
-
-- File at include/snow/lbind.hh:
-  Released under the Creative Commons 2.5 Attribution-ShareAlike
-  license. Some code in this header is based on work by Johannes Schaub,
-  originally found in his Stack Overflow answer at
-  <http://stackoverflow.com/a/7858971/457812>.
-
-  For license information, please refer to
-  <http://creativecommons.org/licenses/by-sa/2.5/>.

@@ -43,8 +43,7 @@ probably won't blow a foot off.
 
 ## Dependencies
 
-libsnow-common currently depends only on OpenSSL for its sha256 functions. If
-you choose to use the lbind.hh header, it also requires Lua, of course.
+libsnow-common currently depends only on OpenSSL for its sha256 functions.
 
 ## Documentation
 
@@ -62,15 +61,3 @@ a dick. I cannot enforce this condition, so it's meaningless and still public
 domain. Be excellent.
 
 See COPYING for further details.
-
-## Exceptions to The Public Domain License
-
-Current exceptions to public domain-ness in Snow-Common are:
-
-* `include/snow/lbind.hh` —
-    Released under the Creative Commons 2.5 Attribution-ShareAlike license. Some
-    code in this header is based on work by Johannes Schaub, originally included
-    in his Stack Overflow answer at <http://stackoverflow.com/a/7858971/457812>.
-
-    For license information, please refer to
-    <http://creativecommons.org/licenses/by-sa/2.5/>.

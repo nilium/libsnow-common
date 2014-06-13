@@ -7,11 +7,6 @@
 
 #include "snow/thread.hh"
 
-/*
-Note: Doesn't include lbind.hh because that depends on whether Lua is installed
-and linked to. So, it would produce some errors if in here.
-*/
-
 // Math
 #include "snow/math/math.hh"
 #ifndef S_NO_INCLUDE_MATH3D
