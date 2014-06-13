@@ -207,11 +207,6 @@ newoption {
 }
 
 newoption {
-  trigger = "exclude-openssl",
-  description = "Do not compile SHA-256 hash function into library or link to OpenSSL"
-}
-
-newoption {
   trigger = "prefix",
   description = "Installation prefix",
   value = "Default: /usr/local"
@@ -302,7 +297,7 @@ flags { "Symbols" }
 
 g_build_config_opts = {
   USE_EXCEPTIONS = not _OPTIONS["no-exceptions"],
-  HAS_SHA256 = not _OPTIONS["exclude-openssl"],
+  HAS_SHA256 = false,
   HAS_LBIND = false
 }
 
@@ -312,20 +307,6 @@ g_pkgconfig_opts = {
   PRIVATE_PKGS = "",
   PRIVATE_LIBS = ""
 }
-
--- OpenSSL options
-if _OPTIONS["exclude-openssl"] then
-  g_exclude_suffixes["exclude-openssl"] = "include/snow/data/sha256.hh"
-else
-  g_pkgconfig_opts["PRIVATE_PKGS"] = g_pkgconfig_opts["PRIVATE_PKGS"] .. " openssl"
-end
-
-configuration "exclude-openssl"
-excludes { "src/data/sha256.cc" }
-
-configuration "not exclude-openssl"
-buildoptions { "`pkg-config openssl --cflags`" }
-linkoptions { "`pkg-config openssl --libs`" }
 
 -- Exceptions
 configuration "no-exceptions"
