@@ -1,3 +1,12 @@
+/*
+ * Copyright Noel Cower 2013.
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or copy at
+ *  http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+
 vec2_t xx() const { return { x, x }; }
 vec3_t<value_type> xxx() const { return { x, x, x }; }
 vec4_t<value_type> xxxx() const { return { x, x, x, x }; }

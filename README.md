@@ -55,9 +55,6 @@ In other cases, there may be no documentation.
 
 ## License
 
-Except where noted otherwise, all source code in Snow-Common is public
-domain. You are free to do with it as you like on the condition that you are not
-a dick. I cannot enforce this condition, so it's meaningless and still public
-domain. Be excellent.
-
-See COPYING for further details.
+libsnow-common is distributed under the Boost Software License, Version 1.0.
+See accompanying file LICENSE_1_0.txt or copy at
+<http://www.boost.org/LICENSE_1_0.txt>.
