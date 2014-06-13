@@ -272,7 +272,7 @@ newaction {
 }
 
 -- Compiler flags
-g_version = "0.0.1"
+g_version = "0.1.0"
 language "C++"
 buildoptions { "-std=c++11" }
 flags { "FloatStrict", "NoRTTI" }
