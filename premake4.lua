@@ -221,8 +221,12 @@ newaction {
     local dirs_needed = {}
     for k,v in pairs(headers) do
       local dir = snow.dirname(v)
-      if not dirs_needed[dir] then
-        dirs_needed[dir] = true
+      local prefixed_dir = g_prefix .. "/" .. dir
+      if not dirs_needed[prefixed_dir] then
+        if g_verbose_install then
+          print("Marking " .. prefixed_dir .. " as required")
+        end
+        dirs_needed[prefixed_dir] = true
       end
     end
 
@@ -234,10 +238,10 @@ newaction {
     for k,v in pairs(dirs_needed) do
       if not os.isdir(k) then
         if g_verbose_install then
-          print("Creating directory " .. v)
+          print("Creating directory " .. k)
         end
 
-        if not snow.mkdir_p(g_prefix .. "/" .. k) then
+        if not snow.mkdir_p(k) then
           print("Could not create directories needed, unable to continue installation")
           return false
         end
