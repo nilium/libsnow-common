@@ -39,6 +39,7 @@
 #include "string/string.hh"
 #include "string/compare.hh"
 #include "string/split.hh"
+#include "string/utf8.hh"
 
 // Memory
 #include "memory/ref_counter.hh"
