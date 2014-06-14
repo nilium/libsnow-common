@@ -6,6 +6,7 @@
  *  http://www.boost.org/LICENSE_1_0.txt)
  */
 
+
 #ifndef __SNOW_COMMON__UTF8_HH__
 #define __SNOW_COMMON__UTF8_HH__
 
