@@ -8,12 +8,13 @@ and a few other projects).
 
 ## Building
 
-To build libsnow-common, you'll need [premake] and a version of OpenSSL,
-preferably >= 1.0.0. This means the default OS X OpenSSL is sort of off-limits
-due to the entire thing being marked as deprecated. You'll also need a C++11
-compatible compiler and standard library (Clang and libc++, for example).
+To build libsnow-common, you'll need [premake] along with a compiler and C++
+standard library that supports at least C++11 (Clang and libc++, for example).
+Currently, this should include Clang and libc++ and an up to date GCC and most
+of libstdc++. Visual Studio support is untested, though its standard library
+implementation should work even if the compiler isn't quite there.
 
-When all that's make, just do the following:
+When all that's done, just do the following:
 
 [premake]: http://industriousone.com/premake
 
@@ -29,10 +30,10 @@ If you want to install the library, you can do the following:
     $ premake4 install
 
 Optionally, you can also specify the prefix (it defaults to `/usr/local`) using
-the `--prefix=/foo/bar/baz` argument. This must come before `install` on the
-command line. This method of installation is not currently suited to anything
-non-UNIX-esque. So, basically, just the Windows users are left out. Seems like
-a fair deal.
+the `--prefix=` argument. This must come before `install` on the command line.
+This method of installation is not currently suited to anything non-UNIX-esque.
+So, basically, just the Windows users are left out. Seems like a mostly fair
+deal at the moment since Visual Studio's not on the target list.
 
 There is currently no `uninstall` action, mostly because I don't like the idea
 of letting a script delete things, potentially with super-user access. So, if
@@ -40,10 +41,6 @@ you feel the need to remove the library, it'll just be libsnow-common.* under
 your prefix/lib directory and the entire prefix/include/snow directory as well
 as snow-common.hh from prefix/include. It tries to keep to itself, so you
 probably won't blow a foot off.
-
-## Dependencies
-
-libsnow-common currently depends only on OpenSSL for its sha256 functions.
 
 ## Documentation
 
