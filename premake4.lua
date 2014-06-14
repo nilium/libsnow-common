@@ -97,7 +97,7 @@ function snow.install(source_path, install_path, verbose)
   end
   local done, errmsg = os.copyfile(source_path, install_path)
   if not done then
-    print("os.copyfile: " .. errms)
+    print("os.copyfile: " .. errmsg)
     print("Unable to copy " .. source_path, " unable to continue installation")
     return false
   end
