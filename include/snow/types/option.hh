@@ -125,6 +125,13 @@ private:
     return reinterpret_cast<value_type const *>(&_data);
   }
 
+  void throw_if_undefined() const
+  {
+    if (!_defined) {
+      s_throw(std::runtime_error, "Attempt to access empty option");
+    }
+  }
+
   void dispose();
 
   friend option_t<value_type> some<value_type>(value_type const &);
@@ -172,24 +179,20 @@ public:
 
   value_type &get()
   {
-    if (is_empty()) {
-      s_throw(std::runtime_error, "Attempt to access empty option");
-    }
+    throw_if_undefined();
     return *typed();
   }
 
   value_type const &get() const
   {
-    if (is_empty()) {
-      s_throw(std::runtime_error, "Attempt to access empty option");
-    }
+    throw_if_undefined();
     return *typed();
   }
 
-  value_type &operator * () { return *typed(); }
-  value_type const &operator * () const { return *typed(); }
+  value_type &operator * () { return get(); }
+  value_type const &operator * () const { return get(); }
 
-  value_type *operator -> () const { return typed(); }
+  value_type *operator -> () const { return get(); }
 
   operator bool () const { return is_defined(); }
   bool operator ! () const { return is_empty(); }
