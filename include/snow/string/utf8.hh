@@ -174,26 +174,28 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
 
   uint32_t code = next_octet__(iter);
   int count = 0;
+  bool mask_found = false;
 
   for (; count < 4; ++count) {
     uint32_t const mask = markers[count];
     uint32_t const name = (mask << 1) & 0xFF;
     uint32_t const vmask = (~mask) & 0xFF;
 
-    if ((code & mask) != name) {
-      // Invalid initial octet, skip all intermediate octets until a valid one is
-      // found then return the requested code for invalids.
-      for (; iter != end; ++iter) {
-        code = next_octet__(iter);
-        if ((code & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
-          break;
-        }
-      }
+    if ((code & mask) == name) {
+      code &= vmask;
+      mask_found = true;
+      break;
+    }
+  }
 
-      return invalid;
+  if (!mask_found) {
+    // Invalid initial octet, skip all intermediate octets until a valid one is
+    // found then return the requested code for invalids.
+    while (iter != end && (next_octet__(iter) & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
+      ++iter;
     }
 
-    code &= vmask;
+    return invalid;
   }
 
   ++iter;
