@@ -106,8 +106,6 @@ auto mat3_t<T>::rotation(T angle, vec3 axis) -> mat3_t
 template <typename T>
 auto mat3_t<T>::from_quat(quat in) -> mat3_t
 {
-  s_float_t xx, xy, xz, yy, yz, zz, wx, wy, wz;
-
   const T xx = in.xyz.x * in.xyz.x;
   const T xy = in.xyz.x * in.xyz.y;
   const T xz = in.xyz.x * in.xyz.z;
@@ -123,19 +121,19 @@ auto mat3_t<T>::from_quat(quat in) -> mat3_t
 
   return {
     {
-      out[0] = T(1) - T(2) * (yy + zz),
-      out[1] = T(2) * (xy - wz),
-      out[2] = T(2) * (xz + wy)
+      T(1) - T(2) * (yy + zz),
+      T(2) * (xy - wz),
+      T(2) * (xz + wy)
     },
     {
-      out[3] = T(2) * (xy + wz),
-      out[4] = T(1) - T(2) * (xx + zz),
-      out[5] = T(2) * (yz - wx)
+      T(2) * (xy + wz),
+      T(1) - T(2) * (xx + zz),
+      T(2) * (yz - wx)
     },
     {
-      out[6] = T(2) * (xz - wy),
-      out[7] = T(2) * (yz + wx),
-      out[8] = T(1) - T(2) * (xx + yy)
+      T(2) * (xz - wy),
+      T(2) * (yz + wx),
+      T(1) - T(2) * (xx + yy)
     }
   };
 }

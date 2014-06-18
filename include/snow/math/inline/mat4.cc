@@ -233,7 +233,7 @@ auto mat4_t<T>::from_quat(quat in) -> mat4_t
     T(0),
     T(0),
     T(1)
-  }
+  };
 }
 
 
