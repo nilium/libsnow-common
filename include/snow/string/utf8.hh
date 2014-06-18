@@ -230,7 +230,7 @@ template <class IT>
 uint32_t peek_code(IT const &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE)
 {
   IT dry { iter };
-  return next_code<IT, invalid>(dry, end, invalid);
+  return next_code<IT>(dry, end, invalid);
 }
 
 
