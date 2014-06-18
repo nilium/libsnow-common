@@ -154,6 +154,28 @@ bool read_BOM(IT &start, IT const &end)
 
 
 /*==============================================================================
+  utf8::find_invalid
+
+    Finds and returns an iterator pointing to the first invalid code found. If
+    no invalid code is found, the end iterator will be returned.
+==============================================================================*/
+template <class IT>
+IT find_invalid(IT iter, IT const &end)
+{
+  while (iter != end) {
+    IT const last { iter };
+
+    if (next_code(iter, end, UTF8_INVALID_CODE) == UTF8_INVALID_CODE) {
+      iter = last;
+      break;
+    }
+  }
+
+  return iter;
+}
+
+
+/*==============================================================================
   utf8::next_code
 
     Reads a code given a character iterator -- the characters do not necessarily
