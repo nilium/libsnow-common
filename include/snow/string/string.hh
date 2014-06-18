@@ -48,6 +48,11 @@ struct string_iter_t
     return *ptr;
   }
 
+  value_type operator * () const
+  {
+    return *ptr;
+  }
+
   pointer operator -> ()
   {
     return ptr;
