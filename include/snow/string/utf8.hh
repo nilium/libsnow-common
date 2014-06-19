@@ -283,7 +283,7 @@ bool next_is_valid(IT const &iter, IT const &end)
 
 
 /*==============================================================================
-  utf::put_code
+  utf8::put_code
 
     Writes a given code to the iterator as a sequence of UTF-8 octets.
     Returns 0 if the code is not representable as a well-formed UTF-8 octet
