@@ -114,7 +114,7 @@ int octets_for_code(uint32_t code);
     Gets the next octet from the iterator as a uint32_t. Does not check whether
     the iterator is valid. Internal use only.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 uint32_t next_octet__(IT const &start)
 {
   return static_cast<uint32_t>(*start) & 0xFF;
@@ -128,7 +128,7 @@ uint32_t next_octet__(IT const &start)
     the BOM was recognized, otherwise false. The iterator is advanced past the
     BOM only if it's present, otherwise it remains unchanged.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 bool read_BOM(IT &start, IT const &end)
 {
   static uint32_t const BOM[3] { 0xEF, 0xBB, 0xBF };
@@ -159,7 +159,7 @@ bool read_BOM(IT &start, IT const &end)
     Finds and returns an iterator pointing to the first invalid code found. If
     no invalid code is found, the end iterator will be returned.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 IT find_invalid(IT iter, IT const &end)
 {
   while (iter != end) {
@@ -183,7 +183,7 @@ IT find_invalid(IT iter, IT const &end)
     unsigned and truncated otherwise. If the code is invalid, the iterator is
     advanced to the next usable byte, then returns UTF8_INVALID_CODE.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE)
 {
   static uint32_t const markers[4] = {
@@ -250,7 +250,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
     Peeks the next code from the given iterator and returns it if it's valid,
     otherwise returns UTF8_INVALID_CODE. Does not advance the iterator.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 uint32_t peek_code(IT const &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE)
 {
   IT dry { iter };
@@ -263,7 +263,7 @@ uint32_t peek_code(IT const &iter, IT const &end, uint32_t invalid = UTF8_INVALI
 
     Returns true if the result of peek_code is valid, otherwise false.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 bool next_is_valid(IT const &iter, IT const &end)
 {
   return peek_code(iter, end, UTF8_INVALID_CODE) != UTF8_INVALID_CODE;
@@ -277,7 +277,7 @@ bool next_is_valid(IT const &iter, IT const &end)
     Returns 0 if the code is not representable as a well-formed UTF-8 octet
     sequence. The output iterator is assumed to take octets of some kind.
 ==============================================================================*/
-template <class IT>
+template <typename IT>
 int put_code(IT &iter, uint32_t code)
 {
   static constexpr uint32_t masks[4] {
