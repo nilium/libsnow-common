@@ -444,14 +444,14 @@ public:
 
   iterator &operator ++ ()
   {
-    next_code(underlying_, end_);
+    next_code<false>(underlying_, end_);
     return *this;
   }
 
   iterator operator ++ (int _)
   {
     iterator copy { underlying_, end_ };
-    next_code(underlying_, end_);
+    next_code<false>(underlying_, end_);
     return copy;
   }
 
