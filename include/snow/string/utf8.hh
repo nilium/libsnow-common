@@ -154,28 +154,6 @@ bool read_BOM(IT &start, IT const &end)
 
 
 /*==============================================================================
-  utf8::find_invalid
-
-    Finds and returns an iterator pointing to the first invalid code found. If
-    no invalid code is found, the end iterator will be returned.
-==============================================================================*/
-template <typename IT>
-IT find_invalid(IT iter, IT const &end)
-{
-  while (iter != end) {
-    IT const last { iter };
-
-    if (next_code(iter, end, UTF8_INVALID_CODE) == UTF8_INVALID_CODE) {
-      iter = last;
-      break;
-    }
-  }
-
-  return iter;
-}
-
-
-/*==============================================================================
   utf8::next_code
 
     Reads a code given a character iterator -- the characters do not necessarily
@@ -183,7 +161,7 @@ IT find_invalid(IT iter, IT const &end)
     unsigned and truncated otherwise. If the code is invalid, the iterator is
     advanced to the next usable byte, then returns UTF8_INVALID_CODE.
 ==============================================================================*/
-template <typename IT>
+template <bool stop_at_invalid = true, typename IT>
 uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE)
 {
   static uint32_t const markers[4] = {
@@ -211,10 +189,12 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
   }
 
   if (!mask_found) {
-    // Invalid initial octet, skip all intermediate octets until a valid one is
-    // found then return the requested code for invalids.
-    while (iter != end && (next_octet__(iter) & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
-      ++iter;
+    // Invalid initial octet, skip all intermediate octets until a non-intermediate
+    // octet is found.
+    if (!stop_at_invalid) {
+      do {
+        ++iter;
+      } while (iter != end && (next_octet__(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
     }
 
     return invalid;
@@ -245,6 +225,24 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
 
 
 /*==============================================================================
+  utf8::find_invalid
+
+    Finds and returns an iterator pointing to the first invalid code found. If
+    no invalid code is found, the end iterator will be returned.
+==============================================================================*/
+template <typename IT>
+IT find_invalid(IT iter, IT const &end)
+{
+  while (iter != end) {
+    if (next_code<true>(iter, end, UTF8_INVALID_CODE) == UTF8_INVALID_CODE) {
+      break;
+    }
+  }
+  return iter;
+}
+
+
+/*==============================================================================
   utf8::peek_code
 
     Peeks the next code from the given iterator and returns it if it's valid,
@@ -254,7 +252,7 @@ template <typename IT>
 uint32_t peek_code(IT const &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE)
 {
   IT dry { iter };
-  return next_code<IT>(dry, end, invalid);
+  return next_code<true, IT>(dry, end, invalid);
 }
 
 
