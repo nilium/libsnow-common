@@ -549,7 +549,8 @@ std::ostream &operator << (std::ostream &out, option_t<T> const &opt)
   outside of that use.
 
 ==============================================================================*/
-struct none_t final {
+struct none_t final
+{
   struct value_type final {};
 
   constexpr none_t() { /* nop */ }
@@ -579,7 +580,8 @@ inline std::ostream &operator << (std::ostream &out, none_t const &non)
 
 
 
-inline std::ostream &operator << (std::ostream &out, none_t::value_type const &) {
+inline std::ostream &operator << (std::ostream &out, none_t::value_type const &)
+{
   return out << "()";
 }
 
@@ -595,7 +597,8 @@ inline std::ostream &operator << (std::ostream &out, none_t::value_type const &)
 
 ==============================================================================*/
 template <>
-class option_t<std::nullptr_t> final {
+class option_t<std::nullptr_t> final
+{
   bool _defined;
 
   enum ctor_bit_t { CTOR };
@@ -616,6 +619,8 @@ public:
 
 
   option_t() noexcept : _defined(false) { /* nop */ }
+
+
 
   option_t(option_t const &opt) noexcept
   : _defined(opt._defined) { /* nop */ }
@@ -676,7 +681,8 @@ public:
 
 
 
-  std::nullptr_t get() const {
+  std::nullptr_t get() const
+  {
     if (is_empty()) {
       s_throw(std::runtime_error, "Attempt to access empty option");
     }
@@ -685,7 +691,8 @@ public:
 
 
 
-  std::nullptr_t operator * () const {
+  std::nullptr_t operator * () const
+  {
     if (is_empty()) {
       s_throw(std::runtime_error, "Attempt to access empty option");
     }
@@ -695,7 +702,8 @@ public:
 
 
   template <typename U>
-  operator option_t<U> () const {
+  operator option_t<U> () const
+  {
     if (is_defined()) {
       return option_t<U>(option_t<U>::CTOR, U { **this });
     } else {
@@ -814,7 +822,8 @@ optional<T> some(T &&val)
 
 
 template <typename T, typename... ARGS>
-optional<T> make_optional(ARGS&&... args) {
+optional<T> make_optional(ARGS&&... args)
+{
   return optional<T>::make(std::forward<ARGS>(args)...);
 }
 
