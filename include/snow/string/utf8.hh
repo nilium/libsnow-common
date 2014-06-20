@@ -825,4 +825,4 @@ bool operator != (iterator<T> const &lhs, T const &rhs)
 
 } // namespace snow
 
-#endif /* end __SCOLEX_UTF8_HH__ include guard */
+#endif /* end __SNOW_COMMON__UTF8_HH__ include guard */

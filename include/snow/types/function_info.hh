@@ -7,8 +7,8 @@
  */
 
 
-#ifndef __FUNCTION_INFO_HH__
-#define __FUNCTION_INFO_HH__
+#ifndef __SNOW_COMMON__FUNCTION_INFO_HH__
+#define __SNOW_COMMON__FUNCTION_INFO_HH__
 
 
 #include <tuple>
@@ -176,4 +176,4 @@ struct function_info<RT(*)(Args......)>
 }
 
 
-#endif /* end __FUNCTION_INFO_HH__ include guard */
+#endif /* end __SNOW_COMMON__FUNCTION_INFO_HH__ include guard */
