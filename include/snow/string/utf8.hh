@@ -76,34 +76,34 @@ enum : uint32_t {
 
 
 /*==============================================================================
-  utf8::value_mask__
+  utf8::value_mask_
 
     Returns the value mask for a UTF-8 bitmask.
 ==============================================================================*/
-constexpr uint32_t value_mask__(uint32_t mask)
+constexpr uint32_t value_mask_(uint32_t mask)
 {
   return (~mask) & 0xFFu;
 }
 
 
 /*==============================================================================
-  utf8::mask_name__
+  utf8::mask_name_
 
     Returns the name for a UTF-8 bitmask.
 ==============================================================================*/
-constexpr uint32_t mask_name__(uint32_t mask)
+constexpr uint32_t mask_name_(uint32_t mask)
 {
   return (mask << 1) & 0xFFu;
 }
 
 
 /*==============================================================================
-  utf8::intermediate_byte__
+  utf8::intermediate_byte_
 
     Returns the intermediate byte for the given code and fourth of the
     first 24 bits of the code.
 ==============================================================================*/
-constexpr uint32_t intermediate_byte__(uint32_t code, int fourth)
+constexpr uint32_t intermediate_byte_(uint32_t code, int fourth)
 {
   return {
     ((code >> (fourth * UTF8_BITS_INTERMEDIATE)) &
@@ -123,13 +123,13 @@ int octets_for_code(uint32_t code);
 
 
 /*==============================================================================
-  utf8::next_octet__
+  utf8::next_octet_
 
     Gets the next octet from the iterator as a uint32_t. Does not check whether
     the iterator is valid. Internal use only.
 ==============================================================================*/
 template <typename IT>
-uint32_t next_octet__(IT const &start)
+uint32_t next_octet_(IT const &start)
 {
   return static_cast<uint32_t>(*start) & 0xFF;
 }
@@ -155,7 +155,7 @@ bool read_BOM(IT &start, IT const &end)
   int index = 0;
 
   for (; index < 3 && iter != end; ++iter, ++index) {
-    uint32_t byte = next_octet__(iter);
+    uint32_t byte = next_octet_(iter);
     if (byte != BOM[index]) {
       return false;
     }
@@ -186,7 +186,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
     return invalid;
   }
 
-  uint32_t code = next_octet__(iter);
+  uint32_t code = next_octet_(iter);
   int count = 0;
   bool mask_found = false;
 
@@ -208,7 +208,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
     if (!stop_at_invalid) {
       do {
         ++iter;
-      } while (iter != end && (next_octet__(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
+      } while (iter != end && (next_octet_(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
     }
 
     return invalid;
@@ -221,7 +221,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
       return invalid;
     }
 
-    uint32_t const next_code = next_octet__(iter);
+    uint32_t const next_code = next_octet_(iter);
 
     if ((next_code & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
       return invalid;
@@ -304,11 +304,11 @@ int put_code(IT &iter, uint32_t code)
   int const intermediate_bytes = num_octets - 1;
   uint32_t const mask = masks[intermediate_bytes];
 
-  *(iter++) = mask_name__(mask) |
-    (value_mask__(mask) & (code >> (UTF8_BITS_INTERMEDIATE * intermediate_bytes)));
+  *(iter++) = mask_name_(mask) |
+    (value_mask_(mask) & (code >> (UTF8_BITS_INTERMEDIATE * intermediate_bytes)));
 
   for (int rep = 1; rep < num_octets; ++rep, ++iter) {
-    *iter = intermediate_byte__(code, intermediate_bytes - rep);
+    *iter = intermediate_byte_(code, intermediate_bytes - rep);
   }
 
   return num_octets;
@@ -554,7 +554,7 @@ bool read_BOM(IT &start)
   int index = 0;
 
   for (; index < 3; ++iter, ++index) {
-    uint32_t byte = next_octet__(iter);
+    uint32_t byte = next_octet_(iter);
     if (byte != BOM[index]) {
       return false;
     }
@@ -574,7 +574,7 @@ uint32_t next_code(IT &iter, uint32_t invalid = UTF8_INVALID_CODE)
   };
 
   IT temp_iter ((iter));
-  uint32_t code = next_octet__(temp_iter);
+  uint32_t code = next_octet_(temp_iter);
   int count = 0;
   bool mask_found = false;
 
@@ -594,7 +594,7 @@ uint32_t next_code(IT &iter, uint32_t invalid = UTF8_INVALID_CODE)
     if (!stop_at_invalid) {
       do {
         ++iter;
-      } while ((next_octet__(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
+      } while ((next_octet_(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
     }
 
     return invalid;
@@ -603,7 +603,7 @@ uint32_t next_code(IT &iter, uint32_t invalid = UTF8_INVALID_CODE)
   ++temp_iter;
 
   for (; count; ++temp_iter, --count) {
-    uint32_t const next_code = next_octet__(temp_iter);
+    uint32_t const next_code = next_octet_(temp_iter);
 
     if ((next_code & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
       return invalid;

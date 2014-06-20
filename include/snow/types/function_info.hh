@@ -20,20 +20,20 @@ namespace snow
 
 
 template <typename T, typename Q>
-struct function_ptr_type_t__
+struct function_ptr_type_t_
 {
 };
 
 
 template <typename T>
-struct function_ptr_type_t__<T, std::false_type>
+struct function_ptr_type_t_<T, std::false_type>
 {
   using type = decltype(&T::operator());
 };
 
 
 template <typename T>
-struct function_ptr_type_t__<T, std::true_type>
+struct function_ptr_type_t_<T, std::true_type>
 {
   using type = typename std::decay<T>::type;
 };
@@ -41,7 +41,7 @@ struct function_ptr_type_t__<T, std::true_type>
 
 template <typename T>
 using function_ptr_type =
-  typename function_ptr_type_t__<T, typename std::is_function<T>::type>::type;
+  typename function_ptr_type_t_<T, typename std::is_function<T>::type>::type;
 
 
 /*

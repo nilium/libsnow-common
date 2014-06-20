@@ -83,16 +83,16 @@ namespace snow
 
 /*==============================================================================
 
-  accept_util__
+  accept_util_
 
   Covers a few utility functions and types for accept_* functions.
 
 ==============================================================================*/
-namespace accept_util__
+namespace accept_util_
 {
 
 template <typename IT, typename Val>
-static bool contains__(IT start, IT end, Val const &value)
+static bool contains(IT start, IT end, Val const &value)
 {
   return std::find(start, end, value) != end;
 }
@@ -106,18 +106,18 @@ static bool contains__(IT start, IT end, Val const &value)
 // Wrapped in a struct to get a sort of pseudo-partial-specialization for
 // functions.
 template <size_t arity>
-struct pred_forwarding_t__
+struct pred_forwarding_t
 {
 };
 
 
 template <typename FN>
-using pred_forwarding__ = pred_forwarding_t__<function_info<FN>::args::arity>;
+using pred_forwarding = pred_forwarding_t<function_info<FN>::args::arity>;
 
 
 // Arity 0 - pred() -> bool-ish
 template <>
-struct pred_forwarding_t__<0>
+struct pred_forwarding_t<0>
 {
   template <typename FN, typename IT>
   static bool call(FN &&pred, IT const &ptr, IT const &end)
@@ -131,7 +131,7 @@ struct pred_forwarding_t__<0>
 
 // Arity 1 - pred(*ptr) -> bool-ish
 template <>
-struct pred_forwarding_t__<1>
+struct pred_forwarding_t<1>
 {
   template <typename FN, typename IT>
   static bool call(FN &&pred, IT const &ptr, IT const &end)
@@ -144,7 +144,7 @@ struct pred_forwarding_t__<1>
 
 // Arity 2 - pred(IT ptr, IT end) -> bool-ish
 template <>
-struct pred_forwarding_t__<2>
+struct pred_forwarding_t<2>
 {
   template <typename FN, typename IT>
   static bool call(FN &&pred, IT const &ptr, IT const &end)
@@ -154,7 +154,7 @@ struct pred_forwarding_t__<2>
 };
 
 
-} // namespace accept_util__
+} // namespace accept_util_
 
 
 /*==============================================================================
@@ -190,7 +190,7 @@ auto peek(IT const start, IT const end) -> optional<decltype(*start)>
 template <bool Result = true, typename IT, typename Pred>
 bool accept_if(IT &start, IT end, Pred &&pred)
 {
-  using PF = accept_util__::pred_forwarding__<Pred>;
+  using PF = accept_util_::pred_forwarding<Pred>;
   if (start == end || PF::call(std::forward<Pred &&>(pred), start, end) != Result) {
     return false;
   }
@@ -231,7 +231,7 @@ template <typename IT, typename CT>
 int accept_run(IT &start, IT const end, CT const run_start, CT const run_end)
 {
   return accept_while(start, end, [&](IT const &i, IT const &e) {
-    return accept_util__::contains__(run_start, run_end, *i);
+    return accept_util_::contains(run_start, run_end, *i);
   });
 }
 
@@ -250,7 +250,7 @@ int accept_run(IT &start, IT const end, CT const run_start, CT const run_end, in
 
   int nth = 0;
   return accept_while(start, end, [&](IT const &i, IT const &e) {
-    return (nth++ < count) && accept_util__::contains__(run_start, run_end, *i);
+    return (nth++ < count) && accept_util_::contains(run_start, run_end, *i);
   });
 }
 
