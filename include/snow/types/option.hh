@@ -552,15 +552,16 @@ std::ostream &operator << (std::ostream &out, option_t<T> const &opt)
 struct none_t final {
   struct value_type final {};
 
-  constexpr none_t() {}
+  constexpr none_t() { /* nop */ }
   constexpr bool is_defined() const { return false; }
   constexpr bool is_empty() const { return true; }
 
-  operator bool () const { return false; }
-  bool operator ! () const { return true; }
+  constexpr operator bool () const { return false; }
+  constexpr bool operator ! () const { return true; }
 
   template <typename T>
-  operator option_t<T> () const {
+  operator option_t<T> () const
+  {
     return option_t<T>();
   }
 };
