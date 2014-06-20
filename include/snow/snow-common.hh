@@ -30,6 +30,8 @@
 #include "types/slot_mask.hh"
 #include "types/triple_buffer.hh"
 #include "types/types_2d.hh"
+#include "types/option.hh"
+#include "types/function_info.hh"
 
 // Data
 #include "data/hash.hh"
@@ -43,5 +45,8 @@
 
 // Memory
 #include "memory/ref_counter.hh"
+
+// Iterators
+#include "iterator/accept.hh"
 
 #endif /* end __SNOW_COMMON__SNOW_COMMON_HH__ include guard */
