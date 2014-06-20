@@ -615,7 +615,7 @@ public:
 
 
 
-  option_t() noexcept {}
+  option_t() noexcept : _defined(false) { /* nop */ }
 
   option_t(option_t const &opt) noexcept
   : _defined(opt._defined) { /* nop */ }
