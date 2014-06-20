@@ -97,17 +97,17 @@ T max_value() { s_throw(std::runtime_error, "no set maximum for type"); }
 
 
 template <>
-inline float max_value<float>() { return FLT_MAX; }
+constexpr float max_value<float>() { return FLT_MAX; }
 
 
 
 template <>
-inline double max_value<double>() { return DBL_MAX; }
+constexpr double max_value<double>() { return DBL_MAX; }
 
 
 
 template <>
-inline long double max_value<long double>() { return LDBL_MAX; }
+constexpr long double max_value<long double>() { return LDBL_MAX; }
 
 
 
