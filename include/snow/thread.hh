@@ -21,7 +21,7 @@ namespace snow {
 template <class FNT, class... ARGS>
 S_EXPORT void async_thread(FNT &&func, ARGS&&... args)
 {
-  std::thread(func, args...).detach();
+  std::thread(std::forward<FNT>(func), std::forward<ARGS>(args)...).detach();
 }
 
 } // namespace snow
