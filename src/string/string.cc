@@ -48,7 +48,7 @@ string_t::string_t() :
 
 
 string_t::string_t(const_iterator const from, const_iterator const to) :
-  string_t(from.ptr, to <= from ? 0 : size_type(to - from))
+  string_t(from, to <= from ? 0 : size_type(to - from))
 {
   /* nop */
 }
@@ -354,7 +354,7 @@ string_t &string_t::append(const_iterator const from, const_iterator const to)
     return *this;
   }
 
-  return append(from.ptr, size_type(to.ptr - from.ptr));
+  return append(from, size_type(to - from));
 }
 
 
@@ -513,7 +513,7 @@ string_t &string_t::erase(size_type from, size_type count)
 
 string_t &string_t::erase(const_iterator const pos)
 {
-  if (pos.ptr == data_ + size()) {
+  if (pos == data_ + size()) {
     return *this;
   }
 
@@ -759,10 +759,10 @@ char string_t::back() const
 
 auto string_t::index_of(const_iterator const iter) const -> size_type
 {
-  if (iter.ptr < data_ || iter.ptr > data_ + size()) {
+  if (iter < data_ || iter >= cend()) {
     return npos;
   } else {
-    return size_type(iter.ptr - data_);
+    return size_type(iter - data_);
   }
 }
 
@@ -770,11 +770,7 @@ auto string_t::index_of(const_iterator const iter) const -> size_type
 
 auto string_t::index_of(const_reverse_iterator const iter) const -> size_type
 {
-  if (iter.ptr < data_ || iter.ptr > data_ + size()) {
-    return npos;
-  } else {
-    return size_type(iter.ptr - data_);
-  }
+  return index_of(iter.base());
 }
 
 
@@ -843,13 +839,13 @@ const char *string_t::data() const
 #define DEF_BEGIN_ITER(NAME, RTYPE, args...)                                  \
 auto string_t:: NAME () args -> RTYPE                                         \
 {                                                                             \
-  return RTYPE (data_);                                                       \
+  return data_;                                                               \
 }
 
 #define DEF_END_ITER(NAME, RTYPE, args...)                                    \
 auto string_t:: NAME () args -> RTYPE                                         \
 {                                                                             \
-  return RTYPE (data_ + size());                                              \
+  return data_ + size();                                                      \
 }
 
 DEF_BEGIN_ITER(cbegin, const_iterator, const)
@@ -867,13 +863,13 @@ DEF_END_ITER(end, iterator)
 #define DEF_RBEGIN_ITER(NAME, RTYPE, args...)                                 \
 auto string_t:: NAME () args -> RTYPE                                         \
 {                                                                             \
-  return RTYPE (data_ + size() - 1);                                          \
+  return RTYPE { end() };                                                     \
 }
 
 #define DEF_REND_ITER(NAME, RTYPE, args...)                                   \
 auto string_t:: NAME () args -> RTYPE                                         \
 {                                                                             \
-  return RTYPE (data_ - 1);                                                   \
+  return RTYPE { begin() };                                                   \
 }
 
 DEF_RBEGIN_ITER(crbegin, const_reverse_iterator, const)

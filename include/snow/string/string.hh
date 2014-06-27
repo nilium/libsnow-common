@@ -29,154 +29,17 @@ using string = string_t;
 std::ostream &operator << (std::ostream &out, const string_t &in);
 
 
-template <bool is_const, ptrdiff_t ptr_step>
-struct string_iter_t
-{
-  using value_type = char;
-  using pointer = typename std::conditional<
-    is_const, const value_type *, value_type *>::type;
-  using reference = typename std::conditional<
-    is_const, value_type, value_type &>::type;
-  using difference_type = ptrdiff_t;
-  using iterator_category = std::random_access_iterator_tag;
-
-
-  string_iter_t() = default;
-  explicit string_iter_t(pointer ptr_) : ptr(ptr_) { /* nop */ }
-
-  reference operator * ()
-  {
-    return *ptr;
-  }
-
-  value_type operator * () const
-  {
-    return *ptr;
-  }
-
-  pointer operator -> ()
-  {
-    return ptr;
-  }
-
-  string_iter_t &operator ++ ()
-  {
-    ptr += ptr_step;
-    return *this;
-  }
-
-  string_iter_t  operator ++ (int dummy)
-  {
-    string_iter_t result = *this;
-    ++ *this;
-    return result;
-  }
-
-  string_iter_t &operator -- ()
-  {
-    ptr -= ptr_step;
-    return *this;
-  }
-
-  string_iter_t  operator -- (int dummy)
-  {
-    string_iter_t result = *this;
-    -- *this;
-    return result;
-  }
-
-  string_iter_t  operator +  (difference_type delta) const
-  {
-    string_iter_t result = *this;
-    result.ptr += delta;
-    return result;
-  }
-
-  string_iter_t &operator += (difference_type delta)
-  {
-    ptr += delta;
-    return *this;
-  }
-
-  string_iter_t  operator -  (difference_type delta) const
-  {
-    string_iter_t result = *this;
-    result.ptr -= delta;
-    return result;
-  }
-
-  string_iter_t &operator -= (difference_type delta)
-  {
-    ptr -= delta;
-    return *this;
-  }
-
-  template <bool other_const, ptrdiff_t step>
-  bool operator == (const string_iter_t<other_const, step> &rhs) const
-  {
-    return ptr == rhs.ptr;
-  }
-
-  template <bool other_const, ptrdiff_t step>
-  bool operator != (const string_iter_t<other_const, step> &rhs) const
-  {
-    return ptr != rhs.ptr;
-  }
-
-  template <bool other_const, ptrdiff_t step>
-  bool operator <  (const string_iter_t<other_const, step> &rhs) const
-  {
-    return ptr < rhs.ptr;
-  }
-
-  template <bool other_const, ptrdiff_t step>
-  bool operator >  (const string_iter_t<other_const, step> &rhs) const
-  {
-    return ptr > rhs.ptr;
-  }
-
-  template <bool other_const, ptrdiff_t step>
-  bool operator <= (const string_iter_t<other_const, step> &rhs) const
-  {
-    return ptr <= rhs.ptr;
-  }
-
-  template <bool other_const, ptrdiff_t step>
-  bool operator >= (const string_iter_t<other_const, step> &rhs) const
-  {
-    return ptr >= rhs.ptr;
-  }
-
-  operator string_iter_t<true, ptr_step> () const
-  {
-    string_iter_t<true, ptr_step> result;
-    result.ptr = ptr;
-    return result;
-  }
-
-  operator pointer () { return ptr; }
-
-  pointer ptr = nullptr;
-};
-
-
-
-template <bool lconst, ptrdiff_t ldiff, bool rconst, ptrdiff_t rdiff>
-ptrdiff_t operator - (const string_iter_t<lconst, ldiff> &lc, const string_iter_t<rconst, rdiff> &rc)
-{
-  return lc.ptr - rc.ptr;
-}
-
-
 
 struct string_t
 {
   using value_type = char; // May not change.
   using size_type = size_t;
-  using iterator = string_iter_t<false, 1>;
-  using const_iterator = string_iter_t<true, 1>;
-  using reverse_iterator = string_iter_t<false, -1>;
-  using const_reverse_iterator = string_iter_t<true, -1>;
+  using pointer = value_type *;
+  using const_pointer = value_type const *;
+  using iterator = pointer;
+  using const_iterator = const_pointer;
+  using reverse_iterator = std::reverse_iterator<iterator>;
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 
   static const size_type npos = ~0;
