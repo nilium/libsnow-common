@@ -527,7 +527,7 @@ string_t &string_t::erase(const_iterator const from, const_iterator const to)
   if (from >= to) {
     return *this;
   }
-  const size_t from_pos = index_of(from);
+  const size_type from_pos = index_of(from);
   return erase(from_pos, index_of(to) - from_pos);
 }
 
