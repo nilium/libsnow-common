@@ -1289,6 +1289,8 @@ auto string_t::find_char(char ch, size_type from) const -> size_type
 
   if (len == 0 || from >= len) {
     return len;
+  } else if (from < 0) {
+    return len;
   }
 
   const uint32_t *data_ptr = reinterpret_cast<const uint32_t *>(data_ + from);
