@@ -23,6 +23,7 @@ namespace snow {
 
 
 struct string_t;
+using string = string_t;
 
 
 std::ostream &operator << (std::ostream &out, const string_t &in);
