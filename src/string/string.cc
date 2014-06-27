@@ -593,20 +593,29 @@ string_t &string_t::clear()
 
 
 
-string_t &string_t::resize(size_type len)
+string_t &string_t::resize(size_type const new_length)
 {
   const size_type old_len = size();
-  if (old_len == len) {
+
+  if (new_length < 0) {
+    s_throw(
+      std::out_of_range,
+      "resize(new_length) requires new_length (%d) >= 0",
+      new_length
+      );
+  } else if (old_len == new_length) {
     return *this;
-  } if (len > old_len) {
-    reserve(len + 1);
+  } if (new_length > old_len) {
+    reserve(new_length + 1);
   }
-  data_[len] = '\0';
+
+  data_[new_length] = '\0';
   if (is_short()) {
-    rep_.short_.length_ = uint8_t(len);
+    rep_.short_.length_ = uint8_t(new_length);
   } else {
-    rep_.long_.length_ = len;
+    rep_.long_.length_ = new_length;
   }
+
   return *this;
 }
 
