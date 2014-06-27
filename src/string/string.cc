@@ -11,6 +11,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <stdexcept>
 
 
 namespace snow {
@@ -21,6 +22,20 @@ static void gen_str_search_table(
   string_t::size_type length,
   ptrdiff_t jumps[]
   );
+
+
+
+static void check_range(int index, string_t::size_type length)
+{
+  if (index < 0 || index >= length) {
+    s_throw(
+      std::out_of_range,
+      "Attempt to access out of range element of string (index = %d; length = %zu)",
+      index,
+      length
+      );
+  }
+}
 
 
 
@@ -673,12 +688,8 @@ auto string_t::capacity() const -> size_type
 
 
 
-char &string_t::operator [] (ptrdiff_t index)
+char &string_t::operator [] (int index)
 {
-  if (index < 0) {
-    index = size() + index;
-  }
-
   /* bounds checking in debug mode only */
   assert(index >= 0);
   assert(index < size());
@@ -688,12 +699,8 @@ char &string_t::operator [] (ptrdiff_t index)
 
 
 
-char string_t::operator [] (ptrdiff_t index) const
+char string_t::operator [] (int index) const
 {
-  if (index < 0) {
-    index = size() + index;
-  }
-
   assert(index >= 0);
   assert(index < size());
 
@@ -702,34 +709,17 @@ char string_t::operator [] (ptrdiff_t index) const
 
 
 
-char &string_t::at(ptrdiff_t index)
+char &string_t::at(int index)
 {
-  if (index < 0) {
-    index = size() + index;
-  }
-
-  // check bounds - this fails regardless of NDEBUG since ::at must fail if the
-  // index is out of bounds (bearing in mind that the above negative indices
-  // still work)
-  if (!(index >= 0 || index < size())) {
-    std::abort();
-  }
-
+  check_range(index, size());
   return data_[index];
 }
 
 
 
-char string_t::at(ptrdiff_t index) const
+char string_t::at(int index) const
 {
-  if (index < 0) {
-    index = size() + index;
-  }
-
-  if (!(index >= 0 || index < size())) {
-    std::abort();
-  }
-
+  check_range(index, size());
   return data_[index];
 }
 

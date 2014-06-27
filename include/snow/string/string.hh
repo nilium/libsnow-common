@@ -268,12 +268,11 @@ struct string_t
   size_type capacity() const;
 
 
-  // Note: negative indices return characters relative to the back of the string.
-  char &operator [] (ptrdiff_t index);
-  char operator [] (ptrdiff_t index) const;
+  char &operator [] (int index);
+  char operator [] (int index) const;
 
-  char &at(ptrdiff_t index);
-  char at(ptrdiff_t index) const;
+  char &at(int index);
+  char at(int index) const;
 
   char &front();
   char front() const;
