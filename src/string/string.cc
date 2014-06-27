@@ -352,6 +352,7 @@ int string_t::compare(const string_t &other) const
 string_t &string_t::append(char ch)
 {
   const size_type len = size();
+  reserve_for_growth(len + 1);
   resize(len + 1);
   data_[len] = ch;
   return *this;
@@ -374,6 +375,7 @@ string_t &string_t::append(const char *zstr, size_type length)
 
   const size_type old_len = size();
   if (length) {
+    reserve_for_growth(old_len + length);
     resize(old_len + length);
     std::memcpy(data_ + old_len, zstr, length);
   }
@@ -387,6 +389,7 @@ string_t &string_t::append(const string_t &str)
   const size_type old_len = size();
   const size_type other_len = str.size();
   if (other_len) {
+    reserve_for_growth(old_len + other_len);
     resize(old_len + other_len);
     std::memcpy(data_ + old_len, str.data(), other_len);
   }
@@ -450,6 +453,7 @@ string_t &string_t::insert(size_type pos, char ch)
     return append(ch);
   } else {
     const size_type new_length = len + 1;
+    reserve_for_growth(new_length);
     resize(new_length);
     std::memmove(data_ + pos, data_ + pos + 1, (new_length) - pos);
     data_[pos] = ch;
@@ -485,6 +489,7 @@ string_t &string_t::insert(size_type pos, const char *zstr, size_type length)
         return append(zstr, length);
       } else {
         const size_type new_length = this_length + length;
+        reserve_for_growth(new_length);
         resize(new_length);
         std::memmove(data_ + pos, data_ + pos + length, (new_length) - pos);
         std::memcpy(data_ + pos, zstr, length);
@@ -705,6 +710,32 @@ string_t &string_t::reserve(size_type const requested_capacity)
   }
 
   return *this;
+}
+
+
+
+void string_t::reserve_for_growth(size_type const needed_cap)
+{
+  static size_type const CAPACITY_GROWTH = 14;
+  static size_type const CAPACITY_FILL_RESIZE = 85;
+
+  size_type const current_cap = capacity();
+
+  if (needed_cap < current_cap) {
+    size_type const current_size = size();
+    size_type const current_fill = (current_size * 100) / current_cap;
+
+    if (current_fill < 85) {
+      return;
+    }
+  }
+
+  size_type const spec_cap = (current_cap * CAPACITY_GROWTH) / 10;
+  if (spec_cap >= needed_cap) {
+    reserve(spec_cap);
+  } else {
+    reserve(needed_cap);
+  }
 }
 
 

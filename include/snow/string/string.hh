@@ -243,6 +243,8 @@ private:
   size_type find_char(char ch, size_type from) const;
   size_type find_substring(const char *str, size_type from, size_type length) const;
 
+  void reserve_for_growth(size_type const needed_cap);
+
   bool is_short() const;
   bool can_free() const;
 
