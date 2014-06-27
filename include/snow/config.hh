@@ -105,10 +105,6 @@
 
 #include "snow/logging/log.hh"
 
-#if S_PLATFORM_TOUCHPAD
-# include <PDL.h>
-#endif
-
 #ifndef S_EXPORT
 # if S_PLATFORM_WINDOWS && !defined(__GNUC__)
 #   if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
