@@ -910,33 +910,6 @@ string_t string_t::substr(const const_iterator &from, const const_iterator &to) 
 
 
 
-string_t string_t::window(size_type pos, size_type count)
-{
-  assert(pos <= size());
-  assert(pos + count <= size());
-  if (count == 0) {
-    return string_t();
-  }
-
-  return string_t(data_ + pos, count);
-}
-
-
-
-string_t string_t::window(const iterator &from)
-{
-  return string_t(from, end(), true);
-}
-
-
-
-string_t string_t::window(const iterator &from, const iterator &to)
-{
-  return string_t(from, to, true);
-}
-
-
-
 char *string_t::c_str()
 {
   return data_;

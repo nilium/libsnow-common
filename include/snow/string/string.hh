@@ -302,14 +302,6 @@ struct string_t
   string_t substr(const const_iterator &from) const;
   string_t substr(const const_iterator &from, const const_iterator &to) const;
 
-  // Window strings work the same as passing some portion of a string's data
-  // to a nofree constructor (with nofree true). If the originating string is
-  // modified is resized or its capacity or contents change, this string may
-  // be invalid.
-  string_t window(size_type pos, size_type count);
-  string_t window(const iterator &from);
-  string_t window(const iterator &from, const iterator &to);
-
   char *c_str();
   const char *c_str() const;
 
