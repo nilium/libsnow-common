@@ -40,14 +40,6 @@ string_t::string_t(const const_iterator &from, const const_iterator &to) :
 
 
 
-string_t::string_t(const iterator &from, const iterator &to, bool nofree) :
-  string_t(from.ptr, to <= from ? 0 : size_type(to - from), nofree)
-{
-  /* nop */
-}
-
-
-
 string_t::string_t(const char *zstr) :
   string_t(zstr, std::strlen(zstr))
 {
@@ -116,24 +108,6 @@ string_t::string_t(std::initializer_list<char> init) :
   size_type index = 0;
   for (; iter != init_end && index < len; ++iter, ++index) {
     data_[index] = *iter;
-  }
-}
-
-
-
-string_t::string_t(char *zstr, size_type length, bool nofree) :
-  string_t()
-{
-  assert(zstr);
-  if (nofree) {
-    data_ = zstr;
-    rep_.long_.length_ = length;
-    rep_.long_.capacity_ = 0;
-  } else {
-    resize(length);
-    if (length) {
-      std::memcpy(data_, zstr, length);
-    }
   }
 }
 

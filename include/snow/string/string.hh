@@ -218,15 +218,6 @@ struct string_t
   explicit string_t(int);
   explicit string_t(unsigned);
   explicit string_t(char);
-  // Note: this constructor allows you to create a string with no null
-  // terminating character, but only if nofree is true. If nofree is false,
-  // these are equivalent to string_t(const char * [, size_type]);
-  // In no case will the original zstr pointer be freed.
-  // If a string with nofree is resized or reserve is called, it will copy the
-  // string it was pointing to into a new buffer and perform the resize/reserve
-  // with that. Afterward, it will be in its own memory on the heap.
-  string_t(char *zstr, size_type length, bool nofree);
-  string_t(iterator const from, iterator const to, bool nofree);
 
   ~string_t();
 
