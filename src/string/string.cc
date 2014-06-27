@@ -17,6 +17,13 @@
 namespace snow {
 
 
+static int int_from_pointer_diff(char const *lhs, char const *rhs)
+{
+  return static_cast<int>(lhs - rhs);
+}
+
+
+
 static void check_range(int index, string_t::size_type length)
 {
   if (index < 0 || index >= length) {
@@ -25,6 +32,54 @@ static void check_range(int index, string_t::size_type length)
       "Attempt to access out of range element of string (index = %d; length = %d)",
       index,
       length
+      );
+  }
+}
+
+
+
+// End is inclusive
+static void check_range_iter_inclusive(char const *const ptr, char const *begin, char const *end)
+{
+  if (ptr < begin) {
+    s_throw(
+      std::out_of_range,
+      "Pointer (%p) occurs before string data (%p - %p)",
+      ptr,
+      begin,
+      end
+      );
+  } else if (ptr > end) {
+    s_throw(
+      std::out_of_range,
+      "Pointer (%p) occurs on or after end of string data (%p - %p)",
+      ptr,
+      end,
+      begin
+      );
+  }
+}
+
+
+
+// End is exclusive
+static void check_range_iter_exclusive(char const *const ptr, char const *begin, char const *end)
+{
+  if (ptr < begin) {
+    s_throw(
+      std::out_of_range,
+      "Pointer (%p) occurs before string data (%p - %p)",
+      ptr,
+      begin,
+      end
+      );
+  } else if (ptr >= end) {
+    s_throw(
+      std::out_of_range,
+      "Pointer (%p) occurs on or after end of string data (%p - %p)",
+      ptr,
+      end,
+      begin
       );
   }
 }
@@ -472,6 +527,16 @@ string_t &string_t::erase(size_type from, size_type count)
 {
   const size_type len = size();
   size_type to;
+  if (from < 0) {
+    from = 0;
+  } else if (count < 0) {
+    s_throw(
+      std::out_of_range,
+      "count (%d) must be >= 0",
+      count
+      );
+  }
+
   switch (count) {
   case 0: return *this;
   case npos: to = len - from; break;
@@ -505,22 +570,18 @@ string_t &string_t::erase(size_type from, size_type count)
 
 string_t &string_t::erase(const_iterator const pos)
 {
-  if (pos == data_ + size()) {
-    return *this;
-  }
-
-  return erase(index_of(pos), 1);
+  check_range_iter_inclusive(pos, cbegin(), cend());
+  return erase(int_from_pointer_diff(pos, data_), 1);
 }
 
 
 
 string_t &string_t::erase(const_iterator const from, const_iterator const to)
 {
-  if (from >= to) {
-    return *this;
-  }
-  const size_type from_pos = index_of(from);
-  return erase(from_pos, index_of(to) - from_pos);
+  check_range_iter_inclusive(from, cbegin(), cend());
+  check_range_iter_inclusive(to, cbegin(), cend());
+
+  return erase(int_from_pointer_diff(from, data_), int_from_pointer_diff(to, from));
 }
 
 
@@ -717,11 +778,8 @@ char string_t::back() const
 
 auto string_t::index_of(const_iterator const iter) const -> size_type
 {
-  if (iter < data_ || iter >= cend()) {
-    return npos;
-  } else {
-    return size_type(iter - data_);
-  }
+  check_range_iter_inclusive(iter, cbegin(), cend());
+  return int_from_pointer_diff(iter, data_);
 }
 
 
