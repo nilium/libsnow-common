@@ -42,6 +42,10 @@ struct string_t
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 
+  static_assert(std::is_same<char, value_type>::value,
+    "value_type of string_t must be char");
+
+
   static const size_type npos = -1;
 
 
