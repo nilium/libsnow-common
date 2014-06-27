@@ -126,7 +126,7 @@ struct string_t
   // string will change. If growing the array, the new characters will be
   // garbage data except for adding a null character at the end of the string.
   string_t &clear();
-  string_t &resize(size_type);
+  string_t &resize(size_type const new_length);
   size_type size() const;
   bool empty() const;
 
