@@ -33,7 +33,7 @@ std::ostream &operator << (std::ostream &out, const string_t &in);
 struct string_t
 {
   using value_type = char; // May not change.
-  using size_type = size_t;
+  using size_type = int;
   using pointer = value_type *;
   using const_pointer = value_type const *;
   using iterator = pointer;
@@ -42,7 +42,7 @@ struct string_t
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 
-  static const size_type npos = ~0;
+  static const size_type npos = -1;
 
 
   /*
