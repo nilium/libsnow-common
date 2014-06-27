@@ -1322,7 +1322,9 @@ auto string_t::find_substring(const char *str, size_type from, size_type length)
   if (data_length < length) {
     return data_length;
   } else if (length <= 0) {
-    return from;
+    return data_length;
+  } else if (from < 0) {
+    return data_length;
   }
 
   size_type const searchable_length = data_length - length;
