@@ -111,16 +111,20 @@
 
 #ifndef S_EXPORT
 # if S_PLATFORM_WINDOWS && !defined(__GNUC__)
-#   ifdef S_BUILD_SHARED_LIB
+#   if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
 #     define S_EXPORT __declspec(dllexport)
-#   else
+#   elif defined(S_SHARED_LIBRARY)
 #     define S_EXPORT __declspec(dllimport)
+#   else
+#     define S_EXPORT
 #   endif
 # elif S_PLATFORM_WINDOWS
-#   ifdef S_BUILD_SHARED_LIB
+#   if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
 #     define S_EXPORT __attribute__((dllexport))
-#   else
+#   elif defined(S_SHARED_LIBRARY)
 #     define S_EXPORT __attribute__((dllimport))
+#   else
+#     define S_EXPORT
 #   endif
 # else
 #   define S_EXPORT __attribute__((visibility("default")))
