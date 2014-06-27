@@ -1232,7 +1232,7 @@ auto string_t::find_char(char ch, size_type from) const -> size_type
     return len;
   }
 
-  const uint32_t *data_ptr = (const uint32_t *)(data_ + from);
+  const uint32_t *data_ptr = reinterpret_cast<const uint32_t *>(data_ + from);
   size_type count = len - from;
   while (count >= sizeof(*data_ptr)) {
     uint32_t ch_read = *data_ptr;
@@ -1243,7 +1243,7 @@ auto string_t::find_char(char ch, size_type from) const -> size_type
     count -= sizeof(*data_ptr);
     ++data_ptr;
   }
-  const char *remainder = (const char *)data_ptr;
+  const char *remainder = reinterpret_cast<const char *>(data_ptr);
   switch (count) {
   case 3: if (remainder[0] == ch) { return len - 3; } // fall-through
   case 2: if (remainder[1] == ch) { return len - 2; } // fall-through
