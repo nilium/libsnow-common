@@ -1279,7 +1279,7 @@ bool string_t::is_short() const
 
 bool string_t::can_free() const
 {
-  return !is_short() && capacity() > 0;
+  return !is_short();
 }
 
 
