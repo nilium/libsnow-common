@@ -57,7 +57,7 @@ size_t buffer_stream_t::write(const string &string)
     return 0;
   }
 
-  size_t length = std::min(string.size(), rem - 1);
+  size_t length = std::min(static_cast<size_t>(string.size()), rem - 1);
   std::memmove(offset_, string.data(), length);
   offset_[length] = '\0';
   seek(tell() + length + 1);
