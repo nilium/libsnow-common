@@ -17,14 +17,6 @@
 namespace snow {
 
 
-static void gen_str_search_table(
-  const char *str,
-  string_t::size_type length,
-  ptrdiff_t jumps[]
-  );
-
-
-
 static void check_range(int index, string_t::size_type length)
 {
   if (index < 0 || index >= length) {
@@ -1255,67 +1247,21 @@ auto string_t::find_char(char ch, size_type from) const -> size_type
 
 
 
-static void gen_str_search_table(
-  const char *str,
-  string_t::size_type length,
-  ptrdiff_t jumps[]
-  )
-{
-  ptrdiff_t str_index = 0;
-  ptrdiff_t jmp_index = jumps[0] = -1;
-  while (str_index < length) {
-    while (jmp_index > -1 && str[str_index] != str[jmp_index]) {
-      jmp_index = jumps[jmp_index];
-    }
-
-    jmp_index += 1;
-    str_index += 1;
-
-    if (str[str_index] == str[jmp_index]) {
-      jumps[str_index] = jumps[jmp_index];
-    } else {
-      jumps[str_index] = jmp_index;
-    }
-  }
-}
-
-
-
 auto string_t::find_substring(const char *str, size_type from, size_type length) const -> size_type
 {
-  assert(str);
-
-  if (length == 1) {
-    return find_char(*str, from);
-  }
-
-  const size_type len = size();
-  assert(from <= len);
-
-  if (from >= len || from + length >= len) {
-    return len;
-  } else if (length == 0) {
+  size_type const data_length = size();
+  if (data_length < length) {
+    return data_length;
+  } else if (length <= 0) {
     return from;
   }
 
-  std::vector<ptrdiff_t> jumps(length);
-  gen_str_search_table(str, length, jumps.data());
+  size_type const searchable_length = data_length - length;
+  char const *ptr = data_;
 
-  ptrdiff_t data_index = from;
-  ptrdiff_t str_index = 0;
-  const size_type data_length = len;
-  const char *data_str = data_;
-
-  while (data_index < data_length) {
-    while (str_index > -1 && str[str_index] != data_str[data_index]) {
-      str_index = jumps[str_index];
-    }
-
-    data_index += 1;
-    str_index += 1;
-
-    if (str_index >= length) {
-      return size_type(data_index - str_index);
+  for (; from <= searchable_length; ++from) {
+    if (std::memcmp(ptr + from, str, length) == 0) {
+      return from;
     }
   }
 
