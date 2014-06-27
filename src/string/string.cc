@@ -605,66 +605,32 @@ string_t &string_t::shrink_to_fit()
 
 
 
-string_t &string_t::reserve(size_type cap)
+string_t &string_t::reserve(size_type const requested_capacity)
 {
-  static const size_type fixed_alignments[128] = {
-    /* 0 - 7: 16 bytes */
-    16, 16, 16, 16, 16, 16, 16, 16,
-    /* 8-15: 32 bytes */
-    32, 32, 32, 32, 32, 32, 32, 32,
-    /* 16 - 23: 64 bytes */
-    64, 64, 64, 64, 64, 64, 64, 64,
-    /* 24 - 31: 128 bytes */
-    128, 128, 128, 128, 128, 128, 128, 128,
-    /* 32 - 63: 256 bytes */
-    256, 256, 256, 256, 256, 256, 256, 256,
-    256, 256, 256, 256, 256, 256, 256, 256,
-    256, 256, 256, 256, 256, 256, 256, 256,
-    256, 256, 256, 256, 256, 256, 256, 256,
-    /* 64 - 95: 512 bytes */
-    512, 512, 512, 512, 512, 512, 512, 512,
-    512, 512, 512, 512, 512, 512, 512, 512,
-    512, 512, 512, 512, 512, 512, 512, 512,
-    512, 512, 512, 512, 512, 512, 512, 512,
-    /* 96 - 128 and above: 1kb */
-    1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024,
-    1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024,
-    1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024,
-    1024, 1024, 1024, 1024, 1024, 1024, 1024, 1024,
-  };
-
   const size_type old_len = size();
-  const bool is_short_cache = (is_short());
+  const bool is_short_cache = is_short();
 
-  if ((!is_short_cache && cap <= capacity()) || (cap <= short_data_len_)) {
+  if ((!is_short_cache && requested_capacity <= capacity()) || (requested_capacity <= short_data_len_)) {
     return *this;
   }
 
-  size_type cap_align_diff;
-  cap_align_diff = (cap - capacity() * !is_short_cache) / 16;
-
-  if (cap_align_diff > 127) {
-    cap_align_diff = 127;
-  }
-
   // Initial allocations get an alignment of 16 bytes.
-  const size_type alignment =
-    (!is_short_cache) ? fixed_alignments[cap_align_diff] : 16;
-
   const size_type old_capacity = capacity();
-  cap = (cap + alignment) & ~(alignment - 1);
 
   if (can_free()) {
-    char *new_buffer = static_cast<char *>(realloc(data_, cap));
-    assert(new_buffer != NULL);
+    char *new_buffer = (char *)std::realloc(data_, requested_capacity);
+    assert(new_buffer != nullptr);
+
     if (!new_buffer) {
       return *this;
     }
+
     data_ = new_buffer;
   } else {
-    char *new_buffer = static_cast<char *>(malloc(cap));
+    char *new_buffer = (char *)std::malloc(requested_capacity);
     // How the hell should you handle this, anyway?
-    assert(new_buffer != NULL);
+    assert(new_buffer != nullptr);
+
     if (!new_buffer) {
       return *this;
     }
@@ -673,7 +639,7 @@ string_t &string_t::reserve(size_type cap)
 
     data_ = new_buffer;
     rep_.long_.length_ = old_len;
-    rep_.long_.capacity_ = cap;
+    rep_.long_.capacity_ = requested_capacity;
   }
 
   return *this;

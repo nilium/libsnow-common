@@ -131,7 +131,7 @@ struct string_t
   bool empty() const;
 
   string_t &shrink_to_fit();
-  string_t &reserve(size_type);
+  string_t &reserve(size_type const requested_capacity);
   size_type capacity() const;
 
 
