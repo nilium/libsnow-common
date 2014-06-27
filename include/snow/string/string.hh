@@ -224,8 +224,8 @@ struct string_t
   // If a string with nofree is resized or reserve is called, it will copy the
   // string it was pointing to into a new buffer and perform the resize/reserve
   // with that. Afterward, it will be in its own memory on the heap.
-  explicit string_t(char *zstr, size_type length, bool nofree);
-  explicit string_t(const iterator &from, const iterator &to, bool nofree);
+  string_t(char *zstr, size_type length, bool nofree);
+  string_t(iterator const from, iterator const to, bool nofree);
 
   ~string_t();
 
