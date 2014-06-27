@@ -22,7 +22,7 @@ static void check_range(int index, string_t::size_type length)
   if (index < 0 || index >= length) {
     s_throw(
       std::out_of_range,
-      "Attempt to access out of range element of string (index = %d; length = %zu)",
+      "Attempt to access out of range element of string (index = %d; length = %d)",
       index,
       length
       );
