@@ -250,10 +250,6 @@ struct string_t
   string_t &insert(const_iterator pos, const char *zstr);
   string_t &insert(const_iterator pos, const char *zstr, size_type length);
   string_t &insert(const_iterator pos, const string_t &str);
-  string_t &insert(iterator pos, char ch);
-  string_t &insert(iterator pos, const char *zstr);
-  string_t &insert(iterator pos, const char *zstr, size_type length);
-  string_t &insert(iterator pos, const string_t &str);
 
   string_t &insert(size_type pos, char ch);
   string_t &insert(size_type pos, const char *zstr);
@@ -293,9 +289,7 @@ struct string_t
   char &back();
   char back() const;
 
-  size_type index_of(const iterator &iter) const;
   size_type index_of(const const_iterator &iter) const;
-  size_type index_of(const reverse_iterator &iter) const;
   size_type index_of(const const_reverse_iterator &iter) const;
 
   string_t substr(size_type pos, size_type count = npos) const;

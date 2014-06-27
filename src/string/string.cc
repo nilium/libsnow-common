@@ -403,39 +403,6 @@ string_t &string_t::insert(const_iterator pos, const string_t &str)
 
 
 
-string_t &string_t::insert(iterator pos, char ch)
-{
-  return insert(index_of(pos), ch);
-}
-
-
-
-string_t &string_t::insert(iterator pos, const char *zstr)
-{
-  assert(zstr);
-  assert(zstr < data_ || zstr > data_ + size());
-  return insert(index_of(pos), zstr, std::strlen(zstr));
-}
-
-
-
-string_t &string_t::insert(iterator pos, const char *zstr, size_type length)
-{
-  assert(zstr);
-  assert(zstr < data_ || zstr > data_ + size());
-  return insert(index_of(pos), zstr, length);
-}
-
-
-
-string_t &string_t::insert(iterator pos, const string_t &str)
-{
-  assert(this != &str);
-  return insert(index_of(pos), str.data(), str.size());
-}
-
-
-
 string_t &string_t::insert(size_type pos, char ch)
 {
   const size_type len = size();
@@ -826,36 +793,7 @@ char string_t::back() const
 
 
 
-auto string_t::index_of(const iterator &iter) const -> size_type
-{
-  const size_t len = size();
-  // Bounds-check, though admittedly only in debug mode.
-  assert(iter.ptr >= data_);
-  assert(iter.ptr <= data_ + len);
-  if (iter.ptr < data_ || iter.ptr > data_ + len) {
-    return npos;
-  } else {
-    return size_type(iter.ptr - data_);
-  }
-}
-
-
-
 auto string_t::index_of(const const_iterator &iter) const -> size_type
-{
-  const size_t len = size();
-  assert(iter.ptr >= data_);
-  assert(iter.ptr <= data_ + len);
-  if (iter.ptr < data_ || iter.ptr > data_ + len) {
-    return npos;
-  } else {
-    return size_type(iter.ptr - data_);
-  }
-}
-
-
-
-auto string_t::index_of(const reverse_iterator &iter) const -> size_type
 {
   if (iter.ptr < data_ || iter.ptr > data_ + size()) {
     return npos;
