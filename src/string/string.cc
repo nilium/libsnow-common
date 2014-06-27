@@ -62,30 +62,6 @@ static void check_range_iter_inclusive(char const *const ptr, char const *begin,
 
 
 
-// End is exclusive
-static void check_range_iter_exclusive(char const *const ptr, char const *begin, char const *end)
-{
-  if (ptr < begin) {
-    s_throw(
-      std::out_of_range,
-      "Pointer (%p) occurs before string data (%p - %p)",
-      ptr,
-      begin,
-      end
-      );
-  } else if (ptr >= end) {
-    s_throw(
-      std::out_of_range,
-      "Pointer (%p) occurs on or after end of string data (%p - %p)",
-      ptr,
-      end,
-      begin
-      );
-  }
-}
-
-
-
 string_t::string_t() :
   rep_({{0x0, 0x0}})
 {
