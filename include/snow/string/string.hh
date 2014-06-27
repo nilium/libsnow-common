@@ -208,7 +208,7 @@ struct string_t
 
   string_t();
   string_t(const std::string &other);
-  string_t(const const_iterator &from, const const_iterator &to);
+  string_t(const_iterator const from, const_iterator const to);
   string_t(const char *zstr);
   string_t(const char *zstr, size_type length);
   string_t(string_t &&other);
@@ -236,12 +236,12 @@ struct string_t
   string_t &append(const char *zstr);
   string_t &append(const char *zstr, size_type length);
   string_t &append(const string_t &str);
-  string_t &append(const const_iterator &from, const const_iterator &to);
+  string_t &append(const_iterator const from, const_iterator const to);
 
-  string_t &insert(const_iterator pos, char ch);
-  string_t &insert(const_iterator pos, const char *zstr);
-  string_t &insert(const_iterator pos, const char *zstr, size_type length);
-  string_t &insert(const_iterator pos, const string_t &str);
+  string_t &insert(const_iterator const pos, char const ch);
+  string_t &insert(const_iterator const pos, const char *const zstr);
+  string_t &insert(const_iterator const pos, const char *const zstr, size_type const length);
+  string_t &insert(const_iterator const pos, const string_t &str);
 
   string_t &insert(size_type pos, char ch);
   string_t &insert(size_type pos, const char *zstr);
@@ -251,9 +251,9 @@ struct string_t
   string_t &push_back(char ch);
   string_t &pop_back();
 
-  string_t &erase(size_type from = 0, size_type count = npos);
-  string_t &erase(const const_iterator &pos);
-  string_t &erase(const const_iterator &from, const const_iterator &to);
+  string_t &erase(size_type const from, size_type const count = npos);
+  string_t &erase(const_iterator const pos);
+  string_t &erase(const_iterator const from, const_iterator const to);
 
   // If shrinking the string, there is no guarantee that the capacity of the
   // string will change. If growing the array, the new characters will be
@@ -281,12 +281,12 @@ struct string_t
   char &back();
   char back() const;
 
-  size_type index_of(const const_iterator &iter) const;
-  size_type index_of(const const_reverse_iterator &iter) const;
+  size_type index_of(const_iterator const iter) const;
+  size_type index_of(const_reverse_iterator const iter) const;
 
   string_t substr(size_type pos, size_type count = npos) const;
-  string_t substr(const const_iterator &from) const;
-  string_t substr(const const_iterator &from, const const_iterator &to) const;
+  string_t substr(const_iterator const from) const;
+  string_t substr(const_iterator const from, const_iterator const to) const;
 
   char *c_str();
   const char *c_str() const;
@@ -325,23 +325,23 @@ struct string_t
   const_iterator find(const char *str, size_type from = 0) const;
   const_iterator find(const char *str, size_type from, size_type length) const;
 
-  iterator find(char ch, const const_iterator &from);
-  iterator find(const string_t &other, const const_iterator &from);
-  iterator find(const char *str, const const_iterator &from);
-  iterator find(const char *str, const const_iterator &from, size_type length);
-  const_iterator find(char ch, const const_iterator &from) const;
-  const_iterator find(const string_t &other, const const_iterator &from) const;
-  const_iterator find(const char *str, const const_iterator &from) const;
-  const_iterator find(const char *str, const const_iterator &from, size_type length) const;
+  iterator find(char ch, const_iterator const from);
+  iterator find(const string_t &other, const_iterator const from);
+  iterator find(const char *str, const_iterator const from);
+  iterator find(const char *str, const_iterator const from, size_type length);
+  const_iterator find(char ch, const_iterator const from) const;
+  const_iterator find(const string_t &other, const_iterator const from) const;
+  const_iterator find(const char *str, const_iterator const from) const;
+  const_iterator find(const char *str, const_iterator const from, size_type length) const;
 
   size_type find_index(char ch, size_type from = 0) const;
   size_type find_index(const string_t &other, size_type from = 0) const;
   size_type find_index(const char *str, size_type from = 0) const;
   size_type find_index(const char *str, size_type from, size_type length) const;
-  size_type find_index(char ch, const const_iterator &from) const;
-  size_type find_index(const string_t &other, const const_iterator &from) const;
-  size_type find_index(const char *str, const const_iterator &from) const;
-  size_type find_index(const char *str, const const_iterator &from, size_type length) const;
+  size_type find_index(char ch, const_iterator const from) const;
+  size_type find_index(const string_t &other, const_iterator const from) const;
+  size_type find_index(const char *str, const_iterator const from) const;
+  size_type find_index(const char *str, const_iterator const from, size_type length) const;
 
   bool has_suffix(const string_t &str) const;
   bool has_suffix(const char *zstr) const;

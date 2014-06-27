@@ -32,7 +32,7 @@ string_t::string_t() :
 
 
 
-string_t::string_t(const const_iterator &from, const const_iterator &to) :
+string_t::string_t(const_iterator const from, const_iterator const to) :
   string_t(from.ptr, to <= from ? 0 : size_type(to - from))
 {
   /* nop */
@@ -333,7 +333,7 @@ string_t &string_t::append(const string_t &str)
 
 
 
-string_t &string_t::append(const const_iterator &from, const const_iterator &to)
+string_t &string_t::append(const_iterator const from, const_iterator const to)
 {
   if (from == to || from < to) {
     return *this;
@@ -496,7 +496,7 @@ string_t &string_t::erase(size_type from, size_type count)
 
 
 
-string_t &string_t::erase(const const_iterator &pos)
+string_t &string_t::erase(const_iterator const pos)
 {
   if (pos.ptr == data_ + size()) {
     return *this;
@@ -507,7 +507,7 @@ string_t &string_t::erase(const const_iterator &pos)
 
 
 
-string_t &string_t::erase(const const_iterator &from, const const_iterator &to)
+string_t &string_t::erase(const_iterator const from, const_iterator const to)
 {
   if (from >= to) {
     return *this;
@@ -767,7 +767,7 @@ char string_t::back() const
 
 
 
-auto string_t::index_of(const const_iterator &iter) const -> size_type
+auto string_t::index_of(const_iterator const iter) const -> size_type
 {
   if (iter.ptr < data_ || iter.ptr > data_ + size()) {
     return npos;
@@ -778,7 +778,7 @@ auto string_t::index_of(const const_iterator &iter) const -> size_type
 
 
 
-auto string_t::index_of(const const_reverse_iterator &iter) const -> size_type
+auto string_t::index_of(const_reverse_iterator const iter) const -> size_type
 {
   if (iter.ptr < data_ || iter.ptr > data_ + size()) {
     return npos;
@@ -808,14 +808,14 @@ string_t string_t::substr(size_type pos, size_type count) const
 
 
 
-string_t string_t::substr(const const_iterator &from) const
+string_t string_t::substr(const_iterator const from) const
 {
   return string_t(from, cend());
 }
 
 
 
-string_t string_t::substr(const const_iterator &from, const const_iterator &to) const
+string_t string_t::substr(const_iterator const from, const_iterator const to) const
 {
   return string_t(from, to);
 }
@@ -982,56 +982,56 @@ auto string_t::find(const char *str, size_type from, size_type length) const -> 
 
 
 
-auto string_t::find(char ch, const const_iterator &from) -> iterator
+auto string_t::find(char ch, const_iterator const from) -> iterator
 {
   return iterator(data_ + find_char(ch, index_of(from)));
 }
 
 
 
-auto string_t::find(const string_t &other, const const_iterator &from) -> iterator
+auto string_t::find(const string_t &other, const_iterator const from) -> iterator
 {
   return iterator(data_ + find_substring(other.data_, index_of(from), other.size()));
 }
 
 
 
-auto string_t::find(const char *str, const const_iterator &from) -> iterator
+auto string_t::find(const char *str, const_iterator const from) -> iterator
 {
   return iterator(data_ + find_substring(str, index_of(from), std::strlen(str)));
 }
 
 
 
-auto string_t::find(const char *str, const const_iterator &from, size_type length) -> iterator
+auto string_t::find(const char *str, const_iterator const from, size_type length) -> iterator
 {
   return iterator(data_ + find_substring(str, index_of(from), length));
 }
 
 
 
-auto string_t::find(char ch, const const_iterator &from) const -> const_iterator
+auto string_t::find(char ch, const_iterator const from) const -> const_iterator
 {
   return const_iterator(data_ + find_char(ch, index_of(from)));
 }
 
 
 
-auto string_t::find(const string_t &other, const const_iterator &from) const -> const_iterator
+auto string_t::find(const string_t &other, const_iterator const from) const -> const_iterator
 {
   return const_iterator(data_ + find_substring(other.data_, index_of(from), other.size()));
 }
 
 
 
-auto string_t::find(const char *str, const const_iterator &from) const -> const_iterator
+auto string_t::find(const char *str, const_iterator const from) const -> const_iterator
 {
   return const_iterator(data_ + find_substring(str, index_of(from), std::strlen(str)));
 }
 
 
 
-auto string_t::find(const char *str, const const_iterator &from, size_type length) const -> const_iterator
+auto string_t::find(const char *str, const_iterator const from, size_type length) const -> const_iterator
 {
   return const_iterator(data_ + find_substring(str, index_of(from), length));
 }
@@ -1070,7 +1070,7 @@ auto string_t::find_index(const char *str, size_type from, size_type length) con
 
 
 
-auto string_t::find_index(char ch, const const_iterator &from) const -> size_type
+auto string_t::find_index(char ch, const_iterator const from) const -> size_type
 {
   const size_type result = find_char(ch, index_of(from));
   return result == size() ? npos : result;
@@ -1078,7 +1078,7 @@ auto string_t::find_index(char ch, const const_iterator &from) const -> size_typ
 
 
 
-auto string_t::find_index(const string_t &other, const const_iterator &from) const -> size_type
+auto string_t::find_index(const string_t &other, const_iterator const from) const -> size_type
 {
   const size_type result = find_substring(other.data_, index_of(from), other.size());
   return result == size() ? npos : result;
@@ -1086,7 +1086,7 @@ auto string_t::find_index(const string_t &other, const const_iterator &from) con
 
 
 
-auto string_t::find_index(const char *str, const const_iterator &from) const -> size_type
+auto string_t::find_index(const char *str, const_iterator const from) const -> size_type
 {
   const size_type result = find_substring(str, index_of(from), std::strlen(str));
   return result == size() ? npos : result;
@@ -1094,7 +1094,7 @@ auto string_t::find_index(const char *str, const const_iterator &from) const -> 
 
 
 
-auto string_t::find_index(const char *str, const const_iterator &from, size_type length) const -> size_type
+auto string_t::find_index(const char *str, const_iterator const from, size_type length) const -> size_type
 {
   const size_type result = find_substring(str, index_of(from), length);
   return result == size() ? npos : result;
