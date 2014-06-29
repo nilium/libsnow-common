@@ -48,6 +48,8 @@ struct allocator
 template <typename Allocator>
 struct simple_deallocator
 {
+  using allocator = Allocator;
+
   void operator () (void *ptr) noexcept
   {
     Allocator{}.deallocate(ptr);
@@ -59,7 +61,9 @@ struct simple_deallocator
 template <typename Allocator>
 struct bound_deallocator
 {
-  Allocator &_alloc;
+  using allocator = Allocator;
+
+  allocator &_alloc;
 
   void operator () (void *ptr) noexcept
   {
