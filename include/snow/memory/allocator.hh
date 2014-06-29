@@ -98,10 +98,7 @@ struct aligned_mallocator
 
   using deallocator_type = simple_deallocator<aligned_mallocator>;
 
-  deallocator_type deallocator()
-  {
-    return deallocator_type {};
-  }
+  deallocator_type deallocator();
 };
 
 
@@ -111,6 +108,14 @@ void aligned_mallocator<Align>::deallocate(void *p) noexcept
 {
   void *const actual = ((void **)p)[-1];
   std::free(actual);
+}
+
+
+
+template <size_t Align>
+auto aligned_mallocator<Align>::deallocator() -> deallocator_type
+{
+  return deallocator_type {};
 }
 
 
