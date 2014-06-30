@@ -140,7 +140,7 @@ template <>
 struct aligned_mallocator<1> : public mallocator
 {
   using mallocator::mallocator;
-  static size_t const alignment = Align;
+  static size_t const alignment = 1;
 };
 
 
@@ -149,7 +149,7 @@ template <>
 struct aligned_mallocator<2> : public mallocator
 {
   using mallocator::mallocator;
-  static size_t const alignment = Align;
+  static size_t const alignment = 2;
 };
 
 
@@ -158,7 +158,7 @@ template <>
 struct aligned_mallocator<4> : public mallocator
 {
   using mallocator::mallocator;
-  static size_t const alignment = Align;
+  static size_t const alignment = 4;
 };
 
 
@@ -167,7 +167,7 @@ template <>
 struct aligned_mallocator<8> : public mallocator
 {
   using mallocator::mallocator;
-  static size_t const alignment = Align;
+  static size_t const alignment = 8;
 };
 
 
@@ -176,7 +176,7 @@ template <>
 struct aligned_mallocator<16> : public mallocator
 {
   using mallocator::mallocator;
-  static size_t const alignment = Align;
+  static size_t const alignment = 16;
 };
 
 
