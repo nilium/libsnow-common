@@ -21,7 +21,10 @@
 namespace snow {
 
 
-struct S_EXPORT ref_counter_t
+struct
+  S_EXPORT
+  S_DEPRECATED("ref_counter_t is unsafe and will be removed shortly")
+  ref_counter_t
 {
     template <typename T>
     using finalizer_t = void (*)(T *object);
