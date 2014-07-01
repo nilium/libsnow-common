@@ -42,6 +42,10 @@
 # endif /* !__cplusplus */
 #endif /* !defined(NULL) */
 
+#ifndef __has_extension
+# define __has_extension(X) (0)
+#endif
+
 /* Define YES/NO constants to map 1 and 0 respectively.
    These are an Apple-ism, and I like that they can contribute to code
    readability in some odd ways.  On the off chance that Cocoa.h is included
