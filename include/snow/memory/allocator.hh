@@ -50,7 +50,7 @@ struct simple_deallocator
 {
   using allocator = Allocator;
 
-  void operator () (void *ptr) noexcept
+  void operator () (void *const ptr) noexcept
   {
     Allocator{}.deallocate(ptr);
   }
@@ -65,7 +65,7 @@ struct bound_deallocator
 
   allocator &_alloc;
 
-  void operator () (void *ptr) noexcept
+  void operator () (void *const ptr) noexcept
   {
     _alloc.deallocate(ptr);
   }
@@ -75,8 +75,8 @@ struct bound_deallocator
 
 struct mallocator
 {
-  void *allocate(size_t bytes) { return std::malloc(bytes); }
-  void deallocate(void *ptr) noexcept { std::free(ptr); }
+  void *allocate(size_t const bytes) { return std::malloc(bytes); }
+  void deallocate(void *const ptr) noexcept { std::free(ptr); }
 
   using deallocator_type = simple_deallocator<mallocator>;
 
@@ -93,8 +93,8 @@ struct aligned_mallocator
 {
   static size_t const alignment = Align;
 
-  void *allocate(size_t bytes);
-  void deallocate(void *ptr) noexcept;
+  void *allocate(size_t const bytes);
+  void deallocate(void *const ptr) noexcept;
 
   using deallocator_type = simple_deallocator<aligned_mallocator>;
 
@@ -104,7 +104,7 @@ struct aligned_mallocator
 
 
 template <size_t Align>
-void aligned_mallocator<Align>::deallocate(void *p) noexcept
+void aligned_mallocator<Align>::deallocate(void *const p) noexcept
 {
   void *const actual = ((void **)p)[-1];
   std::free(actual);
