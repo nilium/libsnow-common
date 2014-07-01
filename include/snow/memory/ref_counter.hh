@@ -63,7 +63,7 @@ auto  ref_counter_t::retain(T *object) -> T *
     s_throw(std::invalid_argument, "Attempt to retain nullptr");
   }
 
-  retain_object_locked((void *)object);
+  retain_object_locked(reinterpret_cast<void *>(object));
 
   return object;
 }
@@ -77,7 +77,7 @@ bool  ref_counter_t::release(T *object, finalizer_t<T> finalize)
     s_throw(std::invalid_argument, "Attempt to release nullptr");
   }
 
-  return release_object_locked(object, (finalizer_t<void>)finalize);
+  return release_object_locked(object, reinterpret_cast<finalizer_t<void>>(finalize));
 }
 
 
