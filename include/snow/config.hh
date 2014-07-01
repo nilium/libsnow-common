@@ -139,6 +139,21 @@
 # endif
 #endif
 
+#ifndef S_DEPRECATED
+# if __cplusplus > 201103L
+#   define S_DEPRECATED(REASON) [[deprecated( REASON )]]
+# elif __has_extension(attribute_deprecated_with_message)
+#   define S_DEPRECATED(REASON) __attribute__((deprecated( REASON )))
+# elif S_PLATFORM_WINDOWS && !defined(__GNUC__)
+#   define S_DEPRECATED(REASON) __declspec(deprecated( REASON ))
+# elif defined(__GNUC__)
+#   define S_DEPRECATED(REASON) __attribute__((deprecated))
+# else
+#   pragma message "No deprecated attribute available, take caution"
+#   define S_DEPRECATED(REASON)
+# endif
+#endif
+
 #include <stdexcept>
 #include <utility>
 #include <type_traits>
