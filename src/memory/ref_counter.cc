@@ -84,8 +84,9 @@ uint_fast32_t ref_counter_t::object_retain_count_locked(const void *obj) const
   uint_fast32_t count = 1;
   lock_.lock();
   auto iter = retained_.find(obj);
-  if (iter != retained_.end())
+  if (iter != retained_.end()) {
     count += iter->second;
+  }
   lock_.unlock();
   return count;
 }

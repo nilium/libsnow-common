@@ -59,8 +59,9 @@ private:
 template <typename T>
 auto  ref_counter_t::retain(T *object) -> T *
 {
-  if (object == NULL)
+  if (object == NULL) {
     s_throw(std::invalid_argument, "Attempt to retain nullptr");
+  }
 
   retain_object_locked((void *)object);
 
@@ -72,8 +73,9 @@ auto  ref_counter_t::retain(T *object) -> T *
 template <typename T>
 bool  ref_counter_t::release(T *object, finalizer_t<T> finalize)
 {
-  if (object == nullptr)
+  if (object == nullptr) {
     s_throw(std::invalid_argument, "Attempt to release nullptr");
+  }
 
   return release_object_locked(object, (finalizer_t<void>)finalize);
 }
@@ -83,8 +85,9 @@ bool  ref_counter_t::release(T *object, finalizer_t<T> finalize)
 template <typename T>
 bool  ref_counter_t::release(T *object)
 {
-  if (object == nullptr)
+  if (object == nullptr) {
     s_throw(std::invalid_argument, "Attempt to release nullptr");
+  }
 
   return release_object_locked(object, nullptr);
 }
@@ -94,8 +97,9 @@ bool  ref_counter_t::release(T *object)
 template <typename T>
 auto  ref_counter_t::retain_count(const T *object) const -> uint_fast32_t
 {
-  if (object == nullptr)
+  if (object == nullptr) {
     return 0;
+  }
 
   return object_retain_count_locked(object);
 }
