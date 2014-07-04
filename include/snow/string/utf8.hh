@@ -228,7 +228,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
     if (!stop_at_invalid) {
       do {
         ++iter;
-      } while (iter != end && (next_octet_(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
+      } while (iter != end && is_intermediate_(next_octet_(iter)));
     }
 
     return invalid;
@@ -243,7 +243,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
 
     uint32_t const next_code = next_octet_(iter);
 
-    if ((next_code & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
+    if (!is_intermediate_(next_code)) {
       return invalid;
     }
 
@@ -629,7 +629,7 @@ uint32_t next_code(IT &iter, uint32_t invalid = UTF8_INVALID_CODE)
     if (!stop_at_invalid) {
       do {
         ++iter;
-      } while ((next_octet_(iter) & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE);
+      } while (is_intermediate_(next_octet_(iter)));
     }
 
     return invalid;
@@ -640,7 +640,7 @@ uint32_t next_code(IT &iter, uint32_t invalid = UTF8_INVALID_CODE)
   for (; count; ++temp_iter, --count) {
     uint32_t const next_code = next_octet_(temp_iter);
 
-    if ((next_code & UTF8_MASK_INTERMEDIATE) != UTF8_NAME_INTERMEDIATE) {
+    if (!is_intermediate_(next_code)) {
       return invalid;
     }
 
