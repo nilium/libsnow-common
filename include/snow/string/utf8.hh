@@ -29,7 +29,7 @@ namespace unsafe
 template <typename T>
 class iterator;
 
-}
+} // namespace unsafe
 
 
 template <typename T>
@@ -75,6 +75,7 @@ enum : uint32_t {
 };
 
 
+
 /*==============================================================================
   utf8::value_mask_
 
@@ -97,6 +98,7 @@ constexpr uint32_t mask_name_(uint32_t mask)
 }
 
 
+
 /*==============================================================================
   utf8::intermediate_byte_
 
@@ -113,6 +115,7 @@ constexpr uint32_t intermediate_byte_(uint32_t code, int fourth)
 }
 
 
+
 /*==============================================================================
   utf8::octets_for_code
 
@@ -120,6 +123,7 @@ constexpr uint32_t intermediate_byte_(uint32_t code, int fourth)
     code can't be represented as a well-formed UTF-8 byte sequence.
 ==============================================================================*/
 int octets_for_code(uint32_t code);
+
 
 
 /*==============================================================================
@@ -133,6 +137,7 @@ uint32_t next_octet_(IT const &start)
 {
   return static_cast<uint32_t>(*start) & 0xFF;
 }
+
 
 
 /*==============================================================================
@@ -165,6 +170,7 @@ bool read_BOM(IT &start, IT const &end)
 
   return true;
 }
+
 
 
 /*==============================================================================
@@ -238,6 +244,7 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
 }
 
 
+
 /*==============================================================================
   utf8::find_invalid
 
@@ -256,6 +263,7 @@ IT find_invalid(IT iter, IT const &end)
 }
 
 
+
 /*==============================================================================
   utf8::peek_code
 
@@ -270,6 +278,7 @@ uint32_t peek_code(IT const &iter, IT const &end, uint32_t invalid = UTF8_INVALI
 }
 
 
+
 /*==============================================================================
   utf8::next_is_valid
 
@@ -280,6 +289,7 @@ bool next_is_valid(IT const &iter, IT const &end)
 {
   return peek_code(iter, end, UTF8_INVALID_CODE) != UTF8_INVALID_CODE;
 }
+
 
 
 /*==============================================================================
@@ -315,6 +325,7 @@ int put_code(IT &iter, uint32_t code)
 }
 
 
+
 /*==============================================================================
   utf8::put_code
 
@@ -325,6 +336,7 @@ int put_code(IT &&iter, uint32_t code)
 {
   return put_code(iter, code);
 }
+
 
 
 /*==============================================================================
@@ -343,6 +355,7 @@ int distance(IT iter, IT const &end)
   }
   return count;
 }
+
 
 
 /*==============================================================================
@@ -367,6 +380,7 @@ int advance(IT &iter, IT const &end, int count)
   }
   return result_count;
 }
+
 
 
 /*==============================================================================
@@ -484,12 +498,14 @@ public:
 };
 
 
+
 // Comparison operators
 template <typename T, typename Q>
 bool operator == (iterator<T> const &lhs, iterator<Q> const &rhs)
 {
   return lhs.underlying() == rhs.underlying();
 }
+
 
 
 template <typename T, typename Q>
@@ -499,11 +515,13 @@ bool operator != (iterator<T> const &lhs, iterator<Q> const &rhs)
 }
 
 
+
 template <typename T>
 bool operator == (T const &lhs, iterator<T> const &rhs)
 {
   return lhs == rhs.underlying();
 }
+
 
 
 template <typename T>
@@ -513,11 +531,13 @@ bool operator != (T const &lhs, iterator<T> const &rhs)
 }
 
 
+
 template <typename T>
 bool operator == (iterator<T> const &lhs, T const &rhs)
 {
   return lhs.underlying() == rhs;
 }
+
 
 
 template <typename T>
@@ -564,6 +584,7 @@ bool read_BOM(IT &start)
 
   return true;
 }
+
 
 
 template <bool stop_at_invalid = true, typename IT>
@@ -622,6 +643,7 @@ uint32_t next_code(IT &iter, uint32_t invalid = UTF8_INVALID_CODE)
 }
 
 
+
 /*==============================================================================
   utf8::unsafe::peek_code
 
@@ -636,6 +658,7 @@ uint32_t peek_code(IT const &iter, uint32_t invalid = UTF8_INVALID_CODE)
 }
 
 
+
 /*==============================================================================
   utf8::unsafe::next_is_valid
 
@@ -646,6 +669,7 @@ bool next_is_valid(IT const &iter)
 {
   return peek_code(iter, UTF8_INVALID_CODE) != UTF8_INVALID_CODE;
 }
+
 
 
 /*==============================================================================
@@ -773,12 +797,14 @@ public:
 };
 
 
+
 // Comparison operators
 template <typename T, typename Q>
 bool operator == (iterator<T> const &lhs, iterator<Q> const &rhs)
 {
   return lhs.underlying() == rhs.underlying();
 }
+
 
 
 template <typename T, typename Q>
@@ -788,11 +814,13 @@ bool operator != (iterator<T> const &lhs, iterator<Q> const &rhs)
 }
 
 
+
 template <typename T>
 bool operator == (T const &lhs, iterator<T> const &rhs)
 {
   return lhs == rhs.underlying();
 }
+
 
 
 template <typename T>
@@ -802,6 +830,7 @@ bool operator != (T const &lhs, iterator<T> const &rhs)
 }
 
 
+
 template <typename T>
 bool operator == (iterator<T> const &lhs, T const &rhs)
 {
@@ -809,12 +838,12 @@ bool operator == (iterator<T> const &lhs, T const &rhs)
 }
 
 
+
 template <typename T>
 bool operator != (iterator<T> const &lhs, T const &rhs)
 {
   return lhs.underlying() != rhs;
 }
-
 
 
 } // namespace unsafe
