@@ -100,6 +100,20 @@ constexpr uint32_t mask_name_(uint32_t mask)
 
 
 /*==============================================================================
+  utf8::is_intermediate_
+
+    Returns whether the octet (granted, it's passed as a uint32_t) is
+    considered an intermediate octet (i.e., not the start of a sequence of
+    UTF8 octets).
+==============================================================================*/
+constexpr bool is_intermediate_(uint32_t code)
+{
+  return (code & UTF8_MASK_INTERMEDIATE) == UTF8_NAME_INTERMEDIATE;
+}
+
+
+
+/*==============================================================================
   utf8::intermediate_byte_
 
     Returns the intermediate byte for the given code and fourth of the
