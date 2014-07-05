@@ -308,9 +308,7 @@ IT before(IT iter, int count)
 template <typename IT>
 void backtrack(IT &iter, int count)
 {
-  for (; count > 0; --count) {
-    iter = before(iter);
-  }
+  iter = before(iter, count);
 }
 
 
