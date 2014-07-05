@@ -283,6 +283,21 @@ IT before(IT iter)
 
 
 /*==============================================================================
+  utf8::backtrack
+
+    Opposite of advance -- walks backwards in a sequence.
+==============================================================================*/
+template <typename IT>
+void backtrack(IT &iter, int count)
+{
+  for (; count > 0; --count) {
+    iter = before(iter);
+  }
+}
+
+
+
+/*==============================================================================
   utf8::find_invalid
 
     Finds and returns an iterator pointing to the first invalid code found. If
