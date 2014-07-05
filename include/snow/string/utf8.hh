@@ -260,6 +260,29 @@ uint32_t next_code(IT &iter, IT const &end, uint32_t invalid = UTF8_INVALID_CODE
 
 
 /*==============================================================================
+  utf8::before
+
+    Returns an iterator pointing to the UTF8 code before the one at the given
+    iterator. This can only be safely used for valid UTF8 sequences. before(IT)
+    is not bounds-checked (i.e., doesn't test for whether it's before the start
+    of a sequence), so using it is only valid when there is a valid code
+    preceding the iterator.
+
+    Essentially, all this does is walk backwards until it finds the first
+    non-intermediate octet (i.e., it finds an octet that looks like it's the
+    start of a code).
+==============================================================================*/
+template <typename IT>
+IT before(IT iter)
+{
+  do {
+    --iter;
+  } while (is_intermediate_(next_octet_(iter)));
+  return iter;
+}
+
+
+/*==============================================================================
   utf8::find_invalid
 
     Finds and returns an iterator pointing to the first invalid code found. If
