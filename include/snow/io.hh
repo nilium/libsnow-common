@@ -124,11 +124,13 @@ bool eof(STREAM const &stream)
 */
 
 template <class T, class STREAM>
-int write(STREAM &stream, T const &t_inst, endian_t order = endian_t::network);
+auto write(STREAM &stream, T const &t_inst, endian_t order = endian_t::network)
+  -> typename std::enable_if<std::is_pod<T>::value, int>::type;
 
 // Returns sizeof(T) on success, 0 on failure.
 template <class T, class STREAM>
-int read(STREAM &stream, T &t_inst, endian_t order = endian_t::network);
+auto read(STREAM &stream, T &t_inst, endian_t order = endian_t::network)
+  -> typename std::enable_if<std::is_pod<T>::value, int>::type;
 
 
 // Write fixed-size strings.
@@ -145,7 +147,8 @@ int write_nulstring(STREAM &stream, const char *str, int length = -1, int cstrle
 
 
 template <class T, class STREAM>
-int write(STREAM &stream, T const &t_inst, endian_t order)
+auto write(STREAM &stream, T const &t_inst, endian_t order)
+  -> typename std::enable_if<std::is_pod<T>::value, int>::type
 {
   static_assert(std::is_pod<T>::value,
     "write default implementation only accepts POD types.");
@@ -166,7 +169,8 @@ int write(STREAM &stream, T const &t_inst, endian_t order)
 
 
 template <class T, class STREAM>
-int read(STREAM &stream, T &t_inst, endian_t order)
+auto read(STREAM &stream, T &t_inst, endian_t order)
+  -> typename std::enable_if<std::is_pod<T>::value, int>::type
 {
   static_assert(std::is_pod<T>::value,
     "read default implementation only accepts POD types.");
