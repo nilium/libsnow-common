@@ -122,11 +122,10 @@ constexpr bool is_intermediate_(uint32_t code)
 ==============================================================================*/
 constexpr uint32_t intermediate_byte_(uint32_t code, int fourth)
 {
-  return {
+  return
     ((code >> (fourth * UTF8_BITS_INTERMEDIATE)) &
       UTF8_VAL_MASK_INTERMEDIATE) |
-    UTF8_NAME_INTERMEDIATE
-  };
+    UTF8_NAME_INTERMEDIATE;
 }
 
 
