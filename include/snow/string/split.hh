@@ -17,15 +17,22 @@
 namespace snow {
 
 
-/*==============================================================================
-  split_string
+/**
+  @brief Splits a string by a delimiter and writes each split string out to a
+  given `result` iterator.
 
-    Splits a string with a delimiter and writes each token to the result
-    iterator. Returns the final iterator position. The delimiter cannot be
-    escaped within the string.
+  Splits a string with a delimiter and writes each token to the result
+  iterator. Returns the final iterator position. The delimiter cannot be
+  escaped within the string.
 
-    Recommended you pass a back_insert_iterator for the result iterator.
-==============================================================================*/
+  Recommended you pass an std::back_insert_iterator for the result iterator.
+
+  @param  str    The string to split along `delim`.
+  @param  delim  The delimiting character (or some value if not a char).
+  @param  result The result iterator to write split strings to. Ideally, this
+                 is an `std::push_back_iterator`.
+  @result The given `result` iterator.
+*/
 template <typename out_iter, typename T, typename C>
 out_iter split_string(const T &str, const C &delim, out_iter result)
 {
@@ -54,19 +61,26 @@ out_iter split_string(const T &str, const C &delim, out_iter result)
 
 
 
-/*==============================================================================
-  split_string_quoted
+/**
+  @brief Splits a quoted string. Ignores instances of `delim` inside double
+  quotes. Each resulting string is written out to the given `result` iterator.
 
-    Splits a quoted string. This one requires its own buffer, so it's less
-    friendly than the above function. However, it allows the strings inside to
-    be enclosed within quotes (meaning no splits on the delimiter).
+  Splits a quoted string. This one requires its own buffer, so it's less
+  friendly than the above function. However, it allows the strings inside to
+  be enclosed within quotes (meaning no splits on the delimiter).
 
-    Quotes within strings can be escaped with a backslash. Backslashes can also
-    escape themselves. They escape nothing else. Recommended you use raw string
-    literals to initialize strings passed to this.
+  Quotes within strings can be escaped with a backslash. Backslashes can also
+  escape themselves. They escape nothing else. Recommended you use raw string
+  literals to initialize strings passed to this.
 
-    Recommended you pass a back_insert_iterator for the result iterator.
-==============================================================================*/
+  Recommended you pass an std::back_insert_iterator for the result iterator.
+
+  @param  str    The string to split along delim.
+  @param  delim  A character to split on.
+  @param  result The iterator to write results to. Ideally, this is an
+                 `std::push_back_iterator`.
+  @return        The `result` iterator.
+*/
 template <typename out_iter, typename T, typename C>
 out_iter split_string_quoted(const T &str, const C &delim, out_iter result)
 {
