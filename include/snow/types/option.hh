@@ -134,8 +134,6 @@ private:
 
   void dispose();
 
-  friend option_t<value_type> some<value_type>(value_type const &);
-  friend option_t<value_type> some<value_type>(value_type &&);
   friend class option_t<std::nullptr_t>;
 
   template <typename... ARGS>
@@ -602,9 +600,6 @@ class option_t<std::nullptr_t> final
   bool _defined;
 
   enum ctor_bit_t { CTOR };
-
-  friend option_t<std::nullptr_t> some<std::nullptr_t>(const std::nullptr_t &);
-  friend option_t<std::nullptr_t> some<std::nullptr_t>(std::nullptr_t &&);
 
   option_t(ctor_bit_t, std::nullptr_t) : _defined(true) { /* nop */ }
 
