@@ -52,7 +52,8 @@ enum : uint32_t
 int const UTF8_BITS_INTERMEDIATE = 6;
 
 
-enum : uint32_t {
+enum : uint32_t
+{
   UTF8_MASK_INTERMEDIATE      = 0xC0u,
   UTF8_NAME_INTERMEDIATE      = (UTF8_MASK_INTERMEDIATE << 1) & 0xFF,
   UTF8_VAL_MASK_INTERMEDIATE  = (~UTF8_MASK_INTERMEDIATE) & 0xFF,
