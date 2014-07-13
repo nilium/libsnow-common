@@ -207,25 +207,7 @@ public:
   ============================================================================*/
   // Apply functions
   template <typename F>
-  void operator () (F &f) const
-  {
-    if (is_defined()) {
-      f(get());
-    }
-  }
-
-
-  template <typename F>
   void operator () (F &&f) const
-  {
-    if (is_defined()) {
-      f(get());
-    }
-  }
-
-
-  template <typename F>
-  void operator () (F &f)
   {
     if (is_defined()) {
       f(get());
@@ -253,8 +235,7 @@ public:
       from a defined value to an empty value, then use flat_map. If your map
       function always has a defined value, use map.
   ============================================================================*/
-  template <typename F>
-  auto map(F &f) const -> optional<decltype(f(get()))>;
+
   template <typename F>
   auto map(F &&f) const -> optional<decltype(f(get()))>;
 
@@ -267,8 +248,6 @@ public:
       If your function always returns a defined value, use map.
   ============================================================================*/
   // map T -> option_t<U>
-  template <typename F>
-  auto flat_map(F &f) const -> optional<typename decltype(f(get()))::value_type>;
   template <typename F>
   auto flat_map(F &&f) const -> optional<typename decltype(f(get()))::value_type>;
 };
@@ -413,38 +392,11 @@ auto option_t<T>::assign(option_t &&other) -> option_t &
 
 template <typename T>
 template <typename F>
-auto option_t<T>::map(F &f) const -> optional<decltype(f(get()))>
-{
-  using U = decltype(f(get()));
-  if (is_defined()) {
-    return some<U>(f(get()));
-  } else {
-    return optional<U>();
-  }
-}
-
-
-template <typename T>
-template <typename F>
 auto option_t<T>::map(F &&f) const -> optional<decltype(f(get()))>
 {
   using U = decltype(f(get()));
   if (is_defined()) {
     return some<U>(f(get()));
-  } else {
-    return optional<U>();
-  }
-}
-
-
-
-template <typename T>
-template <typename F>
-auto option_t<T>::flat_map(F &f) const -> optional<typename decltype(f(get()))::value_type>
-{
-  using U = typename decltype(f(get()))::value_type;
-  if (is_defined()) {
-    return f(get());
   } else {
     return optional<U>();
   }
@@ -709,16 +661,6 @@ public:
 
 
   template <typename F>
-  void operator () (F &f) const
-  {
-    if (is_defined()) {
-      f(nullptr);
-    }
-  }
-
-
-
-  template <typename F>
   void operator () (F &&f) const
   {
     if (is_defined()) {
@@ -729,30 +671,11 @@ public:
 
 
   template <typename F>
-  auto map(F &f) const -> optional<decltype(f(nullptr))>;
-
-  template <typename F>
   auto map(F &&f) const -> optional<decltype(f(nullptr))>;
-
-  template <typename F>
-  auto flat_map(F &f) const -> optional<typename decltype(f(nullptr))::value_type>;
 
   template <typename F>
   auto flat_map(F &&f) const -> optional<typename decltype(f(nullptr))::value_type>;
 };
-
-
-
-template <typename F>
-auto option_t<std::nullptr_t>::map(F &f) const -> optional<decltype(f(nullptr))>
-{
-  using U = decltype(f(nullptr));
-  if (is_defined()) {
-    return some<U>(f(nullptr));
-  } else {
-    return option_t<U>();
-  }
-}
 
 
 
@@ -762,19 +685,6 @@ auto option_t<std::nullptr_t>::map(F &&f) const -> optional<decltype(f(nullptr))
   using U = decltype(f(nullptr));
   if (is_defined()) {
     return some<U>(f(nullptr));
-  } else {
-    return optional<U>();
-  }
-}
-
-
-
-template <typename F>
-auto option_t<std::nullptr_t>::flat_map(F &f) const -> optional<typename decltype(f(nullptr))::value_type>
-{
-  using U = typename decltype(f(nullptr))::value_type;
-  if (is_defined()) {
-    return f(nullptr);
   } else {
     return optional<U>();
   }
