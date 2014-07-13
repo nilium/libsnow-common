@@ -75,9 +75,6 @@ using optional = typename optional_bits<T>::type;
 
 
 template <typename T>
-optional<T> some(T const &val);
-
-template <typename T>
 optional<T> some(T &&val);
 
 template <typename T, typename... ARGS>
@@ -706,23 +703,15 @@ auto option_t<std::nullptr_t>::flat_map(F &&f) const -> optional<typename declty
 
 
 /*==============================================================================
-  some(T const&) and some(T&&)
+  some(T &&)
 
     Creates a new option_t<T> and returns it, either copying or moving the value
     provided.
 ==============================================================================*/
 template <typename T>
-optional<T> some(T const &val)
-{
-  return make_optional<T>(std::forward<T const &>(val));
-}
-
-
-
-template <typename T>
 optional<T> some(T &&val)
 {
-  return make_optional<T>(std::forward<T &&>(val));
+  return make_optional<T>(std::forward<T>(val));
 }
 
 
