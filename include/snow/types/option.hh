@@ -520,7 +520,7 @@ struct none_t final
 
 
 
-constexpr none_t none = none_t();
+constexpr none_t none {};
 
 
 
