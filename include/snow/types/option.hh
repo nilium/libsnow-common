@@ -100,9 +100,13 @@ private:
   // Bit of a hack to keep the private emplace-like constructor. By passing a
   // ctor_bit_t as the constructor's first argument, this basically ensures it
   // knows which ctor to use.
-  enum ctor_bit_t { CTOR };
+  enum ctor_bit_t
+  {
+    CTOR
+  };
 
-  enum store_bit_t {
+  enum store_bit_t
+  {
     SIZE = sizeof(value_type),
     ALIGNMENT = std::alignment_of<value_type>::value
   };
