@@ -410,14 +410,14 @@ int put_code(IT &&iter, uint32_t code)
 /*==============================================================================
   utf8::distance
 
-    Returns the distance in (valid) codepoints between iter and end.
+    Returns the distance in (valid) codepoints between start and end.
 ==============================================================================*/
 template <typename IT>
-int distance(IT iter, IT const &end)
+int distance(IT start, IT const &end)
 {
   int count = 0;
-  for (; iter != end; ++count) {
-    if (next_code(iter, end, UTF8_INVALID_CODE) == UTF8_INVALID_CODE) {
+  for (; start != end; ++count) {
+    if (next_code(start, end, UTF8_INVALID_CODE) == UTF8_INVALID_CODE) {
       break;
     }
   }
