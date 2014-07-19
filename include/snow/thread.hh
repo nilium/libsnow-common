@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__THREAD_HH__
-#define __SNOW_COMMON__THREAD_HH__
+#pragma once
 
 #include <snow/config.hh>
 
@@ -25,5 +24,3 @@ S_EXPORT void async_thread(FNT &&func, ARGS&&... args)
 }
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__THREAD_HH__ include guard */

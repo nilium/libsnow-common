@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__VEC3_HH__
-#define __SNOW_COMMON__VEC3_HH__
+#pragma once
 
 #include "math.hh"
 
@@ -20,5 +19,3 @@
 
 #include "vec2.hh"
 #include "vec4.hh"
-
-#endif /* end __SNOW_COMMON__VEC3_HH__ include guard */

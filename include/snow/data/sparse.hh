@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__SPARSE_HH__
-#define __SNOW_COMMON__SPARSE_HH__
+#pragma once
 
 #include <snow/config.hh>
 
@@ -208,7 +207,3 @@ private:
 
 
 } // namespace snow
-
-
-
-#endif /* end __SNOW_COMMON__SPARSE_HH__ include guard */

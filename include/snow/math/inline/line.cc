@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__LINE_TCC__
-#define __SNOW_COMMON__LINE_TCC__
+#pragma once
 
 
 namespace snow {
@@ -70,5 +69,3 @@ auto line_t<T>::nearest_to(const vec3& p) const -> vec3
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__LINE_TCC__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__SLOT_MASK_HH__
-#define __SNOW_COMMON__SLOT_MASK_HH__
+#pragma once
 
 #include <cstdint>
 #include <iostream>
@@ -218,5 +217,3 @@ void slot_mask_t<HT, CT>::join_same(size_t from)
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__SLOT_MASK_HH__ include guard */

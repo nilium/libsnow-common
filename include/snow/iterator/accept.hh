@@ -6,8 +6,7 @@
  *          http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef __SNOW_COMMON__ACCEPT_HH__
-#define __SNOW_COMMON__ACCEPT_HH__
+#pragma once
 
 #include "../types/option.hh"
 #include "../types/function_info.hh"
@@ -567,6 +566,3 @@ auto accept(IT &start, IT const end, T const &item, FN &&apply) -> optional<decl
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__ACCEPT_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__RANGE_HH__
-#define __SNOW_COMMON__RANGE_HH__
+#pragma once
 
 #include <iostream>
 #include <algorithm>
@@ -676,5 +675,3 @@ using rangef_t  = range_t<float>;
 using ranged_t  = range_t<double>;
 
 }
-
-#endif /* end __SNOW_COMMON__RANGE_HH__ include guard */

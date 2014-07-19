@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__REF_COUNTER_HH__
-#define __SNOW_COMMON__REF_COUNTER_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <cassert>
@@ -109,5 +108,3 @@ auto  ref_counter_t::retain_count(const T *object) const -> uint_fast32_t
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__REF_COUNTER_HH__ include guard */

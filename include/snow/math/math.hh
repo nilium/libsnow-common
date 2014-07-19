@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__MATH_HH__
-#define __SNOW_COMMON__MATH_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <cfloat>
@@ -133,5 +132,3 @@ constexpr T clamp_value(T val, Q min, R max)
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__MATH_HH__ include guard */

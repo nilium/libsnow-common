@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__CONFIG_HH__
-#define __SNOW_COMMON__CONFIG_HH__
+#pragma once
 
 #include "build-config.hh"
 
@@ -166,5 +165,3 @@
 
 // Define string type
 #include <snow/string/string.hh>
-
-#endif /* end __SNOW_COMMON__CONFIG_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__ITERATOR_ITERABLE_HH__
-#define __SNOW_COMMON__ITERATOR_ITERABLE_HH__
+#pragma once
 
 #include <iterator>
 
@@ -134,5 +133,3 @@ auto iterate_reverse_const(const T &container) -> iterator_iterable_t<decltype(c
 
 
 }
-
-#endif /* end __SNOW_COMMON__ITERATOR_ITERABLE_HH__ include guard */

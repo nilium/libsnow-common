@@ -1,5 +1,4 @@
-#ifndef __SNOW_COMMON__ALIGN_HH__
-#define __SNOW_COMMON__ALIGN_HH__
+#pragma once
 
 
 #include <cstddef>
@@ -51,5 +50,3 @@ constexpr size_t align<1>(size_t const num)
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__ALIGN_HH__ include guard */

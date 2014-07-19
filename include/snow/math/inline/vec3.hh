@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__VEC3_THH__
-#define __SNOW_COMMON__VEC3_THH__
+#pragma once
 
 
 namespace snow {
@@ -288,6 +287,3 @@ using vec3l_t = vec3_t<long>;
 
 
 #define splat_vec3(V) (V).x, (V).y, (V).z
-
-
-#endif /* end __SNOW_COMMON__VEC3_THH__ include guard */

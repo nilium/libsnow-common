@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__OBJECT_POOL_HH__
-#define __SNOW_COMMON__OBJECT_POOL_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <cstdint>
@@ -560,5 +559,3 @@ private:
 }; // struct object_pool_t
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__OBJECT_POOL_HH__ include guard */

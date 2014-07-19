@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__SLOT_IMAGE_HH__
-#define __SNOW_COMMON__SLOT_IMAGE_HH__
+#pragma once
 
 #include "slot_mask.hh"
 #include <snow/math/vec2.hh>
@@ -235,5 +234,3 @@ void slot_image_t<HT, CT>::release_subimage(const dim_t &pos, const dim_t &size,
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__SLOT_IMAGE_HH__ include guard */

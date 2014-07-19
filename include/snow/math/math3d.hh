@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__MATH3D_HH__
-#define __SNOW_COMMON__MATH3D_HH__
+#pragma once
 
 /** @addtogroup Math3D 3D Math Types
 @brief A basic collection of templatized POD 3D maths structs for C++.
@@ -39,5 +38,3 @@ depends on the data types in the structures being packed.
 #include "plane.hh"
 #include "mat4.hh"
 #include "mat3.hh"
-
-#endif /* end __SNOW_COMMON__MATH3D_HH__ include guard */

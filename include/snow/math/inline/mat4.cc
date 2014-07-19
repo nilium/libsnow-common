@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__MAT4_TCC__
-#define __SNOW_COMMON__MAT4_TCC__
+#pragma once
 
 
 namespace snow {
@@ -1281,6 +1280,3 @@ bool operator != (const mat4_t<T> &rhs, const mat4_t<Q> &lhs)
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__MAT4_TCC__ include guard */

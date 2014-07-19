@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__VEC4_TCC__
-#define __SNOW_COMMON__VEC4_TCC__
+#pragma once
 
 
 namespace snow {
@@ -523,6 +522,3 @@ bool operator != (vec4_t<T> lhs, vec4_t<Q> rhs)
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__VEC4_TCC__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__MAT4_THH__
-#define __SNOW_COMMON__MAT4_THH__
+#pragma once
 
 
 namespace snow {
@@ -172,5 +171,3 @@ typedef mat4_t<double> mat4d_t;
 } // namespace snow
 
 #include "mat4.cc"
-
-#endif /* end __SNOW_COMMON__MAT4_THH__ include guard */

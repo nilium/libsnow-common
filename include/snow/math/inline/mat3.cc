@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__MAT3_TCC__
-#define __SNOW_COMMON__MAT3_TCC__
+#pragma once
 
 
 namespace snow {
@@ -745,6 +744,3 @@ bool operator != (const mat3_t<T> &rhs, const mat3_t<Q> &lhs)
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__MAT3_TCC__ include guard */

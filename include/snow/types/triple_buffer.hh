@@ -9,8 +9,7 @@
 
 // Based on the macros by Remis at http://remis-thoughts.blogspot.com/2012/01/triple-buffering-as-concurrency_30.html
 
-#ifndef __SNOW_COMMON__TRIPLEBUFFER_HH__
-#define __SNOW_COMMON__TRIPLEBUFFER_HH__ 1
+#pragma once
 
 #include <array>
 #include <atomic>
@@ -173,5 +172,3 @@ public:
 };
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__TRIPLEBUFFER_HH__ include guard */

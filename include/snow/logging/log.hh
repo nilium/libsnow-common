@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__COMMON__LOG_HH__
-#define __SNOW_COMMON__COMMON__LOG_HH__
+#pragma once
 
 #include <snow/build-config.hh>
 #include <cstdarg>
@@ -181,5 +180,3 @@ void s_fatal_error_impl(const char *format, ...)
 
   In builds with NDEBUG defined, this will be a no-op.
 */
-
-#endif /* end of include guard: __SNOW_COMMON__COMMON__LOG_HH__ */

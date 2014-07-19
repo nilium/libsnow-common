@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__BUFFER_STREAM_HH__
-#define __SNOW_COMMON__BUFFER_STREAM_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <stdexcept>
@@ -213,5 +212,3 @@ S_EXPORT size_t buffer_stream_t::read(string &result) const;
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__BUFFER_STREAM_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__VEC2_THH__
-#define __SNOW_COMMON__VEC2_THH__
+#pragma once
 
 
 namespace snow {
@@ -169,5 +168,3 @@ using vec2l_t = vec2_t<long>;
 #include "vec2.cc"
 
 #define splat_vec2(V) (V).x, (V).y, (V).z
-
-#endif /* end __SNOW_COMMON__VEC2_THH__ include guard */

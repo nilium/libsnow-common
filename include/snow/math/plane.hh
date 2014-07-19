@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__PLANE_HH__
-#define __SNOW_COMMON__PLANE_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <stdexcept>
@@ -17,5 +16,3 @@
 
 #include "vec3.hh"
 #include "line.hh"
-
-#endif /* end __SNOW_COMMON__PLANE_HH__ include guard */

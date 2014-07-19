@@ -7,13 +7,10 @@
  */
 
 
-#ifndef __SNOW_COMMON__LINE_HH__
-#define __SNOW_COMMON__LINE_HH__
+#pragma once
 
 #include <snow/config.hh>
 
 #include "inline/line.hh"
 
 #include "vec3.hh"
-
-#endif /* end __SNOW_COMMON__LINE_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__HASH_HH__
-#define __SNOW_COMMON__HASH_HH__
+#pragma once
 
 #include "../config.hh"
 #include <cstdint>
@@ -79,5 +78,3 @@ S_EXPORT uint64_t hash64(const char *str, const size_t length,
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__HASH_HH__ include guard */

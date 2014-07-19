@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__OPTION_HH__
-#define __SNOW_COMMON__OPTION_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <type_traits>
@@ -856,6 +855,3 @@ optional<T> make_optional(ARGS&&... args)
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__OPTION_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__ENDIAN_HH__
-#define __SNOW_COMMON__ENDIAN_HH__
+#pragma once
 
 #include <snow/build-config.hh>
 
@@ -48,5 +47,3 @@ enum class endian_t
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__ENDIAN_HH__ include guard */

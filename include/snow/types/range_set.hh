@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__RANGESET_HH__
-#define __SNOW_COMMON__RANGESET_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <stdexcept>
@@ -214,6 +213,3 @@ private:
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__RANGESET_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__LINE_THH__
-#define __SNOW_COMMON__LINE_THH__
+#pragma once
 
 
 namespace snow {
@@ -55,5 +54,3 @@ using lined_t = line_t<double>;
 } // namespace snow
 
 #include "line.cc"
-
-#endif /* end __SNOW_COMMON__LINE_THH__ include guard */

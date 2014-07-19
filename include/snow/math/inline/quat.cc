@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__QUAT_TCC__
-#define __SNOW_COMMON__QUAT_TCC__
+#pragma once
 
 
 namespace snow {
@@ -632,5 +631,3 @@ bool operator != (quat_t<T> lhs, quat_t<Q> rhs)
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__QUAT_TCC__ include guard */

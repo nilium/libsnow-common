@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__PLANE_THH__
-#define __SNOW_COMMON__PLANE_THH__
+#pragma once
 
 
 namespace snow {
@@ -74,5 +73,3 @@ using planed_t = plane_t<double>;
 } // namespace snow
 
 #include "plane.cc"
-
-#endif /* end __SNOW_COMMON__PLANE_THH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__VEC2_TCC__
-#define __SNOW_COMMON__VEC2_TCC__
+#pragma once
 
 
 namespace snow {
@@ -479,6 +478,3 @@ bool operator != (vec2_t<T> lhs, vec2_t<Q> rhs)
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__VEC2_TCC__ include guard */

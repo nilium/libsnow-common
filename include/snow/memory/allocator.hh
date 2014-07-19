@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__ALLOCATOR_HH__
-#define __SNOW_COMMON__ALLOCATOR_HH__
+#pragma once
 
 
 #include <cstdlib>
@@ -181,6 +180,3 @@ struct aligned_mallocator<16> : public mallocator
 
 
 } // namespace snow
-
-
-#endif /* end __ALLOCATOR_HH__ include guard */

@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__PLANE_TCC__
-#define __SNOW_COMMON__PLANE_TCC__
+#pragma once
 
 
 namespace snow {
@@ -150,5 +149,3 @@ bool operator != (plane_t<T> lhs, plane_t<T> rhs)
 
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__PLANE_TCC__ include guard */

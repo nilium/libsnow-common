@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__BINPACK_HH__
-#define __SNOW_COMMON__BINPACK_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include "types_2d.hh"
@@ -112,5 +111,3 @@ public:
 };
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__BINPACK_HH__ include guard */

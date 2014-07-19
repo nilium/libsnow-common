@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__STRING_HH__
-#define __SNOW_COMMON__STRING_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <cstddef>
@@ -302,6 +301,3 @@ bool string_t::operator != (const char str[N]) const
 
 
 } // namespace snow
-
-
-#endif /* end __SNOW_COMMON__STRING_HH__ include guard */

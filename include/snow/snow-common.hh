@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__SNOW_COMMON_HH__
-#define __SNOW_COMMON__SNOW_COMMON_HH__
+#pragma once
 
 #include "config.hh"
 
@@ -48,5 +47,3 @@
 
 // Iterators
 #include "iterator/accept.hh"
-
-#endif /* end __SNOW_COMMON__SNOW_COMMON_HH__ include guard */

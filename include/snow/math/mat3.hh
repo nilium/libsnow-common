@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__MAT3_HH__
-#define __SNOW_COMMON__MAT3_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include "math.hh"
@@ -166,5 +165,3 @@ mat3_t<value_type>
 #include "vec3.hh"
 #include "quat.hh"
 #include "mat4.hh"
-
-#endif /* end __SNOW_COMMON__MAT3_HH__ include guard */

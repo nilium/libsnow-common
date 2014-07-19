@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__TYPES_2D_HH__
-#define __SNOW_COMMON__TYPES_2D_HH__
+#pragma once
 
 #include <snow/config.hh>
 #include <iostream>
@@ -281,5 +280,3 @@ typedef rect_t<long> rectl_t;
 typedef rect_t<int> recti_t;
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__TYPES_2D_HH__ include guard */

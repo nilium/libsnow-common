@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__COMMON__COMPARE_HH__
-#define __SNOW_COMMON__COMMON__COMPARE_HH__
+#pragma once
 
 #include <snow/config.hh>
 
@@ -61,5 +60,3 @@ S_EXPORT size_t score_strings(const string &source, const string &other);
 S_EXPORT bool pattern_match(const string &pattern, const string &other);
 
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__COMMON__COMPARE_HH__ include guard */

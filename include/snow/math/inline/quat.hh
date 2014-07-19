@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__QUAT_THH__
-#define __SNOW_COMMON__QUAT_THH__
+#pragma once
 
 
 namespace snow {
@@ -124,5 +123,3 @@ using quatd_t = quat_t<double>;
 } // namespace snow
 
 #include "quat.cc"
-
-#endif /* end __SNOW_COMMON__QUAT_THH__ include guard */

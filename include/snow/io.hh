@@ -7,8 +7,7 @@
  */
 
 
-#ifndef __SNOW_COMMON__IO_HH__
-#define __SNOW_COMMON__IO_HH__
+#pragma once
 
 #include <snow/endian.hh>
 // For SEEK_SET/CUR/END
@@ -237,5 +236,3 @@ int write_nulstring(STREAM &stream, const char *str, int length, int cstrlen)
 
 } // namespace io
 } // namespace snow
-
-#endif /* end __SNOW_COMMON__IO_HH__ include guard */
