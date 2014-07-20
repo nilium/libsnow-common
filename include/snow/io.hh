@@ -24,30 +24,85 @@ namespace io {
 
 // Basic IO functions -- does not care about anything other than bytes.
 
-// Writes num_bytes from input_buffer to stream.
-// Returns < 0 on failure.
+/**
+  @brief Writes num_bytes from input_buffer to stream.
+  @param  stream       The stream to write to.
+  @param  num_bytes    The number of bytes being written from input_buffer to
+    the stream. Values < 0 will return an error.
+  @param  input_buffer The input buffer to read bytes from. May be null if the
+    stream's write member function supports it or this function has been
+    specialized to support null input buffers.
+  @return The number of bytes written. Returns < 0 on failure and < num_bytes
+    for partial writes.
+
+  @note The input_buffer argument is not checked for whether it's null in the
+    default implementation of write, as this is left up to the stream's write
+    member function to check. Specializations for other stream types may check
+    for whether the buffer is null and return a value < 0 accordingly.
+*/
 template <class Stream>
 int write(Stream &stream, int num_bytes, void const *input_buffer);
 
-// Reads num_bytes from stream to the output_buffer.
-// Returns < 0 on failure.
+/**
+  @brief Reads num_bytes from stream to the output_buffer.
+  @param stream        The stream to read from.
+  @param num_bytes     The number of bytes to read from the stream into
+    output_buffer. Values < 0 will return an error.
+  @param output_buffer The buffer to store read bytes in. May be null if the
+    stream's read method supports it or this function has been specialized to
+    support null output buffers.
+  @return The number of bytes read into output_buffer. Returns < 0 on failure
+    and < num_bytes for partial writes.
+
+  @note The output_buffer argument is not checked for whether it's null in the
+    default implementation of read, as this is left up to the stream's read
+    member function to check. Specializations for other stream types may check
+    for whether the buffer is null and return a value < 0 accordingly.
+*/
 template <class Stream>
 int read(Stream &stream, int num_bytes, void *output_buffer);
 
-// Returns the current absolute position of read/write ops in the stream.
-// Returns < 0 on failure.
+/**
+  @brief Gets the current absolute position of read/write ops in the stream.
+  @return The current absolute position or offset of read/write ops in the
+    stream. Returns < 0 on failure.
+*/
 template <class Stream>
 int tell(Stream const &stream);
 
-// Seeks to the given offset in the stream relative to origin.
-// If successful, returns the current absolute position of read/write ops in
-// the stream.
-// Returns < 0 on failure.
+/**
+  @brief Seeks to the given offset in the stream relative to origin.
+
+  If successful, returns the current absolute position of read/write ops in
+  the stream (i.e., seek(stream, 0, SEEK_CUR) should be equivalent to tell).
+
+  @param stream The stream to seek in.
+  @param offset The offset, relative to the origin, to seek to.
+  @param origin The origin point of the seek. Must be one of the standard
+    SEEK_SET, SEEK_CUR, or SEEK_END.
+  @return The new absolute position or offset of read/write ops in the stream.
+    Returns < 0 on failure.
+
+  @note Not all streams may support seeking and some may only support seeking
+    from a given origin. Ideally, all streams should support at least seeking
+    with positive offsets and SEEK_CUR, but this isn't required.
+*/
 template <class Stream>
 int seek(Stream &stream, int offset, int origin);
 
-// Returns whether the stream is at its EOF.
-// If the stream does not implement eof(), this is always false.
+/**
+  @brief Returns whether the stream is at its EOF.
+
+  Returns whether the stream is at its EOF. This isn't necessarily an error
+  condition, and depends on the type of stream.
+
+  The default implementation simply calls a stream's eof() member function.
+  Streams that do not support an eof check should specialize for this and
+  return an appropriate value.
+
+  @param  stream The stream the check for EOF status on.
+  @return True if the stream is at EOF (or has the EOF flag set), else false.
+*/
 template <class Stream>
 bool eof(Stream const &stream);
 
@@ -118,28 +173,82 @@ bool eof(Stream const &stream)
 ==============================================================================*/
 
 /*
-  When specializing write and read for non-trivial types, the endianness
-  must be forwarded on to inner calls to read/write.
+  When specializing/overloading write and read for non-trivial types, the
+  endianness must be forwarded on to inner calls to read/write where
+  appropriate.
 */
 
+/**
+  @brief Writes an object of type T to the given stream in a given endianness.
+
+  The default implementation reverses the byte order of objects if the
+  endianness specified differs from the host endianness (usually little
+  endian).
+
+  Can only write POD-type objects to streams by default. This is checked at
+  compile-time.
+
+  @param  stream The stream to write the object to.
+  @param  t_inst An instance of T to write to the stream.
+  @param  order  The byte-order (endianness) to write to the stream in.
+    By default, this is network endianness, which in snow-common often also
+    defaults to little endian.
+
+  @return The number of bytes written to the stream (i.e., sizeof(T) for
+    successful writes). Returns < 0 on failure and < sizeof(T) for partial
+    writes.
+*/
 template <class T, class Stream>
 auto write(Stream &stream, T const &t_inst, endian_t order = endian_t::network)
   -> typename std::enable_if<std::is_pod<T>::value, int>::type;
 
-// Returns sizeof(T) on success, 0 on failure.
+/**
+  @brief Reads an object of type T from the given stream in a given endianness.
+
+  The default implementation reverses the byte order of objects if the
+  endianness specified differs from the host endianness (usually little
+  endian).
+
+  Can only read POD-type objects to streams by default. This is checked at
+  compile-time.
+
+  @param  stream The stream to read the object from.
+  @param  t_inst A reference to an instance of T to write the resulting
+    object to. If the result < sizeof(T), this will not be modified.
+  @param  order  The byte-order (endianness) to read from the stream in.
+    By default, this is network endianness, which in snow-common often also
+    defaults to little endian.
+
+  @return The number of bytes read from the stream (i.e., sizeof(T) on
+    success). Returns < 0 on failure and < sizeof(T) for partial reads.
+*/
 template <class T, class Stream>
 auto read(Stream &stream, T &t_inst, endian_t order = endian_t::network)
   -> typename std::enable_if<std::is_pod<T>::value, int>::type;
 
 
-// Write fixed-size strings.
-// A nulstring is simply a string of N bytes. The string will always contain a
-// terminating null character. Strings shorter than the size written will be
-// padded with null character. Strings that are longer than size-1 bytes will
-// have their last byte replaced with a null character.
-//
-// If the length given is -1, write_nulstring will write only the bytes of the
-// string up to and including the null character.
+/**
+  @brief Writes a fixed-size string to a stream.
+
+  A nulstring is simply a string of N bytes. The string will always contain a
+  terminating null character. Strings shorter than the size written will be
+  padded with null character. Strings that are longer than length-1 bytes will
+  have their last byte replaced with a null character.
+
+  If the length given is -1, write_nulstring will write only the bytes of the
+  string up to and including the null character (that is, length is defaulted
+  to cstrlen + 1).
+
+  @param  stream  The stream to write the nulstring to.
+  @param  str     The string to write. Must have either a terminating NUL
+    character or be only as long as cstrlen if cstrlen >= 0.
+  @param  length  The length of the string to write in bytes. If < 0, length is
+    the same as cstrlen + 1 (after determining cstrlen if it's also < 0).
+  @param  cstrlen The length of str in bytes. If < 0, str's length is measured
+    using std::strlen.
+  @return The number of bytes written to the stream. Returns < 0 on failure and
+    < length for partial writes.
+*/
 template <class Stream>
 int write_nulstring(Stream &stream, const char *str, int length = -1, int cstrlen = -1);
 
