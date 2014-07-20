@@ -152,16 +152,14 @@ auto write(Stream &stream, T const &t_inst, endian_t order)
   static_assert(std::is_pod<T>::value,
     "write default implementation only accepts POD types.");
 
-  if (sizeof(T) <= 1 || endian_t::network == order) {
-    return io::write(stream, int(sizeof(T)), &t_inst);
+
+  if (sizeof(T) <= 1 || endian_t::host == order) {
+    return write(stream, int(sizeof(T)), &t_inst);
   } else {
+    uint8_t buffer[sizeof(T)] { 0 };
     uint8_t const *ptr = reinterpret_cast<uint8_t const *>(&t_inst);
-    for (int index = sizeof(T) - 1; index >= 0; index -= 1) {
-      if (write(stream, 1, &ptr[index]) != 1) {
-        return int(sizeof(T)) - (index + 1);
-      }
-    }
-    return int(sizeof(T));
+    std::reverse_copy(ptr, ptr + sizeof(T), std::begin(buffer));
+    return write(stream, static_cast<int>(sizeof(T)), buffer);
   }
 }
 
