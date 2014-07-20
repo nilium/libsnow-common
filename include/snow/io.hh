@@ -174,17 +174,21 @@ auto read(Stream &stream, T &t_inst, endian_t order)
   static_assert(std::is_pod<T>::value,
     "read default implementation only accepts POD types.");
 
-  if (sizeof(T) <= 1 || endian_t::network == order) {
-    return read(stream, int(sizeof(T)), &t_inst);
-  } else {
-    uint8_t *ptr = reinterpret_cast<uint8_t *>(&t_inst);
-    for (int index = sizeof(T) - 1; index >= 0; index -= 1) {
-      if (read(stream, 1, &ptr[index]) != 1) {
-        return int(sizeof(T)) - (index + 1);
-      }
-    }
-    return int(sizeof(T));
+  int const num_bytes = static_cast<int>(sizeof(T));
+  uint8_t buffer[sizeof(T)];
+  int const result = read(stream, num_bytes, &buffer[0]);
+
+  if (result != num_bytes) {
+    return num_bytes;
   }
+
+  if (sizeof(T) > 1 && endian_t::host != order) {
+    std::reverse(std::begin(buffer), std::end(buffer));
+  }
+
+  t_inst = std::move(*reinterpret_cast<T *>(&buffer[0]));
+
+  return result;
 }
 
 
