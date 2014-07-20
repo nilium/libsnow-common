@@ -26,35 +26,35 @@ namespace io {
 
 // Writes num_bytes from input_buffer to stream.
 // Returns < 0 on failure.
-template <class STREAM>
-int write(STREAM &stream, int num_bytes, void const *input_buffer);
+template <class Stream>
+int write(Stream &stream, int num_bytes, void const *input_buffer);
 
 // Reads num_bytes from stream to the output_buffer.
 // Returns < 0 on failure.
-template <class STREAM>
-int read(STREAM &stream, int num_bytes, void *output_buffer);
+template <class Stream>
+int read(Stream &stream, int num_bytes, void *output_buffer);
 
 // Returns the current absolute position of read/write ops in the stream.
 // Returns < 0 on failure.
-template <class STREAM>
-int tell(STREAM const &stream);
+template <class Stream>
+int tell(Stream const &stream);
 
 // Seeks to the given offset in the stream relative to origin.
 // If successful, returns the current absolute position of read/write ops in
 // the stream.
 // Returns < 0 on failure.
-template <class STREAM>
-int seek(STREAM &stream, int offset, int origin);
+template <class Stream>
+int seek(Stream &stream, int offset, int origin);
 
 // Returns whether the stream is at its EOF.
 // If the stream does not implement eof(), this is always false.
-template <class STREAM>
-bool eof(STREAM const &stream);
+template <class Stream>
+bool eof(Stream const &stream);
 
 
 
-template <class STREAM>
-int write(STREAM &stream, int num_bytes, void const *input_buffer)
+template <class Stream>
+int write(Stream &stream, int num_bytes, void const *input_buffer)
 {
   static_assert(std::is_same<decltype(stream.write(0, nullptr)), int>::value,
     "stream.write must return an int to be compatible with io:: ops");
@@ -70,8 +70,8 @@ int write(STREAM &stream, int num_bytes, void const *input_buffer)
 
 
 
-template <class STREAM>
-int read(STREAM &stream, int num_bytes, void *output_buffer)
+template <class Stream>
+int read(Stream &stream, int num_bytes, void *output_buffer)
 {
   static_assert(std::is_same<decltype(stream.read(0, nullptr)), int>::value,
     "stream.read must return an int to be compatible with io:: ops");
@@ -87,24 +87,24 @@ int read(STREAM &stream, int num_bytes, void *output_buffer)
 
 
 
-template <class STREAM>
-int tell(STREAM const &stream)
+template <class Stream>
+int tell(Stream const &stream)
 {
   return stream.tell();
 }
 
 
 
-template <class STREAM>
-int seek(STREAM &stream, int offset, int origin)
+template <class Stream>
+int seek(Stream &stream, int offset, int origin)
 {
   return stream.seek(offset, origin);
 }
 
 
 
-template <class STREAM>
-bool eof(STREAM const &stream)
+template <class Stream>
+bool eof(Stream const &stream)
 {
   return stream.eof();
 }
@@ -122,13 +122,13 @@ bool eof(STREAM const &stream)
   must be forwarded on to inner calls to read/write.
 */
 
-template <class T, class STREAM>
-auto write(STREAM &stream, T const &t_inst, endian_t order = endian_t::network)
+template <class T, class Stream>
+auto write(Stream &stream, T const &t_inst, endian_t order = endian_t::network)
   -> typename std::enable_if<std::is_pod<T>::value, int>::type;
 
 // Returns sizeof(T) on success, 0 on failure.
-template <class T, class STREAM>
-auto read(STREAM &stream, T &t_inst, endian_t order = endian_t::network)
+template <class T, class Stream>
+auto read(Stream &stream, T &t_inst, endian_t order = endian_t::network)
   -> typename std::enable_if<std::is_pod<T>::value, int>::type;
 
 
@@ -140,13 +140,13 @@ auto read(STREAM &stream, T &t_inst, endian_t order = endian_t::network)
 //
 // If the length given is -1, write_nulstring will write only the bytes of the
 // string up to and including the null character.
-template <class STREAM>
-int write_nulstring(STREAM &stream, const char *str, int length = -1, int cstrlen = -1);
+template <class Stream>
+int write_nulstring(Stream &stream, const char *str, int length = -1, int cstrlen = -1);
 
 
 
-template <class T, class STREAM>
-auto write(STREAM &stream, T const &t_inst, endian_t order)
+template <class T, class Stream>
+auto write(Stream &stream, T const &t_inst, endian_t order)
   -> typename std::enable_if<std::is_pod<T>::value, int>::type
 {
   static_assert(std::is_pod<T>::value,
@@ -167,8 +167,8 @@ auto write(STREAM &stream, T const &t_inst, endian_t order)
 
 
 
-template <class T, class STREAM>
-auto read(STREAM &stream, T &t_inst, endian_t order)
+template <class T, class Stream>
+auto read(Stream &stream, T &t_inst, endian_t order)
   -> typename std::enable_if<std::is_pod<T>::value, int>::type
 {
   static_assert(std::is_pod<T>::value,
@@ -189,8 +189,8 @@ auto read(STREAM &stream, T &t_inst, endian_t order)
 
 
 
-template <class STREAM>
-int write_nulstring(STREAM &stream, const char *str, int length, int cstrlen)
+template <class Stream>
+int write_nulstring(Stream &stream, const char *str, int length, int cstrlen)
 {
   int_fast64_t zero = 0;
 
