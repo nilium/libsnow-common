@@ -117,7 +117,7 @@
 #include "snow/logging/log.hh"
 
 #ifndef S_EXPORT
-# if S_PLATFORM_WINDOWS && !defined(__GNUC__)
+# if S_PLATFORM_WINDOWS && !S_GNU
 #   if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
 #     define S_EXPORT __declspec(dllexport)
 #   elif defined(S_SHARED_LIBRARY)
@@ -139,7 +139,7 @@
 #endif
 
 #ifndef S_HIDDEN
-# if S_PLATFORM_WINDOWS && !defined(__GNUC__)
+# if S_PLATFORM_WINDOWS && !S_GNU
 #   define S_HIDDEN
 # else
 #   define S_HIDDEN __attribute__((visibility("hidden")))
@@ -151,9 +151,9 @@
 #   define S_DEPRECATED(REASON) [[deprecated( REASON )]]
 # elif __has_extension(attribute_deprecated_with_message)
 #   define S_DEPRECATED(REASON) __attribute__((deprecated( REASON )))
-# elif S_PLATFORM_WINDOWS && !defined(__GNUC__)
+# elif S_PLATFORM_WINDOWS && !S_GNU
 #   define S_DEPRECATED(REASON) __declspec(deprecated( REASON ))
-# elif defined(__GNUC__)
+# elif S_GNU
 #   define S_DEPRECATED(REASON) __attribute__((deprecated))
 # else
 #   pragma message "No deprecated attribute available, take caution"
