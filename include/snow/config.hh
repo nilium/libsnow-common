@@ -93,6 +93,10 @@
 #define S_ARCH_x86        (__i386 || __i386__ || i386 || _M_IX86 || _X86_ || __i486__ || __i586 || __i686__)
 #define S_ARCH_PPC        (__powerpc || __powerpc__ || __POWERPC__ || __ppc__ || _M_PPC)
 
+#define S_CLANG   (defined(__clang__))
+#define S_GNU     (defined(__GNUC__))
+#define S_MSVC    (defined(_MSC_BUILD))
+
 #if (S_PLATFORM_UNIX || S_PLATFORM_APPLE) && !defined(__USE_UNIX98)
 # define __USE_UNIX98 1
 #endif
