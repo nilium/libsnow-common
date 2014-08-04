@@ -41,6 +41,10 @@
 # endif /* !__cplusplus */
 #endif /* !defined(NULL) */
 
+#ifndef __has_feature
+# define __has_feature(X) (1)
+#endif
+
 #ifndef __has_extension
 # define __has_extension(X) (0)
 #endif
