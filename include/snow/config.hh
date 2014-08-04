@@ -15,38 +15,38 @@
 #pragma GCC diagnostic ignored "-Wundef"
 
 #if defined(__APPLE__)
-# include <TargetConditionals.h>
+  #include <TargetConditionals.h>
 #endif
 
 #ifndef S_BREAKPOINT
-# if NDEBUG
-#   if defined(S_BREAKPOINT) && defined(S_NO_BREAKPOINTS)
+  #if NDEBUG
+    #if defined(S_BREAKPOINT) && defined(S_NO_BREAKPOINTS)
       // should result in a compiler error if S_NO_BREAKPOINTS is enabled
-#     define S_BREAKPOINT "BREAKPOINT IN NON-DEBUG CODE"
-#   else
+      #define S_BREAKPOINT "BREAKPOINT IN NON-DEBUG CODE"
+    #else
       // otherwise do nothing
-#     define S_BREAKPOINT
-#   endif // !defined(S_BREAKPOINT)
-# else
-#   define S_BREAKPOINT
-# endif
+      #define S_BREAKPOINT
+    #endif // !defined(S_BREAKPOINT)
+  #else
+    #define S_BREAKPOINT
+  #endif
 #endif
 
 /* define NULL ifndef */
 #if !defined(NULL)
-# if defined(__cplusplus)
-#   define NULL nullptr
-# else /* defined(__cplusplus) */
-#   define NULL ((void *)0)
-# endif /* !__cplusplus */
+  #if defined(__cplusplus)
+    #define NULL nullptr
+  #else /* defined(__cplusplus) */
+    #define NULL ((void *)0)
+  #endif /* !__cplusplus */
 #endif /* !defined(NULL) */
 
 #ifndef __has_feature
-# define __has_feature(X) (1)
+  #define __has_feature(X) (1)
 #endif
 
 #ifndef __has_extension
-# define __has_extension(X) (0)
+  #define __has_extension(X) (0)
 #endif
 
 /* Define YES/NO constants to map 1 and 0 respectively.
@@ -57,19 +57,19 @@
 */
 #ifndef __cplusplus
 #if !defined(YES)
-# define YES (1)
+  #define YES (1)
 #endif
 
 #if !defined(NO)
-# define NO (0)
+  #define NO (0)
 #endif
 #else
 #if !defined(YES)
-# define YES (true)
+  #define YES (true)
 #endif
 
 #if !defined(NO)
-# define NO (false)
+  #define NO (false)
 #endif
 #endif
 
@@ -98,67 +98,67 @@
 #define S_MSVC    (defined(_MSC_BUILD))
 
 #if (S_PLATFORM_UNIX || S_PLATFORM_APPLE) && !defined(__USE_UNIX98)
-# define __USE_UNIX98 1
+  #define __USE_UNIX98 1
 #endif
 
 /* specify the use of pthreads on supported platforms */
 #if S_PLATFORM_APPLE || S_PLATFORM_UNIX || S_PLATFORM_LINUX || S_PLATFORM_QNX || S_PLATFORM_ANDROID
-# define S_USE_PTHREADS (1)
+  #define S_USE_PTHREADS (1)
 #else
-# define S_USE_PTHREADS (0)
+  #define S_USE_PTHREADS (0)
 #endif
 
 #if S_USE_PTHREADS
-# include <pthread.h>
+  #include <pthread.h>
 #else
-# error "No threading API available"
+  #error "No threading API available"
 #endif /* USE_PTHREADS */
 
 #include "snow/logging/log.hh"
 
 #ifndef S_EXPORT
-# if S_PLATFORM_WINDOWS && !S_GNU
-#   if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
-#     define S_EXPORT __declspec(dllexport)
-#   elif defined(S_SHARED_LIBRARY)
-#     define S_EXPORT __declspec(dllimport)
-#   else
-#     define S_EXPORT
-#   endif
-# elif S_PLATFORM_WINDOWS
-#   if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
-#     define S_EXPORT __attribute__((dllexport))
-#   elif defined(S_SHARED_LIBRARY)
-#     define S_EXPORT __attribute__((dllimport))
-#   else
-#     define S_EXPORT
-#   endif
-# else
-#   define S_EXPORT __attribute__((visibility("default")))
-# endif
+  #if S_PLATFORM_WINDOWS && !S_GNU
+    #if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
+      #define S_EXPORT __declspec(dllexport)
+    #elif defined(S_SHARED_LIBRARY)
+      #define S_EXPORT __declspec(dllimport)
+    #else
+      #define S_EXPORT
+    #endif
+  #elif S_PLATFORM_WINDOWS
+    #if defined(S_SHARED_LIBRARY) && defined(S_BUILD_SHARED_LIB)
+      #define S_EXPORT __attribute__((dllexport))
+    #elif defined(S_SHARED_LIBRARY)
+      #define S_EXPORT __attribute__((dllimport))
+    #else
+      #define S_EXPORT
+    #endif
+  #elsif
+    #define S_EXPORT __attribute__((visibility("default"))
+  #endif
 #endif
 
 #ifndef S_HIDDEN
-# if S_PLATFORM_WINDOWS && !S_GNU
-#   define S_HIDDEN
-# else
-#   define S_HIDDEN __attribute__((visibility("hidden")))
-# endif
+  #if S_PLATFORM_WINDOWS && !S_GNU
+    #define S_HIDDEN
+  #else
+    #define S_HIDDEN __attribute__((visibility("hidden")))
+  #endif
 #endif
 
 #ifndef S_DEPRECATED
-# if __cplusplus > 201103L
-#   define S_DEPRECATED(REASON) [[deprecated( REASON )]]
-# elif __has_extension(attribute_deprecated_with_message)
-#   define S_DEPRECATED(REASON) __attribute__((deprecated( REASON )))
-# elif S_PLATFORM_WINDOWS && !S_GNU
-#   define S_DEPRECATED(REASON) __declspec(deprecated( REASON ))
-# elif S_GNU
-#   define S_DEPRECATED(REASON) __attribute__((deprecated))
-# else
-#   pragma message "No deprecated attribute available, take caution"
-#   define S_DEPRECATED(REASON)
-# endif
+  #if __cplusplus > 201103L
+    #define S_DEPRECATED(REASON) [[deprecated( REASON )]]
+  #elif __has_extension(attribute_deprecated_with_message)
+    #define S_DEPRECATED(REASON) __attribute__((deprecated( REASON )))
+  #elif S_PLATFORM_WINDOWS && !S_GNU
+    #define S_DEPRECATED(REASON) __declspec(deprecated( REASON ))
+  #elif S_GNU
+    #define S_DEPRECATED(REASON) __attribute__((deprecated))
+  #else
+    #pragma message "No deprecated attribute available, take caution"
+    #define S_DEPRECATED(REASON)
+  #endif
 #endif
 
 #include <stdexcept>
