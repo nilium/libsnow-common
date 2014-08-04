@@ -49,30 +49,6 @@
   #define __has_extension(X) (0)
 #endif
 
-/* Define YES/NO constants to map 1 and 0 respectively.
-   These are an Apple-ism, and I like that they can contribute to code
-   readability in some odd ways.  On the off chance that Cocoa.h is included
-   before config.h in a Mac OS build, I just assume YES/NO are 1 and 0 or at
-   least mapped similarly.
-*/
-#ifndef __cplusplus
-#if !defined(YES)
-  #define YES (1)
-#endif
-
-#if !defined(NO)
-  #define NO (0)
-#endif
-#else
-#if !defined(YES)
-  #define YES (true)
-#endif
-
-#if !defined(NO)
-  #define NO (false)
-#endif
-#endif
-
 /* set up some macros for platforms */
 
 #define S_PLATFORM_UNIX     (defined(unix) || defined(__unix) || defined(__unix__))
