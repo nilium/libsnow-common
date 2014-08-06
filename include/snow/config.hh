@@ -140,7 +140,6 @@
 #ifdef S_NO_THREAD_LOCAL
   // Check if something else is requesting TLS be disabled
   #ifndef S_THREAD_LOCAL
-    #pragma message "Thread local storage has been defined as disabled"
     #define S_THREAD_LOCAL
   #endif
 #endif
