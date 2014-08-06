@@ -158,7 +158,7 @@
   // Otherwise define S_NO_THREAD_LOCAL and emit a warning because nothing
   // could be determined by config.hh and the user hasn't already defined
   // something
-    #warning "No thread local storage duration specifier detected"
+    #warning "No thread local storage duration specifier detected, define S_THREAD_LOCAL or S_NO_THREAD_LOCAL yourself to quiet this"
     #define S_THREAD_LOCAL
 // Define S_NO_THREAD_LOCAL if thread local storage duration is unavailable
 // or should not be used.
