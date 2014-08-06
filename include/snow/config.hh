@@ -137,6 +137,14 @@
   #endif
 #endif
 
+#ifdef S_NO_THREAD_LOCAL
+  // Check if something else is requesting TLS be disabled
+  #ifndef S_THREAD_LOCAL
+    #pragma message "Thread local storage has been defined as disabled"
+    #define S_THREAD_LOCAL
+  #endif
+#endif
+
 #ifndef S_THREAD_LOCAL
   #if __has_feature(cxx_thread_local)
   // Check for compiler support (note: defaults to true unless using clang)
