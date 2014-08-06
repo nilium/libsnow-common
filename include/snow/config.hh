@@ -145,23 +145,26 @@
 #endif
 
 #ifndef S_THREAD_LOCAL
-  #if __has_feature(cxx_thread_local)
   // Check for compiler support (note: defaults to true unless using clang)
+  #if __has_feature(cxx_thread_local)
     #define S_THREAD_LOCAL thread_local
+
+    // If __has_feature is false, try the GNU __thread extension
   #elif S_GNU
-  // If __has_feature is false, try the GNU __thread extension
     #define S_THREAD_LOCAL __thread
+
+    // If it's MSVC for some inexplicable reason, use its TLS specifier
   #elif S_MSVC
-  // If it's MSVC for some inexplicable reason, use its TLS specifier
     #define S_THREAD_LOCAL __declspec(thread)
+
+    // Otherwise define S_NO_THREAD_LOCAL and emit a warning because nothing
+    // could be determined by config.hh and the user hasn't already defined
+    // something.
   #else
-  // Otherwise define S_NO_THREAD_LOCAL and emit a warning because nothing
-  // could be determined by config.hh and the user hasn't already defined
-  // something
     #warning "No thread local storage duration specifier detected, define S_THREAD_LOCAL or S_NO_THREAD_LOCAL yourself to quiet this"
     #define S_THREAD_LOCAL
-// Define S_NO_THREAD_LOCAL if thread local storage duration is unavailable
-// or should not be used.
+    // Define S_NO_THREAD_LOCAL if thread local storage duration is unavailable
+    // or should not be used.
     #ifndef S_NO_THREAD_LOCAL
       #define S_NO_THREAD_LOCAL
     #endif
